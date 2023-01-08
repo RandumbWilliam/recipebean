@@ -1,0 +1,6 @@
+mutation UpdateCookbook($cookbookName: String!, $updateCookbookId: String!) {
+  updateCookbook(cookbookName: $cookbookName, id: $updateCookbookId) {
+    cookbookName
+    id
+  }
+}

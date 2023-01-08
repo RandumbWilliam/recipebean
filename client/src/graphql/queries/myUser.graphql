@@ -1,0 +1,5 @@
+query MyUser {
+  myUser {
+    ...UserResonse
+  }
+}

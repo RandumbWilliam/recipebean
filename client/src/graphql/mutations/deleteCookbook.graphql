@@ -1,0 +1,3 @@
+mutation DeleteCookbook($deleteCookbookId: String!) {
+  deleteCookbook(id: $deleteCookbookId)
+}

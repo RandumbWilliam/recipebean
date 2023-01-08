@@ -1,0 +1,25 @@
+query GetRecipeByID($getRecipeId: String!) {
+  getRecipe(id: $getRecipeId) {
+    id
+    recipeName
+    servings
+    prepTime
+    cookTime
+    recipeIngredient {
+      order
+      ingredients {
+        ingredient
+      }
+      units {
+        unit
+      }
+      quantities {
+        quantity
+      }
+    }
+    recipeHeader {
+      order
+      headerName
+    }
+  }
+}

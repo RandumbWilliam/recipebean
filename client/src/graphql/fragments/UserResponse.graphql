@@ -1,0 +1,6 @@
+fragment UserResonse on User {
+  id
+  email
+  firstName
+  lastName
+}

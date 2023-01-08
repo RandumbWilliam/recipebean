@@ -1,0 +1,12 @@
+query GetCookbooks {
+  getCookbooks {
+    id
+    cookbookName
+    sections {
+      id
+    }
+    recipes {
+      id
+    }
+  }
+}

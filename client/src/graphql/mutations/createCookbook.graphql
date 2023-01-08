@@ -1,0 +1,6 @@
+mutation CreateCookbook($input: CookbookValidator!) {
+  createCookbook(input: $input) {
+    id
+    cookbookName
+  }
+}
