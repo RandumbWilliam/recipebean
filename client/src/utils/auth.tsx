@@ -31,9 +31,13 @@ const Auth = ({ children, excludedRoutes, pageProps }: AuthProps) => {
     ) {
       router.push("/cookbooks");
     }
-  }, [data, router]);
+  }, [fetching, data, router]);
 
-  return children;
+  if (fetching) {
+    return <div>LOADING</div>;
+  } else {
+    return children;
+  }
 };
 
 export default withUrqlClient(createUrqlClient)(Auth);

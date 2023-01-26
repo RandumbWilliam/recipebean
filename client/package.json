@@ -13,6 +13,7 @@
     "@mui/icons-material": "^5.8.4",
     "@mui/material": "^5.9.3",
     "@mui/styled-engine-sc": "^5.9.3",
+    "@urql/exchange-auth": "^1.0.0",
     "@urql/exchange-graphcache": "^4.4.3",
     "graphql": "^16.5.0",
     "next": "12.2.3",

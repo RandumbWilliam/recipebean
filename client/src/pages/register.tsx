@@ -30,7 +30,7 @@ const Register: React.FC<{}> = ({}) => {
     e.preventDefault();
     const response = await register({ input: formData });
     if (response.data?.register) {
-      router.push("/");
+      router.push("/cookbooks");
     } else {
       console.log("ERROR");
     }

@@ -55,11 +55,13 @@ export class UserResolver {
 
     const user = await userRepository.findOne({ email: email });
     if (!user) {
+      console.log("User does not exist");
       throw new Error("User does not exist");
     }
 
     const valid = await argon2.verify(user.password, password);
     if (!valid) {
+      console.log("Wrong Password");
       throw new Error("Incorrect password");
     }
 

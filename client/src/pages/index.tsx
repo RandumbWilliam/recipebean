@@ -3,6 +3,7 @@ import BaseLayout from "../components/layouts/Base";
 import Hero from "../components/templates/Home/Hero";
 import Sec from "../components/templates/Home/Sec";
 import { createUrqlClient } from "../utils/createUrqlClient";
+import { withAuth } from "../utils/auth_test";
 
 const Home = () => {
   return (
@@ -28,4 +29,4 @@ const Home = () => {
   );
 };
 
-export default withUrqlClient(createUrqlClient)(Home);
+export default withUrqlClient(createUrqlClient)(withAuth(Home));
