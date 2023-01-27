@@ -5,9 +5,9 @@ import type { AppProps } from "next/app";
 import { createGlobalStyle } from "styled-components";
 import Head from "next/head";
 import theme from "../styles/theme";
-import { useIsAuth } from "../utils/useIsAuth";
 import { withUrqlClient } from "next-urql";
 import { createUrqlClient } from "../utils/createUrqlClient";
+import { withAuth } from "../utils/withAuth";
 
 const GlobalStyles = createGlobalStyle`
 html,
@@ -29,7 +29,6 @@ a {
 
 const App = (props: AppProps) => {
   const { Component, pageProps } = props;
-  const { authenticated, loading } = useIsAuth();
 
   return (
     <React.Fragment>
@@ -50,4 +49,4 @@ const App = (props: AppProps) => {
   );
 };
 
-export default withUrqlClient(createUrqlClient)(App);
+export default withUrqlClient(createUrqlClient)(withAuth(App));
