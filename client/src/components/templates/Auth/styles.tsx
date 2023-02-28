@@ -1,3 +1,4 @@
+import Button from "@components/elements/Button";
 import { Container } from "@mui/material";
 import styled from "styled-components";
 
@@ -34,4 +35,9 @@ export const AuthCard = styled.form`
   background-color: #fff;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   padding: 40px;
+`;
+
+export const SubmitButton = styled(Button)`
+  width: 120px;
+  margin: 15px 0;
 `;
