@@ -38,6 +38,6 @@ export const AuthCard = styled.form`
 `;
 
 export const SubmitButton = styled(Button)`
-  width: 120px;
+  width: 200px;
   margin: 15px 0;
 `;
