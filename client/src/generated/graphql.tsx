@@ -43,6 +43,12 @@ export type CookbookValidator = {
   cookbookName: Scalars['String'];
 };
 
+export type FieldError = {
+  __typename?: 'FieldError';
+  field: Scalars['String'];
+  message: Scalars['String'];
+};
+
 export type Ingredient = {
   __typename?: 'Ingredient';
   createdAt: Scalars['DateTime'];
@@ -68,7 +74,7 @@ export type Mutation = {
   forgotPassword: Scalars['Boolean'];
   login: User;
   logout: Scalars['Boolean'];
-  register: User;
+  register: UserError;
   updateCookbook: Cookbook;
   updateRecipe: Recipe;
 };
@@ -237,6 +243,12 @@ export type User = {
   updatedAt: Scalars['DateTime'];
 };
 
+export type UserError = {
+  __typename?: 'UserError';
+  errors?: Maybe<Array<FieldError>>;
+  user?: Maybe<User>;
+};
+
 export type UserValidator = {
   email: Scalars['String'];
   firstName: Scalars['String'];
@@ -244,7 +256,11 @@ export type UserValidator = {
   password: Scalars['String'];
 };
 
-export type UserResonseFragment = { __typename?: 'User', id: string, email: string, firstName: string, lastName: string };
+export type ErrorResponseFragment = { __typename?: 'FieldError', field: string, message: string };
+
+export type UserErrorResponseFragment = { __typename?: 'UserError', errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null, user?: { __typename?: 'User', id: string, email: string, firstName: string, lastName: string } | null };
+
+export type UserResponseFragment = { __typename?: 'User', id: string, email: string, firstName: string, lastName: string };
 
 export type ChangePasswordMutationVariables = Exact<{
   newPassword: Scalars['String'];
@@ -301,7 +317,7 @@ export type RegisterMutationVariables = Exact<{
 }>;
 
 
-export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'User', id: string, email: string, firstName: string, lastName: string } };
+export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'UserError', errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null, user?: { __typename?: 'User', id: string, email: string, firstName: string, lastName: string } | null } };
 
 export type UpdateCookbookMutationVariables = Exact<{
   cookbookName: Scalars['String'];
@@ -347,14 +363,31 @@ export type MyUserQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type MyUserQuery = { __typename?: 'Query', myUser?: { __typename?: 'User', id: string, email: string, firstName: string, lastName: string } | null };
 
-export const UserResonseFragmentDoc = gql`
-    fragment UserResonse on User {
+export const ErrorResponseFragmentDoc = gql`
+    fragment ErrorResponse on FieldError {
+  field
+  message
+}
+    `;
+export const UserResponseFragmentDoc = gql`
+    fragment UserResponse on User {
   id
   email
   firstName
   lastName
 }
     `;
+export const UserErrorResponseFragmentDoc = gql`
+    fragment UserErrorResponse on UserError {
+  errors {
+    ...ErrorResponse
+  }
+  user {
+    ...UserResponse
+  }
+}
+    ${ErrorResponseFragmentDoc}
+${UserResponseFragmentDoc}`;
 export const ChangePasswordDocument = gql`
     mutation ChangePassword($newPassword: String!, $token: String!) {
   changePassword(newPassword: $newPassword, token: $token) {
@@ -414,10 +447,10 @@ export function useForgotPasswordMutation() {
 export const LoginDocument = gql`
     mutation Login($password: String!, $email: String!) {
   login(password: $password, email: $email) {
-    ...UserResonse
+    ...UserResponse
   }
 }
-    ${UserResonseFragmentDoc}`;
+    ${UserResponseFragmentDoc}`;
 
 export function useLoginMutation() {
   return Urql.useMutation<LoginMutation, LoginMutationVariables>(LoginDocument);
@@ -434,10 +467,10 @@ export function useLogoutMutation() {
 export const RegisterDocument = gql`
     mutation Register($input: UserValidator!) {
   register(input: $input) {
-    ...UserResonse
+    ...UserErrorResponse
   }
 }
-    ${UserResonseFragmentDoc}`;
+    ${UserErrorResponseFragmentDoc}`;
 
 export function useRegisterMutation() {
   return Urql.useMutation<RegisterMutation, RegisterMutationVariables>(RegisterDocument);
@@ -573,10 +606,10 @@ export function useGetSectionQuery(options: Omit<Urql.UseQueryArgs<GetSectionQue
 export const MyUserDocument = gql`
     query MyUser {
   myUser {
-    ...UserResonse
+    ...UserResponse
   }
 }
-    ${UserResonseFragmentDoc}`;
+    ${UserResponseFragmentDoc}`;
 
 export function useMyUserQuery(options?: Omit<Urql.UseQueryArgs<MyUserQueryVariables>, 'query'>) {
   return Urql.useQuery<MyUserQuery, MyUserQueryVariables>({ query: MyUserDocument, ...options });

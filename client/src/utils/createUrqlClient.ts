@@ -40,12 +40,12 @@ export const createUrqlClient = (ssrExchange: any) => ({
               { query: MyUserDocument },
               _result,
               (result, query) => {
-                if (result.register) {
-                  return {
-                    myUser: result.register,
-                  };
-                } else {
+                if (result.register.errors) {
                   return query;
+                } else {
+                  return {
+                    myUser: result.register.user,
+                  };
                 }
               }
             );

@@ -1,4 +1,4 @@
-fragment UserResonse on User {
+fragment UserResponse on User {
   id
   email
   firstName
