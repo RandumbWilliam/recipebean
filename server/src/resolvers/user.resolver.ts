@@ -76,29 +76,41 @@ export class UserResolver {
   }
 
   // Login
-  @Mutation(() => User)
+  @Mutation(() => UserError)
   public async login(
     @Arg("email") email: string,
     @Arg("password") password: string,
     @Ctx() { em, req }: MyContext
-  ): Promise<User> {
+  ): Promise<UserError> {
+    let errors = [];
+
     const userRepository = em.getRepository(User);
 
     const user = await userRepository.findOne({ email: email });
     if (!user) {
-      console.log("User does not exist");
-      throw new Error("User does not exist");
+      errors.push({
+        field: "email",
+        message: "User does not exist",
+      });
+      return { errors };
+      // console.log("User does not exist");
+      // throw new Error("User does not exist");
     }
 
     const valid = await argon2.verify(user.password, password);
     if (!valid) {
-      console.log("Wrong Password");
-      throw new Error("Incorrect password");
+      errors.push({
+        field: "password",
+        message: "Invalid password",
+      });
+      return { errors };
+      // console.log("Wrong Password");
+      // throw new Error("Incorrect password");
     }
 
     req.session!.userId = user.id;
 
-    return user;
+    return { user };
   }
 
   // Logout

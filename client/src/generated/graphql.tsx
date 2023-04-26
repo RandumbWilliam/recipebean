@@ -72,7 +72,7 @@ export type Mutation = {
   deleteCookbook: Scalars['Boolean'];
   deleteRecipe: Scalars['Boolean'];
   forgotPassword: Scalars['Boolean'];
-  login: User;
+  login: UserError;
   logout: Scalars['Boolean'];
   register: UserError;
   updateCookbook: Cookbook;
@@ -305,7 +305,7 @@ export type LoginMutationVariables = Exact<{
 }>;
 
 
-export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'User', id: string, email: string, firstName: string, lastName: string } };
+export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'UserError', errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null, user?: { __typename?: 'User', id: string, email: string, firstName: string, lastName: string } | null } };
 
 export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
 
@@ -447,10 +447,10 @@ export function useForgotPasswordMutation() {
 export const LoginDocument = gql`
     mutation Login($password: String!, $email: String!) {
   login(password: $password, email: $email) {
-    ...UserResponse
+    ...UserErrorResponse
   }
 }
-    ${UserResponseFragmentDoc}`;
+    ${UserErrorResponseFragmentDoc}`;
 
 export function useLoginMutation() {
   return Urql.useMutation<LoginMutation, LoginMutationVariables>(LoginDocument);

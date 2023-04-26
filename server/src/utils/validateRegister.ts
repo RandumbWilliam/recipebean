@@ -24,51 +24,41 @@ const validateName = (name: string) => {
 
 export const validateRegister = (options: UserValidator) => {
   let errors = [];
-  if (options.email === "") {
+  if (options.email === "" || !validateEmail(options.email)) {
     errors.push({
       field: "email",
-      message: "Required field!",
-    });
-  } else if (!validateEmail(options.email)) {
-    errors.push({
-      field: "email",
-      message: "Invalid email address!",
+      message: "Please enter a valid email address",
     });
   }
 
-  if (options.password === "") {
+  if (options.password === "" || !validatePassword(options.password)) {
     errors.push({
       field: "password",
-      message: "Required field!",
-    });
-  } else if (!validatePassword(options.password)) {
-    errors.push({
-      field: "password",
-      message: "Password must be at least 8 characters!",
+      message: "Password must be at least 8 characters",
     });
   }
 
   if (options.firstName === "") {
     errors.push({
       field: "firstName",
-      message: "Required field!",
+      message: "Please enter your first name",
     });
   } else if (!validateName(options.firstName)) {
     errors.push({
       field: "firstName",
-      message: "First name can only contain letters!",
+      message: "Name can only contain letters",
     });
   }
 
   if (options.lastName === "") {
     errors.push({
       field: "lastName",
-      message: "Required field!",
+      message: "Please enter your last name",
     });
   } else if (!validateName(options.lastName)) {
     errors.push({
       field: "lastName",
-      message: "Last name can only contain letters!",
+      message: "Name can only contain letters",
     });
   }
 

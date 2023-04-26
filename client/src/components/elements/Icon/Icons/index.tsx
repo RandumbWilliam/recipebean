@@ -14,3 +14,4 @@ export * from "./Trash";
 export * from "./Warning";
 export * from "./Camera";
 export * from "./Ingredient";
+export * from "./Error";

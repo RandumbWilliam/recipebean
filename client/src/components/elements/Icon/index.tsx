@@ -16,6 +16,7 @@ import {
   WarningIcon,
   CameraIcon,
   IngredientIcon,
+  ErrorIcon,
 } from "./Icons";
 
 interface IconProps {
@@ -42,6 +43,7 @@ export const Icons = {
   Warning: WarningIcon,
   Camera: CameraIcon,
   Ingredient: IngredientIcon,
+  Error: ErrorIcon,
 };
 
 const Icon: React.FC<IconProps> = ({

@@ -30,7 +30,7 @@ export const AuthCard = styled.form`
   justify-content: center;
   flex-direction: column;
   border-radius: 30px;
-  width: 485px;
+  width: 500px;
   height: 480px;
   background-color: #fff;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
@@ -40,4 +40,11 @@ export const AuthCard = styled.form`
 export const SubmitButton = styled(Button)`
   width: 200px;
   margin: 15px 0;
+`;
+
+export const ErrorText = styled.span`
+  color: #ff0033;
+  display: flex;
+  gap: 5px;
+  align-items: center;
 `;
