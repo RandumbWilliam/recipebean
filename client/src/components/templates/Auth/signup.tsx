@@ -47,8 +47,8 @@ const SignupTemplate: React.FC<{}> = ({}) => {
     <AuthSection>
       <StyledContainer>
         <AuthTitle>Create Account</AuthTitle>
-        <AuthCard onSubmit={handleSubmit}>
-          <Grid container direction="column" rowSpacing={2}>
+        <AuthCard noValidate onSubmit={handleSubmit}>
+          <Grid container direction="column" rowSpacing={3}>
             <Grid item xs>
               <Grid container direction="row" columnSpacing={2}>
                 <Grid item md={6}>

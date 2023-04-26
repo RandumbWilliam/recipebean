@@ -1,12 +1,38 @@
 import UserValidator from "contracts/validators/user.validator";
 import { User } from "entities/user.entity";
-import { Arg, Ctx, Query, Mutation, Resolver } from "type-graphql";
+import {
+  Arg,
+  Ctx,
+  Query,
+  Mutation,
+  Resolver,
+  ObjectType,
+  Field,
+} from "type-graphql";
 import { MyContext } from "utils/interfaces/context.interface";
 import argon2 from "argon2";
 import { v4 } from "uuid";
 import { sendEmail } from "utils/sendEmails";
 import { COOKIE_NAME, FORGET_PASSWORD_PREFIX } from "../constants";
 import { RequiredEntityData } from "@mikro-orm/core";
+import { validateRegister } from "utils/validateRegister";
+
+@ObjectType()
+class FieldError {
+  @Field()
+  field: string;
+  @Field()
+  message: string;
+}
+
+@ObjectType()
+class UserError {
+  @Field(() => [FieldError], { nullable: true })
+  errors?: FieldError[];
+
+  @Field(() => User, { nullable: true })
+  user?: User | null;
+}
 
 @Resolver(() => User)
 export class UserResolver {
@@ -24,11 +50,16 @@ export class UserResolver {
   }
 
   // Register
-  @Mutation(() => User)
+  @Mutation(() => UserError)
   public async register(
     @Arg("input") input: UserValidator,
     @Ctx() { em, req }: MyContext
-  ): Promise<User> {
+  ): Promise<UserError> {
+    const errors = validateRegister(input);
+    if (errors) {
+      return { errors };
+    }
+
     const hashedPassword = await argon2.hash(input.password);
 
     const user = em.create(User, {
@@ -41,33 +72,45 @@ export class UserResolver {
 
     req.session!.userId = user.id;
 
-    return user;
+    return { user };
   }
 
   // Login
-  @Mutation(() => User)
+  @Mutation(() => UserError)
   public async login(
     @Arg("email") email: string,
     @Arg("password") password: string,
     @Ctx() { em, req }: MyContext
-  ): Promise<User> {
+  ): Promise<UserError> {
+    let errors = [];
+
     const userRepository = em.getRepository(User);
 
     const user = await userRepository.findOne({ email: email });
     if (!user) {
-      console.log("User does not exist");
-      throw new Error("User does not exist");
+      errors.push({
+        field: "email",
+        message: "User does not exist",
+      });
+      return { errors };
+      // console.log("User does not exist");
+      // throw new Error("User does not exist");
     }
 
     const valid = await argon2.verify(user.password, password);
     if (!valid) {
-      console.log("Wrong Password");
-      throw new Error("Incorrect password");
+      errors.push({
+        field: "password",
+        message: "Invalid password",
+      });
+      return { errors };
+      // console.log("Wrong Password");
+      // throw new Error("Incorrect password");
     }
 
     req.session!.userId = user.id;
 
-    return user;
+    return { user };
   }
 
   // Logout
