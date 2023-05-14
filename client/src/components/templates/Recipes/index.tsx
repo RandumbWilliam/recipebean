@@ -5,17 +5,17 @@ import Button from "../../../components/elements/Button";
 import { useCreateCookbookMutation } from "../../../generated/graphql";
 import Icon from "../../elements/Icon";
 import {
+  CloseButton,
   Content,
   Header,
   ModalContainer,
   ModalHeader,
+  ModalTitle,
   SectionTitle,
+  StyledButton,
   StyledContainer,
   StyledInput,
   StyledModal,
-  StyledButton,
-  ModalTitle,
-  CloseButton,
 } from "./styles";
 
 interface RecipesProps {
@@ -33,8 +33,9 @@ const RecipesTemplate: React.FC<RecipesProps> = ({ header, children }) => {
   const [formData, setFormData] = useState(initialForm);
   const [, createCookbook] = useCreateCookbookMutation();
 
-  const handleOpenModal = () => {
-    setModalOpen(!modalOpen);
+  const handleRedirectCreateRecipe = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    router.push("/create-recipe");
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -56,7 +57,7 @@ const RecipesTemplate: React.FC<RecipesProps> = ({ header, children }) => {
       <StyledContainer>
         <Header>
           <SectionTitle>{header}</SectionTitle>
-          <Button onClick={handleOpenModal}>Add Recipe</Button>
+          <Button onClick={handleRedirectCreateRecipe}>Add Recipe</Button>
         </Header>
         <Grid container spacing={2}>
           {children}

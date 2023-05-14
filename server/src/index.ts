@@ -1,18 +1,24 @@
-import "reflect-metadata";
 import { MikroORM } from "@mikro-orm/core";
-import { COOKIE_NAME, __prod__ } from "./constants";
-import microConfig from "./orm.config";
-import express from "express";
+import { ApolloServerPluginLandingPageLocalDefault } from "apollo-server-core";
 import { ApolloServer } from "apollo-server-express";
-import { buildSchema } from "type-graphql";
-import { UserResolver } from "resolvers/user.resolver";
-import { RecipeResolver } from "resolvers/recipe.resolver";
-import { CookbookResolver } from "resolvers/cookbook.resolver";
-import { CookbookSectionResolver } from "resolvers/cookbook_section.resolver";
+import connectRedis from "connect-redis";
+import express from "express";
 import session from "express-session";
 import Redis from "ioredis";
-import connectRedis from "connect-redis";
-import { ApolloServerPluginLandingPageLocalDefault } from "apollo-server-core";
+import "reflect-metadata";
+import { CookbookResolver } from "resolvers/cookbook.resolver";
+import { CookbookSectionResolver } from "resolvers/cookbook_section.resolver";
+import { IngredientResolver } from "resolvers/ingredient.resolver";
+import { RecipeResolver } from "resolvers/recipe.resolver";
+import { UserResolver } from "resolvers/user.resolver";
+import { buildSchema, registerEnumType } from "type-graphql";
+import { COOKIE_NAME, __prod__ } from "./constants";
+import microConfig from "./orm.config";
+
+// registerEnumType(HeaderValue, {
+//   name: "HeaderValue",
+//   description: "Either it is a header or value (ingredient or instructions)",
+// });
 
 const main = async () => {
   const orm = await MikroORM.init(microConfig);
@@ -46,6 +52,7 @@ const main = async () => {
         UserResolver,
         CookbookResolver,
         CookbookSectionResolver,
+        IngredientResolver,
       ],
       validate: false,
     }),

@@ -1,0 +1,4 @@
+fragment RecipeHeaderIngredientResponse on RecipeHeaderIngredient {
+  order
+  header
+}

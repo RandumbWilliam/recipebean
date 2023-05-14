@@ -8,7 +8,7 @@ export default {
   },
   tsNode: process.env.NODE_DEV === "true" ? true : false,
   user: "postgres",
-  password: "password",
+  password: "2701",
   dbName: "product",
   host: "localhost",
   port: 5432,

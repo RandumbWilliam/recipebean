@@ -1,0 +1,6 @@
+fragment RecipeIngredientResponse on RecipeIngredient {
+  order
+  ingredient
+  quantity
+  unit
+}

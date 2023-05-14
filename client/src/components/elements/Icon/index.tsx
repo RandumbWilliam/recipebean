@@ -1,22 +1,23 @@
 import React from "react";
 import {
-  BasketIcon,
-  CookbookIcon,
-  HeartIcon,
-  MenuIcon,
-  UtensilsIcon,
-  CloseOutlineIcon,
-  StopwatchIcon,
-  HeartOutlineIcon,
-  PenIcon,
   AddCookbookIcon,
-  HorizontalKebabIcon,
-  VerticalKebabIcon,
-  TrashIcon,
-  WarningIcon,
+  BasketIcon,
   CameraIcon,
-  IngredientIcon,
+  CloseOutlineIcon,
+  CookbookIcon,
+  CrossIcon,
   ErrorIcon,
+  HeartIcon,
+  HeartOutlineIcon,
+  HorizontalKebabIcon,
+  IngredientIcon,
+  MenuIcon,
+  PenIcon,
+  StopwatchIcon,
+  TrashIcon,
+  UtensilsIcon,
+  VerticalKebabIcon,
+  WarningIcon,
 } from "./Icons";
 
 interface IconProps {
@@ -44,6 +45,7 @@ export const Icons = {
   Camera: CameraIcon,
   Ingredient: IngredientIcon,
   Error: ErrorIcon,
+  Cross: CrossIcon,
 };
 
 const Icon: React.FC<IconProps> = ({

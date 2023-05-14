@@ -1,0 +1,4 @@
+fragment RecipeHeaderInstructionResponse on RecipeHeaderInstruction {
+  order
+  header
+}

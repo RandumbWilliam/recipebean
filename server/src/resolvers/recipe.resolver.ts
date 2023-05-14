@@ -1,16 +1,14 @@
 import RecipeValidator from "contracts/validators/recipe.validator";
-import { User } from "entities/user.entity";
-import { Recipe } from "entities/recipe.entity";
-import { Arg, Ctx, Info, Mutation, Query, Resolver } from "type-graphql";
-import { MyContext } from "utils/interfaces/context.interface";
-import { parse } from "recipe-ingredient-parser-v3";
-import { Ingredient } from "entities/ingredient/ingredient.entity";
-import { RecipeIngredient } from "entities/recipe_ingredient.entity";
-import { Quantity } from "entities/ingredient/quantity.entity";
-import { Unit } from "entities/ingredient/unit.entity";
-import { CookbookSection } from "entities/cookbook_section.entity";
-import { RecipeHeader } from "entities/recipe_header.entity";
 import { Cookbook } from "entities/cookbook.entity";
+import { CookbookSection } from "entities/cookbook_section.entity";
+import { Recipe } from "entities/recipe.entity";
+import { RecipeHeaderIngredient } from "entities/recipe_header_ingredient.entity";
+import { RecipeHeaderInstruction } from "entities/recipe_header_instruction.entity";
+import { RecipeIngredient } from "entities/recipe_ingredient.entity";
+import { RecipeInstruction } from "entities/recipe_instruction.entity";
+import { User } from "entities/user.entity";
+import { Arg, Ctx, Mutation, Query, Resolver } from "type-graphql";
+import { MyContext } from "utils/interfaces/context.interface";
 
 @Resolver(() => Recipe)
 export class RecipeResolver {
@@ -25,10 +23,10 @@ export class RecipeResolver {
       { creator },
       {
         populate: [
-          "recipeIngredient.ingredients",
-          "recipeIngredient.units",
-          "recipeIngredient.quantities",
-          "recipeHeader.headerName",
+          "recipeIngredient",
+          "recipeInstruction",
+          "recipeHeaderIngredient",
+          "recipeHeaderInstruction",
         ],
       }
     );
@@ -47,10 +45,10 @@ export class RecipeResolver {
       { id },
       {
         populate: [
-          "recipeIngredient.ingredients",
-          "recipeIngredient.units",
-          "recipeIngredient.quantities",
-          "recipeHeader.headerName",
+          "recipeIngredient",
+          "recipeInstruction",
+          "recipeHeaderIngredient",
+          "recipeHeaderInstruction",
         ],
       }
     );
@@ -69,9 +67,6 @@ export class RecipeResolver {
     const userRepository = em.getRepository(User);
     const cookbookRepository = em.getRepository(Cookbook);
     const sectionRepository = em.getRepository(CookbookSection);
-    const ingredientRepository = em.getRepository(Ingredient);
-    const quantityRepository = em.getRepository(Quantity);
-    const unitRepository = em.getRepository(Unit);
 
     const creator = await userRepository.findOneOrFail({
       id: req.session.userId,
@@ -97,66 +92,47 @@ export class RecipeResolver {
 
     await em.persistAndFlush(recipe);
 
-    for (var i = 0; i < input.ingredients.length; i++) {
-      let raw_ingredient = input.ingredients[i];
+    for (const ingredientItem of input.ingredients) {
+      const ingredientEntity = em.create(RecipeIngredient, {
+        order: ingredientItem.order,
+        ingredient: ingredientItem.ingredient,
+        unit: ingredientItem.unit,
+        quantity: ingredientItem.quantity,
+      });
+      ingredientEntity.recipes = recipe;
 
-      if (raw_ingredient.type == "header") {
-        const header = em.create(RecipeHeader, {
-          order: i,
-          headerName: raw_ingredient.value,
-        });
-        header.recipes = recipe;
+      await em.persistAndFlush(ingredientEntity);
+    }
 
-        await em.persistAndFlush(header);
-      } else if (raw_ingredient.type == "ingredient") {
-        let { quantity, unit, ingredient } = parse(raw_ingredient.value, "eng");
+    for (const ingredientHeaderItem of input.ingredientHeaders) {
+      const ingredientHeaderEntity = em.create(RecipeHeaderIngredient, {
+        order: ingredientHeaderItem.order,
+        header: ingredientHeaderItem.header,
+      });
+      ingredientHeaderEntity.recipes = recipe;
 
-        let ingredientValue = await ingredientRepository.findOne({
-          ingredient,
-        });
+      await em.persistAndFlush(ingredientHeaderEntity);
+    }
 
-        let quantityValue = await quantityRepository.findOne({
-          quantity: quantity.toString(),
-        });
+    for (const instructionItem of input.instructions) {
+      const instructionEntity = em.create(RecipeInstruction, {
+        order: instructionItem.order,
+        instruction: instructionItem.instruction,
+        step: instructionItem.step,
+      });
+      instructionEntity.recipes = recipe;
 
-        let unitValue = await unitRepository.findOne({
-          unit,
-        });
+      await em.persistAndFlush(instructionEntity);
+    }
 
-        if (!ingredientValue) {
-          ingredientValue = em.create(Ingredient, {
-            ingredient,
-          });
+    for (const instructionHeaderItem of input.instructionHeaders) {
+      const instructionHeaderEntity = em.create(RecipeHeaderInstruction, {
+        order: instructionHeaderItem.order,
+        header: instructionHeaderItem.header,
+      });
+      instructionHeaderEntity.recipes = recipe;
 
-          await em.persistAndFlush(ingredientValue);
-        }
-
-        if (!quantityValue) {
-          quantityValue = em.create(Quantity, {
-            quantity: quantity.toString(),
-          });
-
-          await em.persistAndFlush(quantityValue);
-        }
-
-        if (!unitValue) {
-          unitValue = em.create(Unit, {
-            unit,
-          });
-
-          await em.persistAndFlush(unitValue);
-        }
-
-        const recipeIngredient = em.create(RecipeIngredient, {
-          order: i,
-        });
-        recipeIngredient.recipes = recipe;
-        recipeIngredient.ingredients = ingredientValue;
-        recipeIngredient.quantities = quantityValue;
-        recipeIngredient.units = unitValue;
-
-        await em.persistAndFlush(recipeIngredient);
-      }
+      await em.persistAndFlush(instructionHeaderEntity);
     }
 
     return recipe;
