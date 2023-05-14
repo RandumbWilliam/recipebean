@@ -21,7 +21,7 @@ export const ErrorIcon: React.FC<Props> = ({ className, size, color }) => {
           <rect width="52" height="52" />
         </clipPath>
       </defs>
-      <g id="Error" clip-path="url(#clip-Error)">
+      <g id="Error" clipPath="url(#clip-Error)">
         <g id="error-2" data-name="error" transform="translate(-2.171 -0.643)">
           <circle
             id="Ellipse_4"
@@ -41,8 +41,8 @@ export const ErrorIcon: React.FC<Props> = ({ className, size, color }) => {
             id="path1307"
             transform="translate(0.171 -1.357)"
             fill="none"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           >
             <path
               d="M54,28A26,26,0,1,1,28,2,26,26,0,0,1,54,28Z"

@@ -21,7 +21,7 @@ export const CameraIcon: React.FC<Props> = ({ className, size, color }) => {
           <rect width="52" height="52" />
         </clipPath>
       </defs>
-      <g id="Camera" clip-path="url(#clip-Camera)">
+      <g id="Camera" clipPath="url(#clip-Camera)">
         <g id="camera-2" data-name="camera" transform="translate(0 6)">
           <path
             id="Path_20"

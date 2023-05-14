@@ -21,7 +21,7 @@ export const IngredientIcon: React.FC<Props> = ({ className, size, color }) => {
           <rect width="52" height="52" />
         </clipPath>
       </defs>
-      <g id="Ingredient" clip-path="url(#clip-Ingredient)">
+      <g id="Ingredient" clipPath="url(#clip-Ingredient)">
         <g id="ingredients" transform="translate(-0.086 977.259)">
           <path
             id="Path_25"

@@ -10,10 +10,12 @@ import RecipeValidator from "contracts/validators/recipe.validator";
 import { User } from "entities/user.entity";
 import { Field, ObjectType } from "type-graphql";
 import { Base } from "utils/entities/base.entity";
-import { RecipeIngredient } from "./recipe_ingredient.entity";
-import { CookbookSection } from "./cookbook_section.entity";
-import { RecipeHeader } from "./recipe_header.entity";
 import { Cookbook } from "./cookbook.entity";
+import { CookbookSection } from "./cookbook_section.entity";
+import { RecipeHeaderIngredient } from "./recipe_header_ingredient.entity";
+import { RecipeHeaderInstruction } from "./recipe_header_instruction.entity";
+import { RecipeIngredient } from "./recipe_ingredient.entity";
+import { RecipeInstruction } from "./recipe_instruction.entity";
 
 @ObjectType()
 @Entity({ schema: "recipes" })
@@ -34,17 +36,39 @@ export class Recipe extends Base<Recipe> {
   @Property()
   public cookTime: number;
 
+  @Field(() => [RecipeHeaderIngredient])
+  @OneToMany(
+    () => RecipeHeaderIngredient,
+    (recipeHeaderIngredient) => recipeHeaderIngredient.recipes,
+    {
+      cascade: [Cascade.ALL],
+    }
+  )
+  public recipeHeaderIngredient = new Collection<RecipeHeaderIngredient>(this);
+
+  @Field(() => [RecipeHeaderInstruction])
+  @OneToMany(
+    () => RecipeHeaderInstruction,
+    (recipeHeaderInstruction) => recipeHeaderInstruction.recipes,
+    {
+      cascade: [Cascade.ALL],
+    }
+  )
+  public recipeHeaderInstruction = new Collection<RecipeHeaderInstruction>(
+    this
+  );
+
   @Field(() => [RecipeIngredient])
   @OneToMany(() => RecipeIngredient, (r: RecipeIngredient) => r.recipes, {
     cascade: [Cascade.ALL],
   })
   public recipeIngredient = new Collection<RecipeIngredient>(this);
 
-  @Field(() => [RecipeHeader])
-  @OneToMany(() => RecipeHeader, (recipeHeader) => recipeHeader.recipes, {
+  @Field(() => [RecipeInstruction])
+  @OneToMany(() => RecipeInstruction, (r: RecipeInstruction) => r.recipes, {
     cascade: [Cascade.ALL],
   })
-  public recipeHeader = new Collection<RecipeHeader>(this);
+  public recipeInstruction = new Collection<RecipeInstruction>(this);
 
   @ManyToOne(() => CookbookSection, { onDelete: "cascade" })
   public section: CookbookSection;

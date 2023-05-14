@@ -1,34 +1,21 @@
+import InputBase from "@mui/material/InputBase";
 import styled from "styled-components";
 
 interface Props {
   error?: boolean;
 }
 
-export const InputContainer = styled.div`
-  display: flex;
-  flex-direction: column;
+export const TextFieldContainer = styled.div`
   width: 100%;
-  position: relative;
-  justify-content: center;
 `;
 
-export const Label = styled.label`
-  font-size: 16px;
-  font-weight: 500;
-  padding-left: 8px;
-`;
-
-export const Adornment = styled.div`
-  position: absolute;
-  right: 15px;
-`;
-
-export const Field = styled.input<Props>`
+export const StyledTextField = styled(InputBase)<Props>`
+  width: 100%;
+  height: 40px;
+  font-size: 14px;
   background-color: #eef1f7;
   border-radius: 8px;
-  width: 100%;
   padding: 12px 15px;
-  border: 0;
   border: 1.2px solid ${({ error }) => (error ? "#ff0033" : "#D0E0E4")};
   ::placeholder {
     color: #b9bdc3;
@@ -36,5 +23,8 @@ export const Field = styled.input<Props>`
   &:focus {
     border: 1.2px solid ${({ error }) => (error ? "#ff0033" : "#D0E0E4")};
     outline: none;
+  }
+  & > .MuiInputBase-input {
+    padding: 0;
   }
 `;

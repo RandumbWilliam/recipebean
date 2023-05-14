@@ -1,17 +1,8 @@
-import { IsString, IsNumber, IsArray } from "class-validator";
-import { Field, InputType, ObjectType } from "type-graphql";
-import { Property } from "@mikro-orm/core";
-
-@InputType()
-class IngredientType {
-  @Field()
-  @Property()
-  public type: "ingredient" | "header";
-
-  @Field()
-  @Property()
-  public value: string;
-}
+import { IsArray, IsInt, IsString } from "class-validator";
+import { Field, InputType } from "type-graphql";
+import RecipeHeaderValidator from "./recipe_header.validator";
+import RecipeIngredientValidator from "./recipe_ingredient.validator";
+import RecipeInstructionValidator from "./recipe_instruction.validator";
 
 @InputType()
 class RecipeValidator {
@@ -20,20 +11,32 @@ class RecipeValidator {
   public recipeName: string;
 
   @Field()
-  @IsNumber()
+  @IsInt()
   public servings: number;
 
   @Field()
-  @IsNumber()
+  @IsInt()
   public prepTime: number;
 
   @Field()
-  @IsNumber()
+  @IsInt()
   public cookTime: number;
 
-  @Field(() => [IngredientType])
+  @Field(() => [RecipeIngredientValidator])
   @IsArray()
-  public ingredients: IngredientType[];
+  public ingredients: RecipeIngredientValidator[];
+
+  @Field(() => [RecipeInstructionValidator])
+  @IsArray()
+  public instructions: RecipeInstructionValidator[];
+
+  @Field(() => [RecipeHeaderValidator])
+  @IsArray()
+  public ingredientHeaders: RecipeHeaderValidator[];
+
+  @Field(() => [RecipeHeaderValidator])
+  @IsArray()
+  public instructionHeaders: RecipeHeaderValidator[];
 }
 
 export default RecipeValidator;

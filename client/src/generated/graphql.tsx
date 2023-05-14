@@ -49,20 +49,6 @@ export type FieldError = {
   message: Scalars['String'];
 };
 
-export type Ingredient = {
-  __typename?: 'Ingredient';
-  createdAt: Scalars['DateTime'];
-  id: Scalars['ID'];
-  ingredient: Scalars['String'];
-  recipeIngredients: Array<RecipeIngredient>;
-  updatedAt: Scalars['DateTime'];
-};
-
-export type IngredientType = {
-  type: Scalars['String'];
-  value: Scalars['String'];
-};
-
 export type Mutation = {
   __typename?: 'Mutation';
   changePassword: User;
@@ -74,6 +60,7 @@ export type Mutation = {
   forgotPassword: Scalars['Boolean'];
   login: UserError;
   logout: Scalars['Boolean'];
+  parseIngredient: ParsedIngredient;
   register: UserError;
   updateCookbook: Cookbook;
   updateRecipe: Recipe;
@@ -125,6 +112,11 @@ export type MutationLoginArgs = {
 };
 
 
+export type MutationParseIngredientArgs = {
+  strIngredient: Scalars['String'];
+};
+
+
 export type MutationRegisterArgs = {
   input: UserValidator;
 };
@@ -141,13 +133,11 @@ export type MutationUpdateRecipeArgs = {
   input: RecipeValidator;
 };
 
-export type Quantity = {
-  __typename?: 'Quantity';
-  createdAt: Scalars['DateTime'];
-  id: Scalars['ID'];
-  quantity: Scalars['String'];
-  recipeIngredients: Array<RecipeIngredient>;
-  updatedAt: Scalars['DateTime'];
+export type ParsedIngredient = {
+  __typename?: 'ParsedIngredient';
+  ingredient: Scalars['String'];
+  quantity: Scalars['Float'];
+  unit: Scalars['String'];
 };
 
 export type Query = {
@@ -187,50 +177,85 @@ export type Recipe = {
   createdAt: Scalars['DateTime'];
   id: Scalars['ID'];
   prepTime: Scalars['Float'];
-  recipeHeader: Array<RecipeHeader>;
+  recipeHeaderIngredient: Array<RecipeHeaderIngredient>;
+  recipeHeaderInstruction: Array<RecipeHeaderInstruction>;
   recipeIngredient: Array<RecipeIngredient>;
+  recipeInstruction: Array<RecipeInstruction>;
   recipeName: Scalars['String'];
   servings: Scalars['Float'];
   updatedAt: Scalars['DateTime'];
 };
 
-export type RecipeHeader = {
-  __typename?: 'RecipeHeader';
+export type RecipeHeaderIngredient = {
+  __typename?: 'RecipeHeaderIngredient';
   createdAt: Scalars['DateTime'];
-  headerName: Scalars['String'];
+  header: Scalars['String'];
   id: Scalars['ID'];
   order: Scalars['Float'];
   recipes: Recipe;
   updatedAt: Scalars['DateTime'];
+};
+
+export type RecipeHeaderInstruction = {
+  __typename?: 'RecipeHeaderInstruction';
+  createdAt: Scalars['DateTime'];
+  header: Scalars['String'];
+  id: Scalars['ID'];
+  order: Scalars['Float'];
+  recipes: Recipe;
+  updatedAt: Scalars['DateTime'];
+};
+
+export type RecipeHeaderValidator = {
+  header: Scalars['String'];
+  order: Scalars['Float'];
 };
 
 export type RecipeIngredient = {
   __typename?: 'RecipeIngredient';
   createdAt: Scalars['DateTime'];
   id: Scalars['ID'];
-  ingredients: Ingredient;
+  ingredient: Scalars['String'];
   order: Scalars['Float'];
-  quantities: Quantity;
+  quantity: Scalars['Float'];
   recipes: Recipe;
-  units: Unit;
+  unit: Scalars['String'];
   updatedAt: Scalars['DateTime'];
+};
+
+export type RecipeIngredientValidator = {
+  ingredient: Scalars['String'];
+  order: Scalars['Float'];
+  quantity: Scalars['Float'];
+  unit: Scalars['String'];
+};
+
+export type RecipeInstruction = {
+  __typename?: 'RecipeInstruction';
+  createdAt: Scalars['DateTime'];
+  id: Scalars['ID'];
+  instruction: Scalars['String'];
+  order: Scalars['Float'];
+  recipes: Recipe;
+  step: Scalars['Float'];
+  updatedAt: Scalars['DateTime'];
+};
+
+export type RecipeInstructionValidator = {
+  instruction: Scalars['String'];
+  order: Scalars['Float'];
+  step: Scalars['Float'];
 };
 
 export type RecipeValidator = {
   cookTime: Scalars['Float'];
-  ingredients: Array<IngredientType>;
+  ingredientHeaders: Array<RecipeHeaderValidator>;
+  ingredients: Array<RecipeIngredientValidator>;
+  instructionHeaders: Array<RecipeHeaderValidator>;
+  instructions: Array<RecipeInstructionValidator>;
   prepTime: Scalars['Float'];
   recipeName: Scalars['String'];
   servings: Scalars['Float'];
-};
-
-export type Unit = {
-  __typename?: 'Unit';
-  createdAt: Scalars['DateTime'];
-  id: Scalars['ID'];
-  recipeIngredients: Array<RecipeIngredient>;
-  unit: Scalars['String'];
-  updatedAt: Scalars['DateTime'];
 };
 
 export type User = {
@@ -257,6 +282,14 @@ export type UserValidator = {
 };
 
 export type ErrorResponseFragment = { __typename?: 'FieldError', field: string, message: string };
+
+export type RecipeHeaderIngredientResponseFragment = { __typename?: 'RecipeHeaderIngredient', order: number, header: string };
+
+export type RecipeHeaderInstructionResponseFragment = { __typename?: 'RecipeHeaderInstruction', order: number, header: string };
+
+export type RecipeIngredientResponseFragment = { __typename?: 'RecipeIngredient', order: number, ingredient: string, quantity: number, unit: string };
+
+export type RecipeInstructionResponseFragment = { __typename?: 'RecipeInstruction', order: number, step: number, instruction: string };
 
 export type UserErrorResponseFragment = { __typename?: 'UserError', errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null, user?: { __typename?: 'User', id: string, email: string, firstName: string, lastName: string } | null };
 
@@ -312,6 +345,13 @@ export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
 
 export type LogoutMutation = { __typename?: 'Mutation', logout: boolean };
 
+export type ParseIngredientMutationVariables = Exact<{
+  strIngredient: Scalars['String'];
+}>;
+
+
+export type ParseIngredientMutation = { __typename?: 'Mutation', parseIngredient: { __typename?: 'ParsedIngredient', unit: string, ingredient: string, quantity: number } };
+
 export type RegisterMutationVariables = Exact<{
   input: UserValidator;
 }>;
@@ -344,12 +384,12 @@ export type GetRecipeByIdQueryVariables = Exact<{
 }>;
 
 
-export type GetRecipeByIdQuery = { __typename?: 'Query', getRecipe?: { __typename?: 'Recipe', id: string, recipeName: string, servings: number, prepTime: number, cookTime: number, recipeIngredient: Array<{ __typename?: 'RecipeIngredient', order: number, ingredients: { __typename?: 'Ingredient', ingredient: string }, units: { __typename?: 'Unit', unit: string }, quantities: { __typename?: 'Quantity', quantity: string } }>, recipeHeader: Array<{ __typename?: 'RecipeHeader', order: number, headerName: string }> } | null };
+export type GetRecipeByIdQuery = { __typename?: 'Query', getRecipe?: { __typename?: 'Recipe', id: string, recipeName: string, servings: number, prepTime: number, cookTime: number, recipeIngredient: Array<{ __typename?: 'RecipeIngredient', order: number, ingredient: string, quantity: number, unit: string }>, recipeInstruction: Array<{ __typename?: 'RecipeInstruction', order: number, instruction: string }>, recipeHeaderIngredient: Array<{ __typename?: 'RecipeHeaderIngredient', order: number, header: string }>, recipeHeaderInstruction: Array<{ __typename?: 'RecipeHeaderInstruction', order: number, header: string }> } | null };
 
 export type GetRecipesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetRecipesQuery = { __typename?: 'Query', getRecipes: Array<{ __typename?: 'Recipe', id: string, recipeName: string, servings: number, prepTime: number, cookTime: number, recipeIngredient: Array<{ __typename?: 'RecipeIngredient', order: number, ingredients: { __typename?: 'Ingredient', ingredient: string }, units: { __typename?: 'Unit', unit: string }, quantities: { __typename?: 'Quantity', quantity: string } }>, recipeHeader: Array<{ __typename?: 'RecipeHeader', order: number, headerName: string }> }> };
+export type GetRecipesQuery = { __typename?: 'Query', getRecipes: Array<{ __typename?: 'Recipe', id: string, recipeName: string, servings: number, prepTime: number, cookTime: number, recipeIngredient: Array<{ __typename?: 'RecipeIngredient', order: number, ingredient: string, quantity: number, unit: string }>, recipeInstruction: Array<{ __typename?: 'RecipeInstruction', order: number, instruction: string }>, recipeHeaderIngredient: Array<{ __typename?: 'RecipeHeaderIngredient', order: number, header: string }>, recipeHeaderInstruction: Array<{ __typename?: 'RecipeHeaderInstruction', order: number, header: string }> }> };
 
 export type GetSectionQueryVariables = Exact<{
   getSectionId: Scalars['String'];
@@ -363,6 +403,33 @@ export type MyUserQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type MyUserQuery = { __typename?: 'Query', myUser?: { __typename?: 'User', id: string, email: string, firstName: string, lastName: string } | null };
 
+export const RecipeHeaderIngredientResponseFragmentDoc = gql`
+    fragment RecipeHeaderIngredientResponse on RecipeHeaderIngredient {
+  order
+  header
+}
+    `;
+export const RecipeHeaderInstructionResponseFragmentDoc = gql`
+    fragment RecipeHeaderInstructionResponse on RecipeHeaderInstruction {
+  order
+  header
+}
+    `;
+export const RecipeIngredientResponseFragmentDoc = gql`
+    fragment RecipeIngredientResponse on RecipeIngredient {
+  order
+  ingredient
+  quantity
+  unit
+}
+    `;
+export const RecipeInstructionResponseFragmentDoc = gql`
+    fragment RecipeInstructionResponse on RecipeInstruction {
+  order
+  step
+  instruction
+}
+    `;
 export const ErrorResponseFragmentDoc = gql`
     fragment ErrorResponse on FieldError {
   field
@@ -464,6 +531,19 @@ export const LogoutDocument = gql`
 export function useLogoutMutation() {
   return Urql.useMutation<LogoutMutation, LogoutMutationVariables>(LogoutDocument);
 };
+export const ParseIngredientDocument = gql`
+    mutation ParseIngredient($strIngredient: String!) {
+  parseIngredient(strIngredient: $strIngredient) {
+    unit
+    ingredient
+    quantity
+  }
+}
+    `;
+
+export function useParseIngredientMutation() {
+  return Urql.useMutation<ParseIngredientMutation, ParseIngredientMutationVariables>(ParseIngredientDocument);
+};
 export const RegisterDocument = gql`
     mutation Register($input: UserValidator!) {
   register(input: $input) {
@@ -533,19 +613,21 @@ export const GetRecipeByIdDocument = gql`
     cookTime
     recipeIngredient {
       order
-      ingredients {
-        ingredient
-      }
-      units {
-        unit
-      }
-      quantities {
-        quantity
-      }
+      ingredient
+      quantity
+      unit
     }
-    recipeHeader {
+    recipeInstruction {
       order
-      headerName
+      instruction
+    }
+    recipeHeaderIngredient {
+      order
+      header
+    }
+    recipeHeaderInstruction {
+      order
+      header
     }
   }
 }
@@ -564,19 +646,21 @@ export const GetRecipesDocument = gql`
     cookTime
     recipeIngredient {
       order
-      ingredients {
-        ingredient
-      }
-      units {
-        unit
-      }
-      quantities {
-        quantity
-      }
+      ingredient
+      quantity
+      unit
     }
-    recipeHeader {
+    recipeInstruction {
       order
-      headerName
+      instruction
+    }
+    recipeHeaderIngredient {
+      order
+      header
+    }
+    recipeHeaderInstruction {
+      order
+      header
     }
   }
 }

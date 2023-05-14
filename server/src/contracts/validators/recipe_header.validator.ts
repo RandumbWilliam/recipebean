@@ -9,7 +9,7 @@ class RecipeHeaderValidator {
 
   @Field()
   @IsString()
-  headerTitle: string;
+  header: string;
 }
 
 export default RecipeHeaderValidator;

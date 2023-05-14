@@ -1,0 +1,7 @@
+mutation ParseIngredient($strIngredient: String!) {
+  parseIngredient(strIngredient: $strIngredient) {
+    unit
+    ingredient
+    quantity
+  }
+}

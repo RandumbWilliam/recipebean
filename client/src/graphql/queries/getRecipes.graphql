@@ -7,19 +7,21 @@ query GetRecipes {
     cookTime
     recipeIngredient {
       order
-      ingredients {
-        ingredient
-      }
-      units {
-        unit
-      }
-      quantities {
-        quantity
-      }
+      ingredient
+      quantity
+      unit
     }
-    recipeHeader {
+    recipeInstruction {
       order
-      headerName
+      instruction
+    }
+    recipeHeaderIngredient {
+      order
+      header
+    }
+    recipeHeaderInstruction {
+      order
+      header
     }
   }
 }

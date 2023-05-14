@@ -1,8 +1,9 @@
-import React, { useState } from "react";
-import { useRouter } from "next/router";
-import { Grid } from "@mui/material";
-import { FieldError } from "@generated/graphql";
+import Icon from "@components/elements/Icon";
 import Input from "@components/elements/Input";
+import { FieldError, useLoginMutation } from "@generated/graphql";
+import { Grid } from "@mui/material";
+import { useRouter } from "next/router";
+import React, { useState } from "react";
 import {
   AuthCard,
   AuthSection,
@@ -11,8 +12,6 @@ import {
   StyledContainer,
   SubmitButton,
 } from "./styles";
-import { useLoginMutation } from "@generated/graphql";
-import Icon from "@components/elements/Icon";
 
 const initialForm = {
   email: "",
@@ -79,7 +78,7 @@ const LoginTemplate: React.FC<{}> = ({}) => {
             {errors && (
               <Grid display="flex" item justifyContent="center">
                 {errors.map((error) => (
-                  <ErrorText>
+                  <ErrorText key={error.field}>
                     <Icon name="Error" color="#ff0033" />{" "}
                     <span>{error?.message}</span>
                   </ErrorText>

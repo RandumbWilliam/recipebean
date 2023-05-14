@@ -1,12 +1,13 @@
 import React, { ChangeEvent } from "react";
-import { InputContainer, Field, Label } from "./styles";
+import { Adornment, Field, InputContainer, Label } from "./styles";
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   className?: string;
-  placeholder: string;
+  placeholder?: string;
   label?: string;
   name: string;
   error?: boolean;
+  adornment?: JSX.Element | null;
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
 }
 
@@ -18,11 +19,13 @@ const Input: React.FC<InputProps> = ({
   label,
   name,
   error,
+  adornment,
   onChange,
 }) => {
   return (
     <InputContainer className={className}>
       <Label>{label}</Label>
+      {adornment && <Adornment>{adornment}</Adornment>}
       <Field
         value={value}
         type={type}
