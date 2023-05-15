@@ -1,8 +1,8 @@
+import CookbookValidator from "contracts/validators/cookbook.validator";
+import { Cookbook } from "entities/cookbook.entity";
 import { User } from "entities/user.entity";
 import { Arg, Ctx, Mutation, Query, Resolver } from "type-graphql";
 import { MyContext } from "utils/interfaces/context.interface";
-import { Cookbook } from "entities/cookbook.entity";
-import CookbookValidator from "contracts/validators/cookbook.validator";
 
 @Resolver(() => Cookbook)
 export class CookbookResolver {
@@ -18,7 +18,7 @@ export class CookbookResolver {
     const cookbooks = await cookbookRepository.find(
       { creator },
       {
-        populate: ["recipes.id", "sections.id"],
+        populate: ["recipes.id"],
       }
     );
 
@@ -35,7 +35,7 @@ export class CookbookResolver {
     const cookbook = await cookbookRepository.findOne(
       { id },
       {
-        populate: ["recipes.id", "sections.sectionName"],
+        populate: ["recipes.id"],
       }
     );
 

@@ -1,6 +1,5 @@
 import RecipeValidator from "contracts/validators/recipe.validator";
 import { Cookbook } from "entities/cookbook.entity";
-import { CookbookSection } from "entities/cookbook_section.entity";
 import { Recipe } from "entities/recipe.entity";
 import { RecipeHeaderIngredient } from "entities/recipe_header_ingredient.entity";
 import { RecipeHeaderInstruction } from "entities/recipe_header_instruction.entity";
@@ -66,15 +65,15 @@ export class RecipeResolver {
   ): Promise<Recipe> {
     const userRepository = em.getRepository(User);
     const cookbookRepository = em.getRepository(Cookbook);
-    const sectionRepository = em.getRepository(CookbookSection);
+    // const sectionRepository = em.getRepository(CookbookSection);
 
     const creator = await userRepository.findOneOrFail({
       id: req.session.userId,
     });
 
-    const section = await sectionRepository.findOneOrFail({
-      id: sectionId,
-    });
+    // const section = await sectionRepository.findOneOrFail({
+    //   id: sectionId,
+    // });
 
     const cookbook = await cookbookRepository.findOneOrFail({
       id: cookbookId,
@@ -87,7 +86,7 @@ export class RecipeResolver {
       cookTime: input.cookTime,
     });
     recipe.creator = creator;
-    recipe.section = section;
+    // recipe.section = section;
     recipe.cookbook = cookbook;
 
     await em.persistAndFlush(recipe);

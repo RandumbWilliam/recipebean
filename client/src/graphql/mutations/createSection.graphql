@@ -1,9 +1,0 @@
-mutation CreateSection(
-  $cookbookId: String!
-  $input: CookbookSectionValidator!
-) {
-  createSection(cookbookId: $cookbookId, input: $input) {
-    sectionName
-    id
-  }
-}
