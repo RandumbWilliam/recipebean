@@ -3,10 +3,7 @@ import { useRouter } from "next/router";
 import React from "react";
 import BeanLayout from "../../components/layouts/Bean";
 import CookbookTemplate from "../../components/templates/Cookbook";
-import {
-  useGetCookbookQuery,
-  useGetSectionQuery,
-} from "../../generated/graphql";
+import { useGetCookbookQuery } from "../../generated/graphql";
 import { createUrqlClient } from "../../utils/createUrqlClient";
 
 const TestCookbook = () => {
@@ -26,12 +23,6 @@ const TestCookbook = () => {
     },
   });
 
-  const [{ data: sectionData }] = useGetSectionQuery({
-    variables: {
-      getSectionId: sectionId,
-    },
-  });
-
   return (
     <BeanLayout>
       {params.length === 0 ? (
@@ -39,11 +30,9 @@ const TestCookbook = () => {
       ) : (
         <CookbookTemplate
           cookbookId={cookbookId}
-          sectionId={sectionId}
           cookbookName={cookbookData?.getCookbook.cookbookName}
-          sections={cookbookData?.getCookbook.sections}
           recipeCount={cookbookData?.getCookbook.recipes.length}
-          recipes={sectionData?.getSection.recipes}
+          recipes={cookbookData?.getCookbook.recipes}
         />
       )}
     </BeanLayout>

@@ -11,7 +11,6 @@ import { User } from "entities/user.entity";
 import { Field, ObjectType } from "type-graphql";
 import { Base } from "utils/entities/base.entity";
 import { Cookbook } from "./cookbook.entity";
-import { CookbookSection } from "./cookbook_section.entity";
 import { RecipeHeaderIngredient } from "./recipe_header_ingredient.entity";
 import { RecipeHeaderInstruction } from "./recipe_header_instruction.entity";
 import { RecipeIngredient } from "./recipe_ingredient.entity";
@@ -69,9 +68,6 @@ export class Recipe extends Base<Recipe> {
     cascade: [Cascade.ALL],
   })
   public recipeInstruction = new Collection<RecipeInstruction>(this);
-
-  @ManyToOne(() => CookbookSection, { onDelete: "cascade" })
-  public section: CookbookSection;
 
   @ManyToOne(() => Cookbook, { onDelete: "cascade" })
   public cookbook: Cookbook;

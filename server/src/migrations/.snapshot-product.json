@@ -209,86 +209,6 @@
           "length": 6,
           "mappedType": "datetime"
         },
-        "section_name": {
-          "name": "section_name",
-          "type": "varchar(255)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "string"
-        },
-        "cookbook_id": {
-          "name": "cookbook_id",
-          "type": "uuid",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "uuid"
-        }
-      },
-      "name": "cookbook_section",
-      "schema": "recipes",
-      "indexes": [
-        {
-          "keyName": "cookbook_section_pkey",
-          "columnNames": [
-            "id"
-          ],
-          "composite": false,
-          "primary": true,
-          "unique": true
-        }
-      ],
-      "checks": [],
-      "foreignKeys": {
-        "cookbook_section_cookbook_id_foreign": {
-          "constraintName": "cookbook_section_cookbook_id_foreign",
-          "columnNames": [
-            "cookbook_id"
-          ],
-          "localTableName": "recipes.cookbook_section",
-          "referencedColumnNames": [
-            "id"
-          ],
-          "referencedTableName": "recipes.cookbook",
-          "deleteRule": "cascade",
-          "updateRule": "cascade"
-        }
-      }
-    },
-    {
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "uuid"
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamptz(0)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 6,
-          "mappedType": "datetime"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamptz(0)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 6,
-          "mappedType": "datetime"
-        },
         "recipe_name": {
           "name": "recipe_name",
           "type": "varchar(255)",
@@ -325,15 +245,6 @@
           "nullable": false,
           "mappedType": "integer"
         },
-        "section_id": {
-          "name": "section_id",
-          "type": "uuid",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "uuid"
-        },
         "cookbook_id": {
           "name": "cookbook_id",
           "type": "uuid",
@@ -368,19 +279,6 @@
       ],
       "checks": [],
       "foreignKeys": {
-        "recipe_section_id_foreign": {
-          "constraintName": "recipe_section_id_foreign",
-          "columnNames": [
-            "section_id"
-          ],
-          "localTableName": "recipes.recipe",
-          "referencedColumnNames": [
-            "id"
-          ],
-          "referencedTableName": "recipes.cookbook_section",
-          "deleteRule": "cascade",
-          "updateRule": "cascade"
-        },
         "recipe_cookbook_id_foreign": {
           "constraintName": "recipe_cookbook_id_foreign",
           "columnNames": [

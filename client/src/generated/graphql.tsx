@@ -22,21 +22,7 @@ export type Cookbook = {
   createdAt: Scalars['DateTime'];
   id: Scalars['ID'];
   recipes: Array<Recipe>;
-  sections: Array<CookbookSection>;
   updatedAt: Scalars['DateTime'];
-};
-
-export type CookbookSection = {
-  __typename?: 'CookbookSection';
-  createdAt: Scalars['DateTime'];
-  id: Scalars['ID'];
-  recipes: Array<Recipe>;
-  sectionName: Scalars['String'];
-  updatedAt: Scalars['DateTime'];
-};
-
-export type CookbookSectionValidator = {
-  sectionName: Scalars['String'];
 };
 
 export type CookbookValidator = {
@@ -54,7 +40,6 @@ export type Mutation = {
   changePassword: User;
   createCookbook: Cookbook;
   createRecipe: Recipe;
-  createSection: CookbookSection;
   deleteCookbook: Scalars['Boolean'];
   deleteRecipe: Scalars['Boolean'];
   forgotPassword: Scalars['Boolean'];
@@ -82,12 +67,6 @@ export type MutationCreateRecipeArgs = {
   cookbookId: Scalars['String'];
   input: RecipeValidator;
   sectionId: Scalars['String'];
-};
-
-
-export type MutationCreateSectionArgs = {
-  cookbookId: Scalars['String'];
-  input: CookbookSectionValidator;
 };
 
 
@@ -146,8 +125,6 @@ export type Query = {
   getCookbooks: Array<Cookbook>;
   getRecipe?: Maybe<Recipe>;
   getRecipes: Array<Recipe>;
-  getSection: CookbookSection;
-  getSections: Array<CookbookSection>;
   myUser?: Maybe<User>;
 };
 
@@ -159,16 +136,6 @@ export type QueryGetCookbookArgs = {
 
 export type QueryGetRecipeArgs = {
   id: Scalars['String'];
-};
-
-
-export type QueryGetSectionArgs = {
-  id: Scalars['String'];
-};
-
-
-export type QueryGetSectionsArgs = {
-  cookbookId: Scalars['String'];
 };
 
 export type Recipe = {
@@ -310,14 +277,6 @@ export type CreateCookbookMutationVariables = Exact<{
 
 export type CreateCookbookMutation = { __typename?: 'Mutation', createCookbook: { __typename?: 'Cookbook', id: string, cookbookName: string } };
 
-export type CreateSectionMutationVariables = Exact<{
-  cookbookId: Scalars['String'];
-  input: CookbookSectionValidator;
-}>;
-
-
-export type CreateSectionMutation = { __typename?: 'Mutation', createSection: { __typename?: 'CookbookSection', sectionName: string, id: string } };
-
 export type DeleteCookbookMutationVariables = Exact<{
   deleteCookbookId: Scalars['String'];
 }>;
@@ -372,12 +331,12 @@ export type GetCookbookQueryVariables = Exact<{
 }>;
 
 
-export type GetCookbookQuery = { __typename?: 'Query', getCookbook: { __typename?: 'Cookbook', cookbookName: string, sections: Array<{ __typename?: 'CookbookSection', id: string, sectionName: string }>, recipes: Array<{ __typename?: 'Recipe', id: string }> } };
+export type GetCookbookQuery = { __typename?: 'Query', getCookbook: { __typename?: 'Cookbook', cookbookName: string, recipes: Array<{ __typename?: 'Recipe', id: string, prepTime: number, cookTime: number, recipeName: string }> } };
 
 export type GetCookbooksQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetCookbooksQuery = { __typename?: 'Query', getCookbooks: Array<{ __typename?: 'Cookbook', id: string, cookbookName: string, sections: Array<{ __typename?: 'CookbookSection', id: string }>, recipes: Array<{ __typename?: 'Recipe', id: string }> }> };
+export type GetCookbooksQuery = { __typename?: 'Query', getCookbooks: Array<{ __typename?: 'Cookbook', id: string, cookbookName: string, recipes: Array<{ __typename?: 'Recipe', id: string }> }> };
 
 export type GetRecipeByIdQueryVariables = Exact<{
   getRecipeId: Scalars['String'];
@@ -390,13 +349,6 @@ export type GetRecipesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetRecipesQuery = { __typename?: 'Query', getRecipes: Array<{ __typename?: 'Recipe', id: string, recipeName: string, servings: number, prepTime: number, cookTime: number, recipeIngredient: Array<{ __typename?: 'RecipeIngredient', order: number, ingredient: string, quantity: number, unit: string }>, recipeInstruction: Array<{ __typename?: 'RecipeInstruction', order: number, instruction: string }>, recipeHeaderIngredient: Array<{ __typename?: 'RecipeHeaderIngredient', order: number, header: string }>, recipeHeaderInstruction: Array<{ __typename?: 'RecipeHeaderInstruction', order: number, header: string }> }> };
-
-export type GetSectionQueryVariables = Exact<{
-  getSectionId: Scalars['String'];
-}>;
-
-
-export type GetSectionQuery = { __typename?: 'Query', getSection: { __typename?: 'CookbookSection', id: string, sectionName: string, recipes: Array<{ __typename?: 'Recipe', prepTime: number, cookTime: number, recipeName: string, id: string }> } };
 
 export type MyUserQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -481,18 +433,6 @@ export const CreateCookbookDocument = gql`
 export function useCreateCookbookMutation() {
   return Urql.useMutation<CreateCookbookMutation, CreateCookbookMutationVariables>(CreateCookbookDocument);
 };
-export const CreateSectionDocument = gql`
-    mutation CreateSection($cookbookId: String!, $input: CookbookSectionValidator!) {
-  createSection(cookbookId: $cookbookId, input: $input) {
-    sectionName
-    id
-  }
-}
-    `;
-
-export function useCreateSectionMutation() {
-  return Urql.useMutation<CreateSectionMutation, CreateSectionMutationVariables>(CreateSectionDocument);
-};
 export const DeleteCookbookDocument = gql`
     mutation DeleteCookbook($deleteCookbookId: String!) {
   deleteCookbook(id: $deleteCookbookId)
@@ -571,12 +511,11 @@ export const GetCookbookDocument = gql`
     query GetCookbook($getCookbookId: String!) {
   getCookbook(id: $getCookbookId) {
     cookbookName
-    sections {
-      id
-      sectionName
-    }
     recipes {
       id
+      prepTime
+      cookTime
+      recipeName
     }
   }
 }
@@ -590,9 +529,6 @@ export const GetCookbooksDocument = gql`
   getCookbooks {
     id
     cookbookName
-    sections {
-      id
-    }
     recipes {
       id
     }
@@ -668,24 +604,6 @@ export const GetRecipesDocument = gql`
 
 export function useGetRecipesQuery(options?: Omit<Urql.UseQueryArgs<GetRecipesQueryVariables>, 'query'>) {
   return Urql.useQuery<GetRecipesQuery, GetRecipesQueryVariables>({ query: GetRecipesDocument, ...options });
-};
-export const GetSectionDocument = gql`
-    query GetSection($getSectionId: String!) {
-  getSection(id: $getSectionId) {
-    id
-    sectionName
-    recipes {
-      prepTime
-      cookTime
-      recipeName
-      id
-    }
-  }
-}
-    `;
-
-export function useGetSectionQuery(options: Omit<Urql.UseQueryArgs<GetSectionQueryVariables>, 'query'>) {
-  return Urql.useQuery<GetSectionQuery, GetSectionQueryVariables>({ query: GetSectionDocument, ...options });
 };
 export const MyUserDocument = gql`
     query MyUser {

@@ -7,7 +7,6 @@ import session from "express-session";
 import Redis from "ioredis";
 import "reflect-metadata";
 import { CookbookResolver } from "resolvers/cookbook.resolver";
-import { CookbookSectionResolver } from "resolvers/cookbook_section.resolver";
 import { IngredientResolver } from "resolvers/ingredient.resolver";
 import { RecipeResolver } from "resolvers/recipe.resolver";
 import { UserResolver } from "resolvers/user.resolver";
@@ -51,7 +50,6 @@ const main = async () => {
         RecipeResolver,
         UserResolver,
         CookbookResolver,
-        CookbookSectionResolver,
         IngredientResolver,
       ],
       validate: false,

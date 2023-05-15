@@ -23,12 +23,9 @@ const Cookbooks = () => {
     body = (
       <>
         {data.getCookbooks.map((cookbook) => {
-          const sectionPath = cookbook.sections[0]
-            ? `/${cookbook.sections[0].id}`
-            : "";
           return (
             <Grid item md={3} sm={4} xs={6} key={cookbook.id}>
-              <Link href={`/cookbook/${cookbook.id}${sectionPath}`}>
+              <Link href={`/cookbook/${cookbook.id}`}>
                 <a>
                   <CookbookCard
                     cookbookName={cookbook.cookbookName}

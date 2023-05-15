@@ -1,4 +1,4 @@
-import { Container, Modal, Input } from "@mui/material";
+import { Container, Input, Modal } from "@mui/material";
 import styled from "styled-components";
 import Button from "../../elements/Button";
 
@@ -36,21 +36,9 @@ export const CookbookHeader = styled.div`
   justify-content: space-between;
 `;
 
-export const CookbookButton = styled.button`
+export const CookbookActions = styled.div`
   display: flex;
-  position: relative;
-  background: none;
-  color: inherit;
-  border: none;
-  padding: 0;
-  font: inherit;
-  cursor: pointer;
-  outline: inherit;
-  right: 10px;
-  top: 10px;
-  padding: 10px;
-  width: 24;
-  height: 24;
+  gap: 12px;
 `;
 
 export const CookbookEditHeader = styled.div`
@@ -84,21 +72,6 @@ export const CookbookTitle = styled.h3`
 
 export const CookbookRecipes = styled.span`
   color: #b9bdc3;
-`;
-
-export const CookbookSections = styled.div`
-  margin-top: 20px;
-  display: flex;
-  flex-direction: column;
-`;
-
-export const CookbookSection = styled.span<Props>`
-  padding: 8px 12px;
-  background-color: ${(props) => (props.active ? "#eef1f7" : "none")};
-  border-radius: 5px;
-  width: 100%;
-  margin-bottom: 5px;
-  cursor: pointer;
 `;
 
 export const RecipeContainer = styled.div``;
