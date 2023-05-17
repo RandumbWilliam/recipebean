@@ -1,15 +1,24 @@
 import Button from "@components/elements/Button";
 import TextFieldElement from "@components/elements/TextField";
 import {
+  CookbookResponseFragment,
   RecipeHeaderIngredientResponseFragment,
   RecipeHeaderInstructionResponseFragment,
   RecipeIngredientResponseFragment,
   RecipeInstructionResponseFragment,
+  useCreateRecipeMutation,
   useParseIngredientMutation,
 } from "@generated/graphql";
+import {
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+} from "@mui/material";
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   DragDropContext,
   Draggable,
@@ -25,7 +34,9 @@ import { StrictModeDroppable } from "./StrictModeDroppable";
 import {
   AddHeader,
   Box,
+  CloseButton,
   ColumnContainer,
+  ConfirmButton,
   Filler,
   IngredientContainer,
   IngredientList,
@@ -33,32 +44,18 @@ import {
   InputContainer,
   InstructionList,
   MiniHeader,
+  ModalContainer,
+  ModalHeader,
+  ModalTitle,
   NuritionText,
   RowContainer,
   RowGap,
   StyledButton,
+  StyledInput,
+  StyledModal,
   SubHeader,
   TimeInput,
 } from "./styles";
-
-const listItems = [
-  {
-    id: "1",
-    name: "Study Spanish",
-  },
-  {
-    id: "2",
-    name: "Workout",
-  },
-  {
-    id: "3",
-    name: "Film Youtube",
-  },
-  {
-    id: "4",
-    name: "Grocery Shop",
-  },
-];
 
 enum UnionType {
   HEADER = "header",
@@ -79,8 +76,13 @@ interface InstructionHeaderUnion {
     | RecipeInstructionResponseFragment;
 }
 
-const CreateRecipeTemplate = () => {
-  const [todo, setTodo] = useState(listItems);
+interface CreateRecipeTemplateProps {
+  cookbooks: CookbookResponseFragment[];
+}
+
+const CreateRecipeTemplate: React.FC<CreateRecipeTemplateProps> = ({
+  cookbooks,
+}) => {
   const [recipeName, setRecipeName] = useState("");
   const [servings, setServings] = useState(0);
   const [prepTime, setPrepTime] = useState(0);
@@ -106,6 +108,11 @@ const CreateRecipeTemplate = () => {
   const [ingredientHeader, setIngredientHeader] = useState("");
   const [instructionHeader, setInstructionHeader] = useState("");
   const [, parseIngredient] = useParseIngredientMutation();
+
+  const [, createRecipe] = useCreateRecipeMutation();
+  const [cookbookIds, setCookbookIds] = useState<string[]>([]);
+
+  const [showSaveModal, setShowSaveModal] = useState(false);
 
   const handleRecipeName = (e: React.ChangeEvent<HTMLInputElement>) => {
     setRecipeName(e.target.value);
@@ -272,219 +279,102 @@ const CreateRecipeTemplate = () => {
     ...draggableStyle,
   });
 
-  const save = () => {
-    console.log(recipeName);
-    console.log(ingredientDisplay);
-    console.log(instructionDisplay);
-    console.log(prepTime);
-    console.log(cookTime);
+  const handleCookbookSelect = (e: SelectChangeEvent<typeof cookbookIds>) => {
+    const {
+      target: { value },
+    } = e;
+    setCookbookIds(typeof value === "string" ? value.split(",") : value);
+  };
+
+  const saveRecipe = async () => {
+    const ingredients = ingredientDisplay
+      .filter((item) => item.type === UnionType.VALUE)
+      .map((item) => item.value as RecipeIngredientResponseFragment);
+    const ingredientHeaders = ingredientDisplay
+      .filter((item) => item.type === UnionType.HEADER)
+      .map((item) => item.value as RecipeHeaderIngredientResponseFragment);
+    const instructions = instructionDisplay
+      .filter((item) => item.type === UnionType.VALUE)
+      .map((item) => item.value as RecipeInstructionResponseFragment);
+    const instructionHeaders = instructionDisplay
+      .filter((item) => item.type === UnionType.HEADER)
+      .map((item) => item.value as RecipeHeaderInstructionResponseFragment);
+
+    const createRecipeForm = {
+      recipeName,
+      servings,
+      prepTime,
+      cookTime,
+      ingredients,
+      instructions,
+      ingredientHeaders,
+      instructionHeaders,
+    };
+
+    const response = await createRecipe({
+      cookbookId: cookbookIds,
+      input: createRecipeForm,
+    });
+    if (response.data?.createRecipe) {
+      console.log(response.data.createRecipe.id);
+    } else {
+      console.log("ERRORS");
+    }
   };
 
   const headerActions = (
-    <Button onClick={save} disabled={recipeName === ""}>
+    <Button onClick={() => setShowSaveModal(true)} disabled={recipeName === ""}>
       Save
     </Button>
   );
 
   return (
-    <Section header="Create a Recipe" actions={headerActions}>
-      <Grid container spacing={6}>
-        <Grid item md={6}>
-          <ColumnContainer>
-            <TextField
-              hiddenLabel
-              id="filled-hidden-label-small"
-              placeholder="Recipe Name"
-              variant="standard"
-              size="small"
-              onChange={handleRecipeName}
-              fullWidth
-              inputProps={{ style: { fontSize: 30, fontWeight: 500 } }}
-              InputLabelProps={{ style: { fontSize: 30, fontWeight: 500 } }}
-            />
-          </ColumnContainer>
-          <ColumnContainer>
-            <Dropzone fileCallback={handleCoverImage} />
-          </ColumnContainer>
-          <ColumnContainer>
-            <SubHeader>Nutrition</SubHeader>
-            {ingredientDisplay.filter((item) => item.type === UnionType.VALUE)
-              .length === 0 ? (
-              <NuritionText>
-                <Icon name="Ingredient" size={30} color="#B9BDC3" />
-                <span>
-                  Start adding ingredients to get nutrition information
-                </span>
-              </NuritionText>
-            ) : (
-              <div>NUT</div>
-            )}
-          </ColumnContainer>
-          <ColumnContainer>
-            <SubHeader>Instructions</SubHeader>
-            {instructionDisplay.length !== 0 && (
-              <DragDropContext onDragEnd={onDragEndInstruction}>
-                <StrictModeDroppable droppableId="instruction-droppable">
-                  {(provided) => (
-                    <div
-                      className="instruction-droppable"
-                      {...provided.droppableProps}
-                      ref={provided.innerRef}
-                    >
-                      {instructionDisplay.map(({ type, value }, index) => {
-                        if (type === UnionType.HEADER) {
-                          const headerValue =
-                            value as RecipeHeaderIngredientResponseFragment;
-                          return (
-                            <Draggable
-                              key={`instruction-draggable_${index}`}
-                              draggableId={`instruction-draggable_${index}`}
-                              index={index}
-                            >
-                              {(provided, snapshot) => (
-                                <div
-                                  ref={provided.innerRef}
-                                  {...provided.draggableProps}
-                                  {...provided.dragHandleProps}
-                                  style={getItemStyle(
-                                    snapshot.isDragging,
-                                    provided.draggableProps.style
-                                  )}
-                                >
-                                  {headerValue.header}
-                                </div>
-                              )}
-                            </Draggable>
-                          );
-                        } else if (type === UnionType.VALUE) {
-                          const instructionValue =
-                            value as RecipeInstructionResponseFragment;
-                          return (
-                            <Draggable
-                              key={`instruction-draggable_${index}`}
-                              draggableId={`instruction-draggable_${index}`}
-                              index={index}
-                            >
-                              {(provided, snapshot) => (
-                                <div
-                                  ref={provided.innerRef}
-                                  {...provided.draggableProps}
-                                  {...provided.dragHandleProps}
-                                  style={getItemStyle(
-                                    snapshot.isDragging,
-                                    provided.draggableProps.style
-                                  )}
-                                >
-                                  <span>
-                                    {instructionValue.step}{" "}
-                                    {instructionValue.instruction}
-                                  </span>
-                                </div>
-                              )}
-                            </Draggable>
-                          );
-                        }
-                      })}
-                      {provided.placeholder}
-                    </div>
-                  )}
-                </StrictModeDroppable>
-              </DragDropContext>
-            )}
-            {showInstructionHeader && (
-              <form onSubmit={addInstructionHeader} autoComplete="off">
-                <span>Header</span>
-                <InputContainer>
-                  <TextFieldElement
-                    value={instructionHeader}
-                    type="text"
-                    placeholder={`"Example "For the sauce"`}
-                    name="instruction"
-                    adornment={
-                      <ButtonLink
-                        onClick={() => setShowInstructionHeader(false)}
-                      >
-                        <Icon name="Cross" size={14} color="#B9BDC3" />
-                      </ButtonLink>
-                    }
-                    onChange={handleInstructionHeader}
-                  />
-                  <StyledButton disabled={!instructionHeader} type="submit">
-                    +
-                  </StyledButton>
-                </InputContainer>
-              </form>
-            )}
-            <form onSubmit={addInstruction} autoComplete="off">
-              <InputContainer>
-                <TextFieldElement
-                  value={instructionValue}
-                  type="text"
-                  placeholder="Add one or paste multiple ingredients"
-                  name="ingredient"
-                  onChange={handleInstruction}
-                />
-                <StyledButton disabled={!instructionValue} type="submit">
-                  +
-                </StyledButton>
-              </InputContainer>
-              <AddHeader>
-                <ButtonLink onClick={() => setShowInstructionHeader(true)}>
-                  + Add Header
-                </ButtonLink>
-              </AddHeader>
-            </form>
-          </ColumnContainer>
-        </Grid>
-        <Grid item md={6}>
-          <ColumnContainer>
-            <Filler />
-          </ColumnContainer>
-          <Box>
+    <>
+      <Section header="Create a Recipe" actions={headerActions}>
+        <Grid container spacing={6}>
+          <Grid item md={6}>
             <ColumnContainer>
-              <RowGap>
-                <RowContainer>
-                  <SubHeader>Servings</SubHeader>
-                  <Counter value={servings} setValue={setServings} />
-                </RowContainer>
-                <RowContainer>
-                  <SubHeader>Prep Time</SubHeader>
-                  <TimeInput
-                    value={prepTime}
-                    type="number"
-                    placeholder="Minutes"
-                    name="ingredient"
-                    adornment={<span>minutes</span>}
-                    onChange={handlePrepTime}
-                    min="0"
-                  />
-                </RowContainer>
-                <RowContainer>
-                  <SubHeader>Cook Time</SubHeader>
-                  <TimeInput
-                    value={cookTime}
-                    type="number"
-                    placeholder="Minutes"
-                    name="cookTime"
-                    adornment={<span>minutes</span>}
-                    onChange={handleCookTime}
-                    min="0"
-                  />
-                </RowContainer>
-              </RowGap>
+              <TextField
+                hiddenLabel
+                id="filled-hidden-label-small"
+                placeholder="Recipe Name"
+                variant="standard"
+                size="small"
+                onChange={handleRecipeName}
+                fullWidth
+                inputProps={{ style: { fontSize: 30, fontWeight: 500 } }}
+                InputLabelProps={{ style: { fontSize: 30, fontWeight: 500 } }}
+              />
             </ColumnContainer>
             <ColumnContainer>
-              <SubHeader>Ingredients</SubHeader>
-              {ingredientDisplay.length !== 0 && (
-                <DragDropContext onDragEnd={onDragEndIngredient}>
-                  <StrictModeDroppable droppableId="ingredient-droppable">
+              <Dropzone fileCallback={handleCoverImage} />
+            </ColumnContainer>
+            <ColumnContainer>
+              <SubHeader>Nutrition</SubHeader>
+              {ingredientDisplay.filter((item) => item.type === UnionType.VALUE)
+                .length === 0 ? (
+                <NuritionText>
+                  <Icon name="Ingredient" size={30} color="#B9BDC3" />
+                  <span>
+                    Start adding ingredients to get nutrition information
+                  </span>
+                </NuritionText>
+              ) : (
+                <div>NUT</div>
+              )}
+            </ColumnContainer>
+            <ColumnContainer>
+              <SubHeader>Instructions</SubHeader>
+              {instructionDisplay.length !== 0 && (
+                <DragDropContext onDragEnd={onDragEndInstruction}>
+                  <StrictModeDroppable droppableId="instruction-droppable">
                     {(provided) => (
                       <div
-                        className="ingredient-droppable"
+                        className="instruction-droppable"
                         {...provided.droppableProps}
                         ref={provided.innerRef}
                       >
-                        {ingredientDisplay.map(({ type, value }, index) => {
+                        {instructionDisplay.map(({ type, value }, index) => {
                           if (type === UnionType.HEADER) {
                             const headerValue =
                               value as RecipeHeaderIngredientResponseFragment;
@@ -510,8 +400,8 @@ const CreateRecipeTemplate = () => {
                               </Draggable>
                             );
                           } else if (type === UnionType.VALUE) {
-                            const ingredientValue =
-                              value as RecipeIngredientResponseFragment;
+                            const instructionValue =
+                              value as RecipeInstructionResponseFragment;
                             return (
                               <Draggable
                                 key={`instruction-draggable_${index}`}
@@ -529,11 +419,8 @@ const CreateRecipeTemplate = () => {
                                     )}
                                   >
                                     <span>
-                                      <b>
-                                        {ingredientValue.quantity}{" "}
-                                        {ingredientValue.unit}
-                                      </b>{" "}
-                                      {ingredientValue.ingredient}
+                                      {instructionValue.step}{" "}
+                                      {instructionValue.instruction}
                                     </span>
                                   </div>
                                 )}
@@ -547,54 +434,241 @@ const CreateRecipeTemplate = () => {
                   </StrictModeDroppable>
                 </DragDropContext>
               )}
-              {showIngredientHeader && (
-                <form onSubmit={addIngredientHeader} autoComplete="off">
+              {showInstructionHeader && (
+                <form onSubmit={addInstructionHeader} autoComplete="off">
                   <span>Header</span>
                   <InputContainer>
                     <TextFieldElement
-                      value={ingredientHeader}
+                      value={instructionHeader}
                       type="text"
                       placeholder={`"Example "For the sauce"`}
-                      name="ingredient"
+                      name="instruction"
                       adornment={
                         <ButtonLink
-                          onClick={() => setShowIngredientHeader(false)}
+                          onClick={() => setShowInstructionHeader(false)}
                         >
                           <Icon name="Cross" size={14} color="#B9BDC3" />
                         </ButtonLink>
                       }
-                      onChange={handleIngredientHeader}
+                      onChange={handleInstructionHeader}
                     />
-                    <StyledButton disabled={!ingredientHeader} type="submit">
+                    <StyledButton disabled={!instructionHeader} type="submit">
                       +
                     </StyledButton>
                   </InputContainer>
                 </form>
               )}
-              <form onSubmit={addIngredient} autoComplete="off">
+              <form onSubmit={addInstruction} autoComplete="off">
                 <InputContainer>
                   <TextFieldElement
-                    value={ingredientValue}
+                    value={instructionValue}
                     type="text"
                     placeholder="Add one or paste multiple ingredients"
                     name="ingredient"
-                    onChange={handleIngredient}
+                    onChange={handleInstruction}
                   />
-                  <StyledButton disabled={!ingredientValue} type="submit">
+                  <StyledButton disabled={!instructionValue} type="submit">
                     +
                   </StyledButton>
                 </InputContainer>
                 <AddHeader>
-                  <ButtonLink onClick={() => setShowIngredientHeader(true)}>
+                  <ButtonLink onClick={() => setShowInstructionHeader(true)}>
                     + Add Header
                   </ButtonLink>
                 </AddHeader>
               </form>
             </ColumnContainer>
-          </Box>
+          </Grid>
+          <Grid item md={6}>
+            <ColumnContainer>
+              <Filler />
+            </ColumnContainer>
+            <Box>
+              <ColumnContainer>
+                <RowGap>
+                  <RowContainer>
+                    <SubHeader>Servings</SubHeader>
+                    <Counter value={servings} setValue={setServings} />
+                  </RowContainer>
+                  <RowContainer>
+                    <SubHeader>Prep Time</SubHeader>
+                    <TimeInput
+                      value={prepTime}
+                      type="number"
+                      placeholder="Minutes"
+                      name="ingredient"
+                      adornment={<span>minutes</span>}
+                      onChange={handlePrepTime}
+                      min="0"
+                    />
+                  </RowContainer>
+                  <RowContainer>
+                    <SubHeader>Cook Time</SubHeader>
+                    <TimeInput
+                      value={cookTime}
+                      type="number"
+                      placeholder="Minutes"
+                      name="cookTime"
+                      adornment={<span>minutes</span>}
+                      onChange={handleCookTime}
+                      min="0"
+                    />
+                  </RowContainer>
+                </RowGap>
+              </ColumnContainer>
+              <ColumnContainer>
+                <SubHeader>Ingredients</SubHeader>
+                {ingredientDisplay.length !== 0 && (
+                  <DragDropContext onDragEnd={onDragEndIngredient}>
+                    <StrictModeDroppable droppableId="ingredient-droppable">
+                      {(provided) => (
+                        <div
+                          className="ingredient-droppable"
+                          {...provided.droppableProps}
+                          ref={provided.innerRef}
+                        >
+                          {ingredientDisplay.map(({ type, value }, index) => {
+                            if (type === UnionType.HEADER) {
+                              const headerValue =
+                                value as RecipeHeaderIngredientResponseFragment;
+                              return (
+                                <Draggable
+                                  key={`instruction-draggable_${index}`}
+                                  draggableId={`instruction-draggable_${index}`}
+                                  index={index}
+                                >
+                                  {(provided, snapshot) => (
+                                    <div
+                                      ref={provided.innerRef}
+                                      {...provided.draggableProps}
+                                      {...provided.dragHandleProps}
+                                      style={getItemStyle(
+                                        snapshot.isDragging,
+                                        provided.draggableProps.style
+                                      )}
+                                    >
+                                      {headerValue.header}
+                                    </div>
+                                  )}
+                                </Draggable>
+                              );
+                            } else if (type === UnionType.VALUE) {
+                              const ingredientValue =
+                                value as RecipeIngredientResponseFragment;
+                              return (
+                                <Draggable
+                                  key={`instruction-draggable_${index}`}
+                                  draggableId={`instruction-draggable_${index}`}
+                                  index={index}
+                                >
+                                  {(provided, snapshot) => (
+                                    <div
+                                      ref={provided.innerRef}
+                                      {...provided.draggableProps}
+                                      {...provided.dragHandleProps}
+                                      style={getItemStyle(
+                                        snapshot.isDragging,
+                                        provided.draggableProps.style
+                                      )}
+                                    >
+                                      <span>
+                                        <b>
+                                          {ingredientValue.quantity}{" "}
+                                          {ingredientValue.unit}
+                                        </b>{" "}
+                                        {ingredientValue.ingredient}
+                                      </span>
+                                    </div>
+                                  )}
+                                </Draggable>
+                              );
+                            }
+                          })}
+                          {provided.placeholder}
+                        </div>
+                      )}
+                    </StrictModeDroppable>
+                  </DragDropContext>
+                )}
+                {showIngredientHeader && (
+                  <form onSubmit={addIngredientHeader} autoComplete="off">
+                    <span>Header</span>
+                    <InputContainer>
+                      <TextFieldElement
+                        value={ingredientHeader}
+                        type="text"
+                        placeholder={`"Example "For the sauce"`}
+                        name="ingredient"
+                        adornment={
+                          <ButtonLink
+                            onClick={() => setShowIngredientHeader(false)}
+                          >
+                            <Icon name="Cross" size={14} color="#B9BDC3" />
+                          </ButtonLink>
+                        }
+                        onChange={handleIngredientHeader}
+                      />
+                      <StyledButton disabled={!ingredientHeader} type="submit">
+                        +
+                      </StyledButton>
+                    </InputContainer>
+                  </form>
+                )}
+                <form onSubmit={addIngredient} autoComplete="off">
+                  <InputContainer>
+                    <TextFieldElement
+                      value={ingredientValue}
+                      type="text"
+                      placeholder="Add one or paste multiple ingredients"
+                      name="ingredient"
+                      onChange={handleIngredient}
+                    />
+                    <StyledButton disabled={!ingredientValue} type="submit">
+                      +
+                    </StyledButton>
+                  </InputContainer>
+                  <AddHeader>
+                    <ButtonLink onClick={() => setShowIngredientHeader(true)}>
+                      + Add Header
+                    </ButtonLink>
+                  </AddHeader>
+                </form>
+              </ColumnContainer>
+            </Box>
+          </Grid>
         </Grid>
-      </Grid>
-    </Section>
+      </Section>
+      <StyledModal open={showSaveModal} onClose={() => setShowSaveModal(false)}>
+        <ModalContainer>
+          <ModalHeader>
+            <ModalTitle>Add Cookbook</ModalTitle>
+            <CloseButton onClick={() => setShowSaveModal(false)}>
+              <Icon name="CloseOutline" size={24} color="#B9BDC3" />
+            </CloseButton>
+          </ModalHeader>
+          <FormControl size="small">
+            <InputLabel>Cookbook</InputLabel>
+            <Select
+              multiple
+              value={cookbookIds}
+              onChange={handleCookbookSelect}
+            >
+              {cookbooks.map((item) => (
+                <MenuItem value={item.id} key={item.id}>
+                  {item.cookbookName}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <ConfirmButton
+            disabled={cookbookIds.length === 0}
+            onClick={saveRecipe}
+          >
+            Confirm
+          </ConfirmButton>
+        </ModalContainer>
+      </StyledModal>
+    </>
   );
 };
 

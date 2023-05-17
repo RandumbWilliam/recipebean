@@ -2,24 +2,29 @@ query GetRecipes {
   getRecipes {
     id
     recipeName
-    servings
     prepTime
     cookTime
+    servings
     recipeIngredient {
+      id
       order
       ingredient
       quantity
       unit
     }
     recipeInstruction {
+      id
       order
       instruction
+      step
     }
     recipeHeaderIngredient {
+      id
       order
       header
     }
     recipeHeaderInstruction {
+      id
       order
       header
     }

@@ -10,11 +10,9 @@ const TestCookbook = () => {
   const router = useRouter();
   const { params = [] } = router.query;
   let cookbookId = "";
-  let sectionId = "";
 
   if (params.length === 2 || params.length === 1) {
     cookbookId = params[0];
-    sectionId = params.length === 2 ? params[1] : "";
   }
 
   const [{ data: cookbookData }] = useGetCookbookQuery({
