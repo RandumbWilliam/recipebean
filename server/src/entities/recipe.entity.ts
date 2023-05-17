@@ -2,6 +2,7 @@ import {
   Cascade,
   Collection,
   Entity,
+  ManyToMany,
   ManyToOne,
   OneToMany,
   Property,
@@ -69,8 +70,9 @@ export class Recipe extends Base<Recipe> {
   })
   public recipeInstruction = new Collection<RecipeInstruction>(this);
 
-  @ManyToOne(() => Cookbook, { onDelete: "cascade" })
-  public cookbook: Cookbook;
+  @Field(() => [Cookbook])
+  @ManyToMany(() => Cookbook, (cookbook: Cookbook) => cookbook.recipes)
+  public cookbooks = new Collection<Cookbook>(this);
 
   @ManyToOne(() => User, { onDelete: "cascade" })
   public creator: User;

@@ -2,8 +2,8 @@ import {
   Cascade,
   Collection,
   Entity,
+  ManyToMany,
   ManyToOne,
-  OneToMany,
   Property,
 } from "@mikro-orm/core";
 import CookbookValidator from "contracts/validators/cookbook.validator";
@@ -20,9 +20,7 @@ export class Cookbook extends Base<Cookbook> {
   public cookbookName!: string;
 
   @Field(() => [Recipe])
-  @OneToMany(() => Recipe, (recipe) => recipe.cookbook, {
-    cascade: [Cascade.ALL],
-  })
+  @ManyToMany(() => Recipe)
   public recipes = new Collection<Recipe>(this);
 
   @ManyToOne(() => User, { onDelete: "cascade" })

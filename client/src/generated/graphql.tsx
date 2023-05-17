@@ -64,9 +64,8 @@ export type MutationCreateCookbookArgs = {
 
 
 export type MutationCreateRecipeArgs = {
-  cookbookId: Scalars['String'];
+  cookbookId: Array<Scalars['String']>;
   input: RecipeValidator;
-  sectionId: Scalars['String'];
 };
 
 
@@ -141,6 +140,7 @@ export type QueryGetRecipeArgs = {
 export type Recipe = {
   __typename?: 'Recipe';
   cookTime: Scalars['Float'];
+  cookbooks: Array<Cookbook>;
   createdAt: Scalars['DateTime'];
   id: Scalars['ID'];
   prepTime: Scalars['Float'];
@@ -248,6 +248,8 @@ export type UserValidator = {
   password: Scalars['String'];
 };
 
+export type CookbookResponseFragment = { __typename?: 'Cookbook', id: string, cookbookName: string };
+
 export type ErrorResponseFragment = { __typename?: 'FieldError', field: string, message: string };
 
 export type RecipeHeaderIngredientResponseFragment = { __typename?: 'RecipeHeaderIngredient', order: number, header: string };
@@ -276,6 +278,14 @@ export type CreateCookbookMutationVariables = Exact<{
 
 
 export type CreateCookbookMutation = { __typename?: 'Mutation', createCookbook: { __typename?: 'Cookbook', id: string, cookbookName: string } };
+
+export type CreateRecipeMutationVariables = Exact<{
+  cookbookId: Array<Scalars['String']> | Scalars['String'];
+  input: RecipeValidator;
+}>;
+
+
+export type CreateRecipeMutation = { __typename?: 'Mutation', createRecipe: { __typename?: 'Recipe', id: string } };
 
 export type DeleteCookbookMutationVariables = Exact<{
   deleteCookbookId: Scalars['String'];
@@ -343,18 +353,24 @@ export type GetRecipeByIdQueryVariables = Exact<{
 }>;
 
 
-export type GetRecipeByIdQuery = { __typename?: 'Query', getRecipe?: { __typename?: 'Recipe', id: string, recipeName: string, servings: number, prepTime: number, cookTime: number, recipeIngredient: Array<{ __typename?: 'RecipeIngredient', order: number, ingredient: string, quantity: number, unit: string }>, recipeInstruction: Array<{ __typename?: 'RecipeInstruction', order: number, instruction: string }>, recipeHeaderIngredient: Array<{ __typename?: 'RecipeHeaderIngredient', order: number, header: string }>, recipeHeaderInstruction: Array<{ __typename?: 'RecipeHeaderInstruction', order: number, header: string }> } | null };
+export type GetRecipeByIdQuery = { __typename?: 'Query', getRecipe?: { __typename?: 'Recipe', id: string, recipeName: string, prepTime: number, cookTime: number, servings: number, recipeIngredient: Array<{ __typename?: 'RecipeIngredient', id: string, order: number, ingredient: string, quantity: number, unit: string }>, recipeInstruction: Array<{ __typename?: 'RecipeInstruction', id: string, order: number, instruction: string, step: number }>, recipeHeaderIngredient: Array<{ __typename?: 'RecipeHeaderIngredient', id: string, order: number, header: string }>, recipeHeaderInstruction: Array<{ __typename?: 'RecipeHeaderInstruction', id: string, order: number, header: string }> } | null };
 
 export type GetRecipesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetRecipesQuery = { __typename?: 'Query', getRecipes: Array<{ __typename?: 'Recipe', id: string, recipeName: string, servings: number, prepTime: number, cookTime: number, recipeIngredient: Array<{ __typename?: 'RecipeIngredient', order: number, ingredient: string, quantity: number, unit: string }>, recipeInstruction: Array<{ __typename?: 'RecipeInstruction', order: number, instruction: string }>, recipeHeaderIngredient: Array<{ __typename?: 'RecipeHeaderIngredient', order: number, header: string }>, recipeHeaderInstruction: Array<{ __typename?: 'RecipeHeaderInstruction', order: number, header: string }> }> };
+export type GetRecipesQuery = { __typename?: 'Query', getRecipes: Array<{ __typename?: 'Recipe', id: string, recipeName: string, prepTime: number, cookTime: number, servings: number, recipeIngredient: Array<{ __typename?: 'RecipeIngredient', id: string, order: number, ingredient: string, quantity: number, unit: string }>, recipeInstruction: Array<{ __typename?: 'RecipeInstruction', id: string, order: number, instruction: string, step: number }>, recipeHeaderIngredient: Array<{ __typename?: 'RecipeHeaderIngredient', id: string, order: number, header: string }>, recipeHeaderInstruction: Array<{ __typename?: 'RecipeHeaderInstruction', id: string, order: number, header: string }> }> };
 
 export type MyUserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type MyUserQuery = { __typename?: 'Query', myUser?: { __typename?: 'User', id: string, email: string, firstName: string, lastName: string } | null };
 
+export const CookbookResponseFragmentDoc = gql`
+    fragment CookbookResponse on Cookbook {
+  id
+  cookbookName
+}
+    `;
 export const RecipeHeaderIngredientResponseFragmentDoc = gql`
     fragment RecipeHeaderIngredientResponse on RecipeHeaderIngredient {
   order
@@ -432,6 +448,17 @@ export const CreateCookbookDocument = gql`
 
 export function useCreateCookbookMutation() {
   return Urql.useMutation<CreateCookbookMutation, CreateCookbookMutationVariables>(CreateCookbookDocument);
+};
+export const CreateRecipeDocument = gql`
+    mutation CreateRecipe($cookbookId: [String!]!, $input: RecipeValidator!) {
+  createRecipe(cookbookId: $cookbookId, input: $input) {
+    id
+  }
+}
+    `;
+
+export function useCreateRecipeMutation() {
+  return Urql.useMutation<CreateRecipeMutation, CreateRecipeMutationVariables>(CreateRecipeDocument);
 };
 export const DeleteCookbookDocument = gql`
     mutation DeleteCookbook($deleteCookbookId: String!) {
@@ -544,24 +571,29 @@ export const GetRecipeByIdDocument = gql`
   getRecipe(id: $getRecipeId) {
     id
     recipeName
-    servings
     prepTime
     cookTime
+    servings
     recipeIngredient {
+      id
       order
       ingredient
       quantity
       unit
     }
     recipeInstruction {
+      id
       order
       instruction
+      step
     }
     recipeHeaderIngredient {
+      id
       order
       header
     }
     recipeHeaderInstruction {
+      id
       order
       header
     }
@@ -577,24 +609,29 @@ export const GetRecipesDocument = gql`
   getRecipes {
     id
     recipeName
-    servings
     prepTime
     cookTime
+    servings
     recipeIngredient {
+      id
       order
       ingredient
       quantity
       unit
     }
     recipeInstruction {
+      id
       order
       instruction
+      step
     }
     recipeHeaderIngredient {
+      id
       order
       header
     }
     recipeHeaderInstruction {
+      id
       order
       header
     }

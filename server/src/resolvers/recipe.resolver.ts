@@ -59,24 +59,15 @@ export class RecipeResolver {
   @Mutation(() => Recipe)
   public async createRecipe(
     @Arg("input") input: RecipeValidator,
-    @Arg("sectionId") sectionId: string,
-    @Arg("cookbookId") cookbookId: string,
+    @Arg("cookbookId", (type) => [String]) cookbookId: string[],
     @Ctx() { em, req }: MyContext
   ): Promise<Recipe> {
     const userRepository = em.getRepository(User);
     const cookbookRepository = em.getRepository(Cookbook);
-    // const sectionRepository = em.getRepository(CookbookSection);
 
     const creator = await userRepository.findOneOrFail({
-      id: req.session.userId,
-    });
-
-    // const section = await sectionRepository.findOneOrFail({
-    //   id: sectionId,
-    // });
-
-    const cookbook = await cookbookRepository.findOneOrFail({
-      id: cookbookId,
+      // id: req.session.userId,
+      id: "d70400a3-2d20-4c70-9a70-3bb5efd94042",
     });
 
     const recipe = em.create(Recipe, {
@@ -86,8 +77,14 @@ export class RecipeResolver {
       cookTime: input.cookTime,
     });
     recipe.creator = creator;
-    // recipe.section = section;
-    recipe.cookbook = cookbook;
+
+    for (const id of cookbookId) {
+      const cookbook = await cookbookRepository.findOneOrFail({
+        id,
+      });
+
+      recipe.cookbooks.add(cookbook);
+    }
 
     await em.persistAndFlush(recipe);
 

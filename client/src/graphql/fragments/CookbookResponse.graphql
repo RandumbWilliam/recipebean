@@ -1,0 +1,4 @@
+fragment CookbookResponse on Cookbook {
+  id
+  cookbookName
+}

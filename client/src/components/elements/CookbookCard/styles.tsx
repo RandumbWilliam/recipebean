@@ -43,6 +43,7 @@ export const Title = styled.h3`
   hyphens: auto;
   display: flex;
   margin: 0;
+  text-align: center;
 `;
 
 export const RecipeText = styled.span`
