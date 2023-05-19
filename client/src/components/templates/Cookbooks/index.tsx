@@ -1,34 +1,40 @@
+import Icon from "@components/elements/Icon";
+import {
+  CookbookResponseFragment,
+  useCreateCookbookMutation,
+} from "@generated/graphql";
 import { Grid } from "@mui/material";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
-import Button from "../../../components/elements/Button";
-import { useCreateCookbookMutation } from "../../../generated/graphql";
-import Icon from "../../elements/Icon";
 import {
-  Header,
+  CloseButton,
+  CookbookCard,
+  CookbookCover,
+  CookbookRecipeCount,
+  CookbookSpine,
+  CookbookTitle,
+  CookbooksButton,
+  CookbooksContainer,
+  CookbooksHeader,
+  CookbooksTitle,
+  ModalButton,
   ModalContainer,
   ModalHeader,
-  ButtonContent,
-  ActionButton,
-  SectionTitle,
-  StyledContainer,
-  StyledInput,
-  StyledModal,
-  StyledButton,
+  ModalInput,
   ModalTitle,
-  CloseButton,
+  StyledModal,
 } from "./styles";
-
-interface CookbooksProps {
-  header: string;
-  children: JSX.Element | null;
-}
 
 const initialForm = {
   cookbookName: "",
 };
 
-const CookbooksTemplate: React.FC<CookbooksProps> = ({ header, children }) => {
+interface CookbooksTemplateProps {
+  cookbooks: CookbookResponseFragment[];
+}
+
+const CookbooksTemplate: React.FC<CookbooksTemplateProps> = ({ cookbooks }) => {
   const router = useRouter();
   const [modalOpen, setModalOpen] = useState(false);
   const [formData, setFormData] = useState(initialForm);
@@ -52,20 +58,46 @@ const CookbooksTemplate: React.FC<CookbooksProps> = ({ header, children }) => {
     }
   };
 
+  const recipeCountText = (recipeCount: number) => {
+    if (recipeCount > 1) {
+      return `${recipeCount} recipes`;
+    } else if (recipeCount === 1) {
+      return `${recipeCount} recipe`;
+    } else {
+      return "no recipes";
+    }
+  };
+
   return (
     <>
-      <StyledContainer>
-        <Header>
-          <SectionTitle>{header}</SectionTitle>
-          <ActionButton onClick={handleOpenModal}>
+      <CookbooksContainer>
+        <CookbooksHeader>
+          <CookbooksTitle>Your Cookbooks</CookbooksTitle>
+          <CookbooksButton onClick={handleOpenModal}>
             <Icon name="AddCookbook" size={20} color="#fff" />
             Add Book
-          </ActionButton>
-        </Header>
+          </CookbooksButton>
+        </CookbooksHeader>
         <Grid container columnSpacing={3} rowSpacing={4}>
-          {children}
+          {cookbooks.map((cookbook) => (
+            <Grid key={cookbook.id} item md={3} sm={4} xs={6}>
+              <Link href={`/cookbook/${cookbook.id}`}>
+                <a>
+                  <CookbookCard>
+                    <CookbookSpine />
+                    <CookbookCover>
+                      <CookbookTitle>{cookbook.cookbookName}</CookbookTitle>
+                      <CookbookRecipeCount>
+                        {recipeCountText(cookbook.recipes.length)}
+                      </CookbookRecipeCount>
+                    </CookbookCover>
+                  </CookbookCard>
+                </a>
+              </Link>
+            </Grid>
+          ))}
         </Grid>
-      </StyledContainer>
+      </CookbooksContainer>
       <StyledModal open={modalOpen} onClose={() => setModalOpen(false)}>
         <ModalContainer>
           <ModalHeader>
@@ -74,17 +106,14 @@ const CookbooksTemplate: React.FC<CookbooksProps> = ({ header, children }) => {
               <Icon name="CloseOutline" size={24} color="#B9BDC3" />
             </CloseButton>
           </ModalHeader>
-          <StyledInput
+          <ModalInput
             placeholder="Cookbook name"
             value={formData.cookbookName}
             onChange={handleChange}
           />
-          <StyledButton
-            disabled={!formData.cookbookName}
-            onClick={handleSubmit}
-          >
+          <ModalButton disabled={!formData.cookbookName} onClick={handleSubmit}>
             Confirm
-          </StyledButton>
+          </ModalButton>
         </ModalContainer>
       </StyledModal>
     </>

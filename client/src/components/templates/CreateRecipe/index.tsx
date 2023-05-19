@@ -1,4 +1,8 @@
 import Button from "@components/elements/Button";
+import ButtonLink from "@components/elements/ButtonLink";
+import Counter from "@components/elements/Counter";
+import Dropzone from "@components/elements/Dropzone";
+import Icon from "@components/elements/Icon";
 import TextFieldElement from "@components/elements/TextField";
 import {
   CookbookResponseFragment,
@@ -19,17 +23,7 @@ import {
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
 import React, { useState } from "react";
-import {
-  DragDropContext,
-  Draggable,
-  DropResult,
-  Droppable,
-} from "react-beautiful-dnd";
-import ButtonLink from "../../elements/ButtonLink";
-import Counter from "../../elements/Counter";
-import Dropzone from "../../elements/Dropzone";
-import Icon from "../../elements/Icon";
-import Section from "../../modules/Section";
+import { DragDropContext, Draggable, DropResult } from "react-beautiful-dnd";
 import { StrictModeDroppable } from "./StrictModeDroppable";
 import {
   AddHeader,
@@ -37,13 +31,11 @@ import {
   CloseButton,
   ColumnContainer,
   ConfirmButton,
+  CreateRecipeContainer,
+  CreateRecipeHeader,
+  CreateRecipeTitle,
   Filler,
-  IngredientContainer,
-  IngredientList,
-  IngredientListItem,
   InputContainer,
-  InstructionList,
-  MiniHeader,
   ModalContainer,
   ModalHeader,
   ModalTitle,
@@ -51,7 +43,6 @@ import {
   RowContainer,
   RowGap,
   StyledButton,
-  StyledInput,
   StyledModal,
   SubHeader,
   TimeInput,
@@ -322,15 +313,18 @@ const CreateRecipeTemplate: React.FC<CreateRecipeTemplateProps> = ({
     }
   };
 
-  const headerActions = (
-    <Button onClick={() => setShowSaveModal(true)} disabled={recipeName === ""}>
-      Save
-    </Button>
-  );
-
   return (
     <>
-      <Section header="Create a Recipe" actions={headerActions}>
+      <CreateRecipeContainer>
+        <CreateRecipeHeader>
+          <CreateRecipeTitle>Create a Recipe</CreateRecipeTitle>
+          <Button
+            onClick={() => setShowSaveModal(true)}
+            disabled={recipeName === ""}
+          >
+            Save
+          </Button>
+        </CreateRecipeHeader>
         <Grid container spacing={6}>
           <Grid item md={6}>
             <ColumnContainer>
@@ -637,7 +631,7 @@ const CreateRecipeTemplate: React.FC<CreateRecipeTemplateProps> = ({
             </Box>
           </Grid>
         </Grid>
-      </Section>
+      </CreateRecipeContainer>
       <StyledModal open={showSaveModal} onClose={() => setShowSaveModal(false)}>
         <ModalContainer>
           <ModalHeader>

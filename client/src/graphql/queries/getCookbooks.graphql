@@ -1,9 +1,5 @@
 query GetCookbooks {
   getCookbooks {
-    id
-    cookbookName
-    recipes {
-      id
-    }
+    ...CookbookResponse
   }
 }

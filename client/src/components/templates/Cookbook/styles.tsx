@@ -1,34 +1,15 @@
-import { Container, Input, Modal } from "@mui/material";
+import { Container, Modal } from "@mui/material";
 import styled from "styled-components";
-import Button from "../../elements/Button";
 
 interface Props {
   active: boolean;
 }
 
-export const StyledContainer = styled(Container)`
+export const CookbookContainer = styled(Container)`
   &&& {
     padding: 0 65px;
     margin-top: 50px;
   }
-`;
-
-export const Grid = styled.div`
-  display: grid;
-  grid-template-columns: 230px auto;
-  gap: 60px;
-`;
-
-export const CookbookContainer = styled.div``;
-
-export const Cookbook = styled.div`
-  width: 230px;
-  height: 300px;
-  border-radius: 8px;
-  background-color: #202a44;
-  padding: 24px 0;
-  box-shadow: 6px 6px #b9bdc3;
-  margin-bottom: 12px;
 `;
 
 export const CookbookHeader = styled.div`
@@ -70,11 +51,71 @@ export const CookbookTitle = styled.h3`
   overflow: hidden;
 `;
 
-export const CookbookRecipes = styled.span`
+export const CookbookRecipeCountText = styled.span`
   color: #b9bdc3;
 `;
 
-export const RecipeContainer = styled.div``;
+export const CookbookRecipeContainer = styled.div`
+  display: flex;
+  gap: 20px;
+`;
+
+export const RecipeCardContainer = styled.div``;
+
+export const RecipeCard = styled.div`
+  width: 278px;
+  height: 198px;
+  border-radius: 20px;
+  background-color: #eab676;
+  cursor: pointer;
+  padding: 15px;
+  margin-bottom: 10px;
+`;
+
+export const RecipeHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+export const TimeBanner = styled.div`
+  background-color: #292929;
+  border-radius: 50vh;
+  height: 30px;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+`;
+
+export const TimeText = styled.span`
+  font-size: 12px;
+  color: #fff;
+  margin-left: 10px;
+`;
+
+export const RecipeName = styled.span`
+  font-size: 20px;
+  font-weight: 600;
+  margin-left: 10px;
+`;
+
+export const FavouriteButton = styled.button`
+  width: 47px;
+  height: 47px;
+  border-radius: 17px;
+  background-color: #292929;
+
+  color: inherit;
+  border: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  outline: inherit;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
 
 export const EmptyContainer = styled.div`
   display: flex;
@@ -121,16 +162,6 @@ export const ModalTitle = styled.h2`
   font-size: 24px;
   font-weight: 700;
   margin: 0;
-`;
-
-export const StyledInput = styled(Input)`
-  width: 100%;
-`;
-
-export const StyledButton = styled(Button)`
-  &&& {
-    align-self: flex-end;
-  }
 `;
 
 export const CloseButton = styled.button`

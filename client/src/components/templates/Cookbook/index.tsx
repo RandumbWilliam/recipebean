@@ -1,15 +1,15 @@
+import Button from "@components/elements/Button";
+import ButtonLink from "@components/elements/ButtonLink";
+import Icon from "@components/elements/Icon";
+import {
+  CookbookResponseFragment,
+  useDeleteCookbookMutation,
+  useUpdateCookbookMutation,
+} from "@generated/graphql";
 import TextField from "@mui/material/TextField";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
-import {
-  useDeleteCookbookMutation,
-  useUpdateCookbookMutation,
-} from "../../../generated/graphql";
-import Button from "../../elements/Button";
-import ButtonLink from "../../elements/ButtonLink";
-import Icon from "../../elements/Icon";
-import RecipeCard from "../../elements/RecipeCard";
+import React, { useState } from "react";
 import {
   CloseButton,
   CookbookActions,
@@ -18,47 +18,36 @@ import {
   CookbookEditHeader,
   CookbookEditIcon,
   CookbookHeader,
-  CookbookRecipes,
+  CookbookRecipeContainer,
+  CookbookRecipeCountText,
   CookbookTitle,
   EmptyContainer,
   EmptyText,
+  FavouriteButton,
   ModalContainer,
   ModalHeader,
   ModalTitle,
-  RecipeContainer,
-  StyledContainer,
+  RecipeCard,
+  RecipeCardContainer,
+  RecipeHeader,
+  RecipeName,
   StyledModal,
+  TimeBanner,
+  TimeText,
   WarningText,
 } from "./styles";
 
-interface ResultsProps {
-  cookbookId: string;
-  cookbookName?: string;
-  recipeCount?: number;
-  recipes?: {
-    id: string;
-    prepTime: number;
-    cookTime: number;
-    recipeName: string;
-  }[];
+interface CookbookTemplateProps {
+  cookbook: CookbookResponseFragment;
 }
 
-const CookbookTemplate: React.FC<ResultsProps> = ({
-  cookbookId,
-  cookbookName,
-  recipeCount,
-  recipes,
-}) => {
+const CookbookTemplate: React.FC<CookbookTemplateProps> = ({ cookbook }) => {
   const router = useRouter();
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [editTitle, setEditTitle] = useState(false);
-  const [title, setTitle] = useState("");
+  const [title, setTitle] = useState(cookbook.cookbookName);
   const [, updateCookbook] = useUpdateCookbookMutation();
   const [, deleteCookbook] = useDeleteCookbookMutation();
-
-  useEffect(() => {
-    setTitle(cookbookName!);
-  }, [cookbookName]);
 
   const handleDeleteOpenModal = () => {
     setDeleteModalOpen(!deleteModalOpen);
@@ -72,25 +61,21 @@ const CookbookTemplate: React.FC<ResultsProps> = ({
     e.preventDefault();
     await updateCookbook({
       cookbookName: title,
-      updateCookbookId: cookbookId,
+      updateCookbookId: cookbook.id,
     });
 
     setEditTitle(false);
   };
 
   const handleDeleteCookbook = async () => {
-    const { data } = await deleteCookbook({ deleteCookbookId: cookbookId });
+    const { data } = await deleteCookbook({ deleteCookbookId: cookbook.id });
 
     if (data?.deleteCookbook) {
       router.push("/cookbooks");
     }
   };
 
-  let recipeText = () => {
-    if (!recipeCount) {
-      return "No recipes";
-    }
-
+  const recipeCountText = (recipeCount: number) => {
     if (recipeCount > 1) {
       return `${recipeCount} recipes`;
     } else if (recipeCount == 1) {
@@ -102,7 +87,7 @@ const CookbookTemplate: React.FC<ResultsProps> = ({
 
   let body = null;
 
-  if (recipes?.length === 0) {
+  if (cookbook.recipes?.length === 0) {
     body = (
       <EmptyContainer>
         <Icon name="Cookbook" size={102} color="#B9BDC3" />
@@ -115,61 +100,76 @@ const CookbookTemplate: React.FC<ResultsProps> = ({
   } else {
     body = (
       <>
-        {recipes?.map((recipe) => (
-          <RecipeCard
-            key={recipe.id}
-            recipeName={recipe.recipeName}
-            cookTime={recipe.cookTime}
-            prepTime={recipe.prepTime}
-          />
-        ))}
+        {cookbook.recipes?.map((recipe) => {
+          const totalTime = recipe.cookTime + recipe.prepTime;
+          const hours = Math.floor(totalTime / 60);
+          const minutes = totalTime % 60;
+          return (
+            <RecipeCardContainer key={recipe.id}>
+              <RecipeCard>
+                <RecipeHeader>
+                  <TimeBanner>
+                    <Icon name="Stopwatch" size={18} color="#fff" />
+                    <TimeText>
+                      {hours} h {minutes !== 0 && `${minutes} m`}
+                    </TimeText>
+                  </TimeBanner>
+                  <FavouriteButton>
+                    <Icon name="HeartOutline" size={22} color="#fff" />
+                  </FavouriteButton>
+                </RecipeHeader>
+              </RecipeCard>
+              <RecipeName>{recipe.recipeName}</RecipeName>
+            </RecipeCardContainer>
+          );
+        })}
       </>
     );
   }
 
   return (
     <>
-      <StyledContainer>
-        <CookbookContainer>
-          {editTitle ? (
-            <CookbookEditHeader>
-              <TextField
-                hiddenLabel
-                id="filled-hidden-label-small"
-                defaultValue={title}
-                variant="standard"
-                size="small"
-                onChange={handleTitleChange}
-              />
-              <CookbookEditActions>
-                <ButtonLink color="#B9BDC3" onClick={() => setEditTitle(false)}>
-                  CANCEL
-                </ButtonLink>
-                <ButtonLink onClick={handleTitleSave}>SAVE</ButtonLink>
-              </CookbookEditActions>
-            </CookbookEditHeader>
-          ) : (
-            <CookbookHeader>
-              <CookbookTitle>{title}</CookbookTitle>
-              <CookbookActions>
-                <CookbookEditIcon
-                  onClick={() => {
-                    setEditTitle(true);
-                    setTitle(cookbookName!);
-                  }}
-                >
-                  <Icon name="Pen" size={22} color="#ff596d" />
-                </CookbookEditIcon>
-                <CookbookEditIcon onClick={handleDeleteOpenModal}>
-                  <Icon name="Trash" size={22} color="#ff596d" />
-                </CookbookEditIcon>
-              </CookbookActions>
-            </CookbookHeader>
-          )}
-          <CookbookRecipes>{recipeText()}</CookbookRecipes>
-          <RecipeContainer>{body}</RecipeContainer>
-        </CookbookContainer>
-      </StyledContainer>
+      <CookbookContainer>
+        {editTitle ? (
+          <CookbookEditHeader>
+            <TextField
+              hiddenLabel
+              id="filled-hidden-label-small"
+              defaultValue={title}
+              variant="standard"
+              size="small"
+              onChange={handleTitleChange}
+            />
+            <CookbookEditActions>
+              <ButtonLink color="#B9BDC3" onClick={() => setEditTitle(false)}>
+                CANCEL
+              </ButtonLink>
+              <ButtonLink onClick={handleTitleSave}>SAVE</ButtonLink>
+            </CookbookEditActions>
+          </CookbookEditHeader>
+        ) : (
+          <CookbookHeader>
+            <CookbookTitle>{title}</CookbookTitle>
+            <CookbookActions>
+              <CookbookEditIcon
+                onClick={() => {
+                  setEditTitle(true);
+                  setTitle(cookbook.cookbookName!);
+                }}
+              >
+                <Icon name="Pen" size={22} color="#ff596d" />
+              </CookbookEditIcon>
+              <CookbookEditIcon onClick={handleDeleteOpenModal}>
+                <Icon name="Trash" size={22} color="#ff596d" />
+              </CookbookEditIcon>
+            </CookbookActions>
+          </CookbookHeader>
+        )}
+        <CookbookRecipeCountText>
+          {recipeCountText(cookbook.recipes.length)}
+        </CookbookRecipeCountText>
+        <CookbookRecipeContainer>{body}</CookbookRecipeContainer>
+      </CookbookContainer>
       <StyledModal
         open={deleteModalOpen}
         onClose={() => setDeleteModalOpen(false)}

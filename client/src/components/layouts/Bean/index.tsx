@@ -1,5 +1,5 @@
-import React from "react";
 import Head from "next/head";
+import React from "react";
 import Sidebar from "../../modules/Sidebar";
 import { BeanContainer, BeanMain } from "./styles";
 

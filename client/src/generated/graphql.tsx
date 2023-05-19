@@ -248,7 +248,7 @@ export type UserValidator = {
   password: Scalars['String'];
 };
 
-export type CookbookResponseFragment = { __typename?: 'Cookbook', id: string, cookbookName: string };
+export type CookbookResponseFragment = { __typename?: 'Cookbook', id: string, cookbookName: string, recipes: Array<{ __typename?: 'Recipe', id: string, recipeName: string, prepTime: number, cookTime: number }> };
 
 export type ErrorResponseFragment = { __typename?: 'FieldError', field: string, message: string };
 
@@ -341,12 +341,12 @@ export type GetCookbookQueryVariables = Exact<{
 }>;
 
 
-export type GetCookbookQuery = { __typename?: 'Query', getCookbook: { __typename?: 'Cookbook', cookbookName: string, recipes: Array<{ __typename?: 'Recipe', id: string, prepTime: number, cookTime: number, recipeName: string }> } };
+export type GetCookbookQuery = { __typename?: 'Query', getCookbook: { __typename?: 'Cookbook', id: string, cookbookName: string, recipes: Array<{ __typename?: 'Recipe', id: string, recipeName: string, prepTime: number, cookTime: number }> } };
 
 export type GetCookbooksQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetCookbooksQuery = { __typename?: 'Query', getCookbooks: Array<{ __typename?: 'Cookbook', id: string, cookbookName: string, recipes: Array<{ __typename?: 'Recipe', id: string }> }> };
+export type GetCookbooksQuery = { __typename?: 'Query', getCookbooks: Array<{ __typename?: 'Cookbook', id: string, cookbookName: string, recipes: Array<{ __typename?: 'Recipe', id: string, recipeName: string, prepTime: number, cookTime: number }> }> };
 
 export type GetRecipeByIdQueryVariables = Exact<{
   getRecipeId: Scalars['String'];
@@ -369,6 +369,12 @@ export const CookbookResponseFragmentDoc = gql`
     fragment CookbookResponse on Cookbook {
   id
   cookbookName
+  recipes {
+    id
+    recipeName
+    prepTime
+    cookTime
+  }
 }
     `;
 export const RecipeHeaderIngredientResponseFragmentDoc = gql`
@@ -537,16 +543,10 @@ export function useUpdateCookbookMutation() {
 export const GetCookbookDocument = gql`
     query GetCookbook($getCookbookId: String!) {
   getCookbook(id: $getCookbookId) {
-    cookbookName
-    recipes {
-      id
-      prepTime
-      cookTime
-      recipeName
-    }
+    ...CookbookResponse
   }
 }
-    `;
+    ${CookbookResponseFragmentDoc}`;
 
 export function useGetCookbookQuery(options: Omit<Urql.UseQueryArgs<GetCookbookQueryVariables>, 'query'>) {
   return Urql.useQuery<GetCookbookQuery, GetCookbookQueryVariables>({ query: GetCookbookDocument, ...options });
@@ -554,14 +554,10 @@ export function useGetCookbookQuery(options: Omit<Urql.UseQueryArgs<GetCookbookQ
 export const GetCookbooksDocument = gql`
     query GetCookbooks {
   getCookbooks {
-    id
-    cookbookName
-    recipes {
-      id
-    }
+    ...CookbookResponse
   }
 }
-    `;
+    ${CookbookResponseFragmentDoc}`;
 
 export function useGetCookbooksQuery(options?: Omit<Urql.UseQueryArgs<GetCookbooksQueryVariables>, 'query'>) {
   return Urql.useQuery<GetCookbooksQuery, GetCookbooksQueryVariables>({ query: GetCookbooksDocument, ...options });

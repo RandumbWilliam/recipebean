@@ -6,11 +6,10 @@ import { useRouter } from "next/router";
 import React, { useState } from "react";
 import {
   AuthCard,
-  AuthSection,
+  AuthContainer,
+  AuthErrorText,
+  AuthSubmitButton,
   AuthTitle,
-  ErrorText,
-  StyledContainer,
-  SubmitButton,
 } from "./styles";
 
 const initialForm = {
@@ -27,6 +26,7 @@ const LoginTemplate: React.FC<{}> = ({}) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    setErrors(errors.filter((error) => error.field !== e.target.name));
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -37,58 +37,49 @@ const LoginTemplate: React.FC<{}> = ({}) => {
     } else if (response.data?.login.user) {
       router.push("/cookbooks");
     }
-    // if (response.data?.login) {
-    //   router.push("/cookbooks");
-    // } else {
-    //   console.log("ERROR");
-    // }
   };
 
   return (
-    <AuthSection>
-      <StyledContainer>
-        <AuthTitle>Log In</AuthTitle>
-        <AuthCard noValidate onSubmit={handleSubmit}>
-          <Grid container direction="column" rowSpacing={3}>
-            <Grid item>
-              <Input
-                type="email"
-                name="email"
-                label="Email"
-                placeholder="Enter your email"
-                onChange={handleChange}
-                error={errors.some((error) => error.field === "email")}
-              />
-            </Grid>
-            <Grid item>
-              <Input
-                type="password"
-                name="password"
-                label="Password"
-                placeholder="Password"
-                onChange={handleChange}
-                error={errors.some((error) => error.field === "password")}
-              />
-            </Grid>
-            <Grid display="flex" item justifyContent="center">
-              <SubmitButton type="submit" pill={true}>
-                Log In
-              </SubmitButton>
-            </Grid>
-            {errors && (
-              <Grid display="flex" item justifyContent="center">
-                {errors.map((error) => (
-                  <ErrorText key={error.field}>
-                    <Icon name="Error" color="#ff0033" />{" "}
-                    <span>{error?.message}</span>
-                  </ErrorText>
-                ))}
-              </Grid>
-            )}
+    <AuthContainer>
+      <AuthTitle>Log In</AuthTitle>
+      <AuthCard noValidate onSubmit={handleSubmit}>
+        <Grid container direction="column" rowSpacing={3}>
+          <Grid item>
+            <Input
+              type="email"
+              name="email"
+              label="Email"
+              placeholder="Enter your email"
+              onChange={handleChange}
+              error={errors.some((error) => error.field === "email")}
+            />
           </Grid>
-        </AuthCard>
-      </StyledContainer>
-    </AuthSection>
+          <Grid item>
+            <Input
+              type="password"
+              name="password"
+              label="Password"
+              placeholder="Password"
+              onChange={handleChange}
+              error={errors.some((error) => error.field === "password")}
+            />
+          </Grid>
+          <Grid display="flex" item justifyContent="center">
+            <AuthSubmitButton type="submit">Log In</AuthSubmitButton>
+          </Grid>
+          {errors && (
+            <Grid display="flex" item justifyContent="center">
+              {errors.map((error) => (
+                <AuthErrorText key={error.field}>
+                  <Icon name="Error" color="#ff0033" />{" "}
+                  <span>{error?.message}</span>
+                </AuthErrorText>
+              ))}
+            </Grid>
+          )}
+        </Grid>
+      </AuthCard>
+    </AuthContainer>
   );
 };
 

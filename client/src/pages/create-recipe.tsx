@@ -1,14 +1,12 @@
+import BeanLayout from "@components/layouts/Bean";
+import CreateRecipeTemplate from "@components/templates/CreateRecipe";
 import { useGetCookbooksQuery } from "@generated/graphql";
-import React, { useState } from "react";
-import BeanLayout from "../components/layouts/Bean";
-import CreateRecipeTemplate from "../components/templates/CreateRecipe";
+import { createUrqlClient } from "@utils/createUrqlClient";
+import { withUrqlClient } from "next-urql";
+import React from "react";
 
 const CreateRecipe = () => {
   const [{ data, fetching }] = useGetCookbooksQuery();
-
-  if (fetching) {
-    return <div>Loading</div>;
-  }
 
   if (!fetching && data?.getCookbooks) {
     return (
@@ -21,4 +19,4 @@ const CreateRecipe = () => {
   return <div>Error</div>;
 };
 
-export default CreateRecipe;
+export default withUrqlClient(createUrqlClient)(CreateRecipe);
