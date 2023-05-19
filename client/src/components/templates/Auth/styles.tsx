@@ -2,18 +2,12 @@ import Button from "@components/elements/Button";
 import { Container } from "@mui/material";
 import styled from "styled-components";
 
-export const AuthSection = styled.section`
-  height: 100vh;
-  min-height: 768px;
-  background-color: #f5f7f9;
-`;
-
-export const StyledContainer = styled(Container)`
+export const AuthContainer = styled(Container)`
   &&& {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    padding-top: 130px;
     height: 100%;
   }
 `;
@@ -37,12 +31,12 @@ export const AuthCard = styled.form`
   padding: 40px;
 `;
 
-export const SubmitButton = styled(Button)`
+export const AuthSubmitButton = styled(Button)`
   width: 200px;
   margin: 15px 0;
 `;
 
-export const ErrorText = styled.span`
+export const AuthErrorText = styled.span`
   color: #ff0033;
   display: flex;
   gap: 5px;

@@ -1,5 +1,5 @@
-import React from "react";
 import Head from "next/head";
+import React from "react";
 import Footer from "../../modules/Footer";
 import Navbar from "../../modules/Navbar";
 

@@ -5,7 +5,7 @@ interface Props {
   backgroundColor: "white" | "grey";
 }
 
-export const SecSection = styled.section<Props>`
+export const SectionSection = styled.section<Props>`
   height: 768px;
   ${({ backgroundColor }) => {
     switch (backgroundColor) {
@@ -17,7 +17,7 @@ export const SecSection = styled.section<Props>`
   }};
 `;
 
-export const StyledContainer = styled(Container)`
+export const SectionContainer = styled(Container)`
   &&& {
     display: flex;
     align-items: center;
@@ -25,11 +25,11 @@ export const StyledContainer = styled(Container)`
   }
 `;
 
-export const SecTitle = styled.h2`
+export const SectionTitle = styled.h2`
   font-weight: 600;
   font-size: 48px;
 `;
 
-export const SecParagraph = styled.p`
+export const SectionParagraph = styled.p`
   font-size: 24px;
 `;

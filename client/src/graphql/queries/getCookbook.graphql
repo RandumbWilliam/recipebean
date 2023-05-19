@@ -1,11 +1,5 @@
 query GetCookbook($getCookbookId: String!) {
   getCookbook(id: $getCookbookId) {
-    cookbookName
-    recipes {
-      id
-      prepTime
-      cookTime
-      recipeName
-    }
+    ...CookbookResponse
   }
 }

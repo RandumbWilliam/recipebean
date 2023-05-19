@@ -1,19 +1,13 @@
 import { Grid } from "@mui/material";
 import React from "react";
-import { useMyUserQuery } from "../../../../generated/graphql";
-import {
-  HeroSection,
-  StyledContainer,
-  HeroTitle,
-  HeroParagraph,
-} from "./styles";
+import { HeroContainer, HeroParagraph, HeroSection, HeroTitle } from "./styles";
 
 interface HeroProps {}
 
 const Hero: React.FC<HeroProps> = ({}) => {
   return (
     <HeroSection>
-      <StyledContainer>
+      <HeroContainer>
         <Grid container>
           <Grid item>
             <HeroTitle>
@@ -28,7 +22,7 @@ const Hero: React.FC<HeroProps> = ({}) => {
             </HeroParagraph>
           </Grid>
         </Grid>
-      </StyledContainer>
+      </HeroContainer>
     </HeroSection>
   );
 };

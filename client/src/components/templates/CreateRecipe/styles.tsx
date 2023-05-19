@@ -1,7 +1,24 @@
 import Button from "@components/elements/Button";
 import TextFieldElement from "@components/elements/TextField";
-import { Input, Modal } from "@mui/material";
+import { Container, Modal } from "@mui/material";
 import styled from "styled-components";
+
+export const CreateRecipeContainer = styled(Container)`
+  &&& {
+    padding: 0 65px;
+  }
+`;
+
+export const CreateRecipeHeader = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
+
+export const CreateRecipeTitle = styled.h1`
+  font-size: 48px;
+  font-weight: 700;
+`;
 
 export const ColumnContainer = styled.div`
   display: flex;
@@ -29,12 +46,6 @@ export const SubHeader = styled.h2`
   margin-bottom: 8px;
 `;
 
-export const IngredientContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 20px;
-`;
-
 export const InputContainer = styled.div`
   display: flex;
   margin-bottom: 20px;
@@ -59,12 +70,6 @@ export const TimeInput = styled(TextFieldElement)`
   }
 `;
 
-export const IngredientList = styled.ul``;
-
-export const InstructionList = styled.ol``;
-
-export const IngredientListItem = styled.li``;
-
 export const NuritionText = styled.span`
   display: flex;
   column-gap: 14px;
@@ -85,11 +90,6 @@ export const Box = styled.div`
   border-radius: 20px;
   min-height: 1000px;
   overflow-y: auto;
-`;
-
-export const MiniHeader = styled.h3`
-  font-weight: 500;
-  margin: 0;
 `;
 
 export const StyledModal = styled(Modal)`
@@ -120,10 +120,6 @@ export const ModalTitle = styled.h2`
   font-size: 24px;
   font-weight: 700;
   margin: 0;
-`;
-
-export const StyledInput = styled(Input)`
-  width: 100%;
 `;
 
 export const CloseButton = styled.button`

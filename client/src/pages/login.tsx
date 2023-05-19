@@ -1,14 +1,14 @@
-import React from "react";
-import { withUrqlClient } from "next-urql";
-import BaseLayout from "@components/layouts/Base";
+import AuthLayout from "@components/layouts/Auth";
 import { LoginTemplate } from "@components/templates/Auth";
-import { createUrqlClient } from "../utils/createUrqlClient";
+import { createUrqlClient } from "@utils/createUrqlClient";
+import { withUrqlClient } from "next-urql";
+import React from "react";
 
 const Login: React.FC<{}> = ({}) => {
   return (
-    <BaseLayout>
+    <AuthLayout>
       <LoginTemplate />
-    </BaseLayout>
+    </AuthLayout>
   );
 };
 

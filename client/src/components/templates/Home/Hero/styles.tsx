@@ -17,7 +17,7 @@ export const HeroSection = styled.section`
   }
 `;
 
-export const StyledContainer = styled(Container)`
+export const HeroContainer = styled(Container)`
   &&& {
     display: flex;
     align-items: center;

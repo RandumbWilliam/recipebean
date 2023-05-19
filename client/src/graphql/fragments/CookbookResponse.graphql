@@ -1,4 +1,10 @@
 fragment CookbookResponse on Cookbook {
   id
   cookbookName
+  recipes {
+    id
+    recipeName
+    prepTime
+    cookTime
+  }
 }
