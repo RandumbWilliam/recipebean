@@ -1,7 +1,6 @@
+import Logo from "@components/elements/Logo";
 import { Container } from "@mui/material";
-import Link from "next/link";
 import styled from "styled-components";
-import Logo from "../../elements/Logo";
 
 interface Props {
   scrolled: boolean;

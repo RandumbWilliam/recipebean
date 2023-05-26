@@ -3,15 +3,15 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import Button from "../../elements/Button";
 import {
-  NavbarContainer,
-  NavLogo,
-  NavMenu,
-  NavLink,
   NavButtons,
-  Profile,
-  NavLogoLink,
-  StyledContainer,
   NavItem,
+  NavLink,
+  NavLogo,
+  NavLogoLink,
+  NavMenu,
+  NavbarContainer,
+  Profile,
+  StyledContainer,
 } from "./styles";
 
 interface NavbarProps {}
@@ -44,7 +44,7 @@ const Navbar: React.FC<NavbarProps> = ({}) => {
       <StyledContainer>
         <Link href="/">
           <NavLogoLink>
-            <NavLogo scrolled={scrolled} />
+            <NavLogo scrolled={scrolled} color="#ff596d" />
           </NavLogoLink>
         </Link>
         <NavMenu>
