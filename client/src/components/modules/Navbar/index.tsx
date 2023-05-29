@@ -1,8 +1,8 @@
-import { Container } from "@mui/material";
+import Button from "@components/elements/Button";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
-import Button from "../../elements/Button";
 import {
+  Nav,
   NavButtons,
   NavItem,
   NavLink,
@@ -10,16 +10,14 @@ import {
   NavLogoLink,
   NavMenu,
   NavbarContainer,
-  Profile,
-  StyledContainer,
 } from "./styles";
 
 interface NavbarProps {}
 
 const MenuLinks = [
-  { item: "Recipes", url: "/recipe-app" },
-  { item: "Planning", url: "/" },
-  { item: "Shopping", url: "/" },
+  { key: "recipes", label: "Recipes", url: "/" },
+  { key: "planning", label: "Planning", url: "/" },
+  { key: "shopping", label: "Shopping", url: "/" },
 ];
 
 const Navbar: React.FC<NavbarProps> = ({}) => {
@@ -40,18 +38,18 @@ const Navbar: React.FC<NavbarProps> = ({}) => {
   });
 
   return (
-    <NavbarContainer scrolled={scrolled}>
-      <StyledContainer>
+    <Nav scrolled={scrolled}>
+      <NavbarContainer>
         <Link href="/">
           <NavLogoLink>
             <NavLogo scrolled={scrolled} color="#ff596d" />
           </NavLogoLink>
         </Link>
         <NavMenu>
-          {MenuLinks.map((item, index) => (
-            <NavItem key={index}>
+          {MenuLinks.map((item) => (
+            <NavItem key={item.key}>
               <Link href={item.url}>
-                <NavLink>{item.item}</NavLink>
+                <NavLink>{item.label}</NavLink>
               </Link>
             </NavItem>
           ))}
@@ -68,8 +66,8 @@ const Navbar: React.FC<NavbarProps> = ({}) => {
             </a>
           </Link>
         </NavButtons>
-      </StyledContainer>
-    </NavbarContainer>
+      </NavbarContainer>
+    </Nav>
   );
 };
 

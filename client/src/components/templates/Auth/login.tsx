@@ -1,15 +1,29 @@
+import LoginImage from "@assets/LoginImage.png";
+import ButtonLink from "@components/elements/ButtonLink";
+import Checkbox from "@components/elements/Checkbox";
 import Icon from "@components/elements/Icon";
 import Input from "@components/elements/Input";
 import { FieldError, useLoginMutation } from "@generated/graphql";
-import { Grid } from "@mui/material";
+import Image from "next/image";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import {
+  AuthButtons,
   AuthCard,
-  AuthContainer,
+  AuthContentContainer,
   AuthErrorText,
+  AuthForm,
+  AuthGoogleButton,
+  AuthGoogleButtonText,
+  AuthHeader,
+  AuthImageContainer,
+  AuthImageText,
   AuthSubmitButton,
+  AuthText,
   AuthTitle,
+  LoginActions,
+  LoginPasswordContainer,
+  TextDivider,
 } from "./styles";
 
 const initialForm = {
@@ -20,6 +34,7 @@ const initialForm = {
 const LoginTemplate: React.FC<{}> = ({}) => {
   const router = useRouter();
   const [, login] = useLoginMutation();
+  const [rememberPassword, setRememberPassword] = useState(false);
   const [formData, setFormData] = useState(initialForm);
   const [errors, setErrors] = useState<FieldError[]>([]);
 
@@ -40,11 +55,21 @@ const LoginTemplate: React.FC<{}> = ({}) => {
   };
 
   return (
-    <AuthContainer>
-      <AuthTitle>Log In</AuthTitle>
-      <AuthCard noValidate onSubmit={handleSubmit}>
-        <Grid container direction="column" rowSpacing={3}>
-          <Grid item>
+    <>
+      <AuthImageContainer>
+        <Image src={LoginImage} alt="Login Image" />
+        <AuthImageText>Welcome Back!</AuthImageText>
+      </AuthImageContainer>
+      <AuthContentContainer>
+        <AuthCard>
+          <AuthHeader>
+            <AuthTitle>Welcome back!</AuthTitle>
+            <AuthText>
+              {`Don't have an account? `}
+              <ButtonLink link="/register">Sign up here</ButtonLink>
+            </AuthText>
+          </AuthHeader>
+          <AuthForm noValidate onSubmit={handleSubmit}>
             <Input
               type="email"
               name="email"
@@ -53,33 +78,48 @@ const LoginTemplate: React.FC<{}> = ({}) => {
               onChange={handleChange}
               error={errors.some((error) => error.field === "email")}
             />
-          </Grid>
-          <Grid item>
-            <Input
-              type="password"
-              name="password"
-              label="Password"
-              placeholder="Password"
-              onChange={handleChange}
-              error={errors.some((error) => error.field === "password")}
-            />
-          </Grid>
-          <Grid display="flex" item justifyContent="center">
+            <LoginPasswordContainer>
+              <Input
+                type="password"
+                name="password"
+                label="Password"
+                placeholder="Password"
+                onChange={handleChange}
+                error={errors.some((error) => error.field === "password")}
+              />
+              <LoginActions>
+                <Checkbox
+                  isChecked={rememberPassword}
+                  onChange={() => setRememberPassword(!rememberPassword)}
+                  label="Remember Me"
+                />
+                <ButtonLink link="/">Forgot Password?</ButtonLink>
+              </LoginActions>
+            </LoginPasswordContainer>
+          </AuthForm>
+          <AuthButtons>
             <AuthSubmitButton type="submit">Log In</AuthSubmitButton>
-          </Grid>
+            <TextDivider>or</TextDivider>
+            <AuthGoogleButton primary={false}>
+              <AuthGoogleButtonText>
+                <Icon name="Google" size={22} />
+                Continue with Google
+              </AuthGoogleButtonText>
+            </AuthGoogleButton>
+          </AuthButtons>
           {errors && (
-            <Grid display="flex" item justifyContent="center">
+            <div>
               {errors.map((error) => (
                 <AuthErrorText key={error.field}>
                   <Icon name="Error" color="#ff0033" />{" "}
                   <span>{error?.message}</span>
                 </AuthErrorText>
               ))}
-            </Grid>
+            </div>
           )}
-        </Grid>
-      </AuthCard>
-    </AuthContainer>
+        </AuthCard>
+      </AuthContentContainer>
+    </>
   );
 };
 

@@ -5,6 +5,7 @@ export * from "./CloseOuteline";
 export * from "./Cookbook";
 export * from "./Cross";
 export * from "./Error";
+export * from "./Google";
 export * from "./Heart";
 export * from "./HeartOutline";
 export * from "./HorizontalKebab";

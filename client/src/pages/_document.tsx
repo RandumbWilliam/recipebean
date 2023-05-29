@@ -1,6 +1,6 @@
 import React from "react";
 // eslint-disable-next-line @next/next/no-document-import-in-page
-import Document, { Html, Head, Main, NextScript } from "next/document";
+import Document, { Head, Html, Main, NextScript } from "next/document";
 import { ServerStyleSheet } from "styled-components";
 import theme from "../styles/theme";
 
@@ -12,16 +12,12 @@ export default class MyDocument extends Document {
         <Head>
           <meta content={theme.palette.primary.main} name="theme-color" />
           <link
-            href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
-            rel="stylesheet"
-          />
-          <link
             rel="stylesheet"
             href="https://fonts.googleapis.com/icon?family=Material+Icons"
           />
           <link
-            href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
             rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Outfit:wght@100;200;300;400;500;600;700;800;900&display=swap"
           />
         </Head>
         <body>

@@ -1,39 +1,83 @@
 import Button from "@components/elements/Button";
-import { Container } from "@mui/material";
+import { BRINK_PINK_20, ONYX_20, WHITE_COLOUR } from "@styles/base/colours";
 import styled from "styled-components";
 
-export const AuthContainer = styled(Container)`
-  &&& {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding-top: 130px;
-    height: 100%;
-  }
+export const AuthImageContainer = styled.div`
+  background-color: ${BRINK_PINK_20};
+  height: 100%;
+  max-width: 720px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 `;
 
-export const AuthTitle = styled.h1`
-  font-size: 35px;
-  font-weight: 500;
-  color: #ff596d;
+export const AuthContentContainer = styled.div`
+  width: 100%;
+  min-width: 600px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 `;
 
-export const AuthCard = styled.form`
+export const AuthImageText = styled.h3`
+  color: ${WHITE_COLOUR};
+`;
+
+export const AuthCard = styled.div`
+  width: 368px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+`;
+
+export const AuthHeader = styled.div``;
+
+export const AuthTitle = styled.h4``;
+
+export const AuthText = styled.p`
+  color: ${ONYX_20};
+`;
+
+export const AuthForm = styled.form`
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
   border-radius: 30px;
-  width: 500px;
-  height: 480px;
-  background-color: #fff;
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-  padding: 40px;
+  margin-bottom: 24px;
+  gap: 24px;
+`;
+
+export const AuthButtons = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 `;
 
 export const AuthSubmitButton = styled(Button)`
-  width: 200px;
-  margin: 15px 0;
+  width: 100%;
+`;
+
+export const AuthGoogleButton = styled(Button)`
+  width: 100%;
+  color: ${ONYX_20};
+  border-color: ${ONYX_20};
+
+  &:hover {
+    background-color: transparent;
+    color: ${ONYX_20};
+  }
+`;
+
+export const AuthGoogleButtonText = styled.span`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 18px;
 `;
 
 export const AuthErrorText = styled.span`
@@ -41,4 +85,38 @@ export const AuthErrorText = styled.span`
   display: flex;
   gap: 5px;
   align-items: center;
+`;
+
+export const TextDivider = styled.div`
+  --text-divider-gap: 1rem;
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.1em;
+  color: ${ONYX_20};
+
+  &::before,
+  ::after {
+    content: "";
+    height: 1px;
+    background-color: ${ONYX_20};
+    flex-grow: 1;
+  }
+
+  &::before {
+    margin-right: var(--text-divider-gap);
+  }
+
+  &::after {
+    margin-left: var(--text-divider-gap);
+  }
+`;
+
+export const LoginActions = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+`;
+
+export const LoginPasswordContainer = styled.div`
+  width: 100%;
 `;

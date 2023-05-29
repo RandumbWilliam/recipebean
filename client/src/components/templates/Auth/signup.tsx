@@ -1,10 +1,29 @@
 import ErrorMessage from "@components/elements/ErrorMessage";
+import Icon from "@components/elements/Icon";
 import Input from "@components/elements/Input";
 import { FieldError, useRegisterMutation } from "@generated/graphql";
 import { Grid } from "@mui/material";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
-import { AuthCard, AuthContainer, AuthSubmitButton, AuthTitle } from "./styles";
+import {
+  AuthButtons,
+  AuthCard,
+  AuthContentContainer,
+  AuthForm,
+  AuthGoogleButton,
+  AuthGoogleButtonText,
+  AuthHeader,
+  AuthImageContainer,
+  AuthImageText,
+  AuthSubmitButton,
+  AuthText,
+  AuthTitle,
+  TextDivider,
+} from "./styles";
+
+import SignUpImage from "@assets/SignUpImage.png";
+import ButtonLink from "@components/elements/ButtonLink";
+import Image from "next/image";
 
 const initialForm = {
   email: "",
@@ -35,12 +54,29 @@ const SignupTemplate: React.FC<{}> = ({}) => {
     }
   };
 
+  const handleGoogleSignup = () => {
+    console.log("Google Log In");
+  };
+
   return (
-    <AuthContainer>
-      <AuthTitle>Create Account</AuthTitle>
-      <AuthCard noValidate onSubmit={handleSubmit}>
-        <Grid container direction="column" rowSpacing={3}>
-          <Grid item xs>
+    <>
+      <AuthImageContainer>
+        <Image src={SignUpImage} alt="Sign Up Image" />
+        <AuthImageText>
+          Sign up to save your recipes, <br />
+          ingredients, and many more!
+        </AuthImageText>
+      </AuthImageContainer>
+      <AuthContentContainer>
+        <AuthCard>
+          <AuthHeader>
+            <AuthTitle>Create Account</AuthTitle>
+            <AuthText>
+              Already have an account?{" "}
+              <ButtonLink link="/login">Log In</ButtonLink>
+            </AuthText>
+          </AuthHeader>
+          <AuthForm noValidate onSubmit={handleSubmit}>
             <Grid container direction="row" columnSpacing={2}>
               <Grid item md={6}>
                 <Input
@@ -79,8 +115,6 @@ const SignupTemplate: React.FC<{}> = ({}) => {
                 )}
               </Grid>
             </Grid>
-          </Grid>
-          <Grid item>
             <Input
               type="email"
               name="email"
@@ -96,13 +130,11 @@ const SignupTemplate: React.FC<{}> = ({}) => {
                 }
               />
             )}
-          </Grid>
-          <Grid item>
             <Input
               type="password"
               name="password"
               label="Password"
-              placeholder="at least 8 characters"
+              placeholder="At least 8 characters"
               error={errors.some((error) => error.field === "password")}
               onChange={handleChange}
             />
@@ -113,13 +145,20 @@ const SignupTemplate: React.FC<{}> = ({}) => {
                 }
               />
             )}
-          </Grid>
-          <Grid display="flex" item justifyContent="center">
-            <AuthSubmitButton type="submit">Sign Up</AuthSubmitButton>
-          </Grid>
-        </Grid>
-      </AuthCard>
-    </AuthContainer>
+          </AuthForm>
+          <AuthButtons>
+            <AuthSubmitButton type="submit">Create Account</AuthSubmitButton>
+            <TextDivider>or</TextDivider>
+            <AuthGoogleButton primary={false} onClick={handleGoogleSignup}>
+              <AuthGoogleButtonText>
+                <Icon name="Google" size={22} />
+                Sign up with Google
+              </AuthGoogleButtonText>
+            </AuthGoogleButton>
+          </AuthButtons>
+        </AuthCard>
+      </AuthContentContainer>
+    </>
   );
 };
 

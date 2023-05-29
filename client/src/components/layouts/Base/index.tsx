@@ -15,7 +15,6 @@ const BaseLayout: React.FC<BaseLayoutProps> = ({ children }) => {
       </Head>
       <Navbar />
       {children}
-      <Footer />
     </>
   );
 };

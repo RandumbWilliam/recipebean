@@ -1,33 +1,23 @@
+import Link from "next/link";
 import React from "react";
-import { StyledButton } from "./styles";
+import { StyledButtonLink } from "./styles";
 
 interface ButtonLinkProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
   children: any;
   className?: string;
-  color?: string;
-  disabled?: boolean;
-  onClick?: any;
+  link: string;
 }
 
 const ButtonLink: React.FC<ButtonLinkProps> = ({
   children,
   className,
-  type = "button",
-  color = "#ff596d",
-  disabled = false,
-  onClick,
+  link,
 }) => {
   return (
-    <StyledButton
-      className={className}
-      type={type}
-      color={color}
-      disabled={disabled}
-      onClick={onClick}
-    >
-      {children}
-    </StyledButton>
+    <Link href={link}>
+      <StyledButtonLink className={className}>{children}</StyledButtonLink>
+    </Link>
   );
 };
 
