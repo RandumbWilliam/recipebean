@@ -15,7 +15,6 @@ const Button: React.FC<ButtonProps> = ({
   className,
   type = "button",
   primary = true,
-  pill = false,
   disabled = false,
   onClick,
 }) => {
@@ -24,7 +23,6 @@ const Button: React.FC<ButtonProps> = ({
       className={className}
       type={type}
       primary={primary}
-      pill={pill}
       disabled={disabled}
       onClick={onClick}
     >

@@ -19,7 +19,9 @@
       "@mui/styled-engine": ["./node_modules/@mui/styled-engine-sc"],
       "@components/*": ["components/*"],
       "@generated/*": ["generated/*"],
-      "@utils/*": ["utils/*"]
+      "@utils/*": ["utils/*"],
+      "@styles/*": ["styles/*"],
+      "@assets/*": ["assets/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],

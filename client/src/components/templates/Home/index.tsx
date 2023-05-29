@@ -6,7 +6,7 @@ const HomeTemplate = () => {
   return (
     <>
       <Hero />
-      <Section
+      {/* <Section
         align="right"
         backgroundColor="grey"
         title="Save all your recipes in one place"
@@ -21,7 +21,7 @@ const HomeTemplate = () => {
         backgroundColor="grey"
         title="Generate your grocery list from your recipes"
         paragraph="Easily import ingredients from your recipes to your grocery list with a click of a button. Edit and organize your list."
-      />
+      /> */}
     </>
   );
 };

@@ -7,6 +7,7 @@ import {
   CookbookIcon,
   CrossIcon,
   ErrorIcon,
+  GoogleIcon,
   HeartIcon,
   HeartOutlineIcon,
   HorizontalKebabIcon,
@@ -46,6 +47,7 @@ export const Icons = {
   Ingredient: IngredientIcon,
   Error: ErrorIcon,
   Cross: CrossIcon,
+  Google: GoogleIcon,
 };
 
 const Icon: React.FC<IconProps> = ({

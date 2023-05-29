@@ -1,6 +1,17 @@
+import HeroImage from "@assets/Hero.png";
+import Button from "@components/elements/Button";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import { Grid } from "@mui/material";
+import Image from "next/image";
+import Link from "next/link";
 import React from "react";
-import { HeroContainer, HeroParagraph, HeroSection, HeroTitle } from "./styles";
+import {
+  HeroButtonText,
+  HeroContainer,
+  HeroParagraph,
+  HeroSection,
+  HeroTitle,
+} from "./styles";
 
 interface HeroProps {}
 
@@ -8,18 +19,36 @@ const Hero: React.FC<HeroProps> = ({}) => {
   return (
     <HeroSection>
       <HeroContainer>
-        <Grid container>
-          <Grid item>
+        <Grid container spacing={12}>
+          <Grid
+            item
+            display="flex"
+            direction="column"
+            justifyContent="center"
+            lg={5}
+          >
             <HeroTitle>
               The Ultimate
               <br />
-              Cookbook!
+              Cooking App
             </HeroTitle>
             <HeroParagraph>
-              The all-in-one app for recipe saving,
+              Meet the all-in-one cookbook app for recipe saving,
               <br />
-              meal planning, and grocery lists.
+              meal planning, grocery shopping, and dietary details.
             </HeroParagraph>
+            <Link href="/register">
+              <a>
+                <Button>
+                  <HeroButtonText>
+                    Get Started <ChevronRightIcon fontSize="large" />
+                  </HeroButtonText>
+                </Button>
+              </a>
+            </Link>
+          </Grid>
+          <Grid item lg={7}>
+            <Image src={HeroImage} alt="Hero Image" />
           </Grid>
         </Grid>
       </HeroContainer>

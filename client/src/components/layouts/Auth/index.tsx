@@ -1,7 +1,8 @@
-import Navbar from "@components/modules/Navbar";
+import { WHITE_COLOUR } from "@styles/base/colours";
 import Head from "next/head";
+import Link from "next/link";
 import React from "react";
-import { AuthSection } from "./styles";
+import { AuthSection, NavLogo, NavLogoContainer, NavLogoLink } from "./styles";
 
 interface AuthLayoutProps {
   children: React.ReactNode;
@@ -13,7 +14,13 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ children }) => {
       <Head>
         <title>Recipebean | Authentication</title>
       </Head>
-      <Navbar />
+      <NavLogoContainer>
+        <Link href="/">
+          <NavLogoLink>
+            <NavLogo color={WHITE_COLOUR} />
+          </NavLogoLink>
+        </Link>
+      </NavLogoContainer>
       <AuthSection>{children}</AuthSection>
     </>
   );

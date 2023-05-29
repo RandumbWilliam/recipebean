@@ -1,12 +1,13 @@
 import Logo from "@components/elements/Logo";
 import { Container } from "@mui/material";
+import { PRIMARY_COLOUR } from "@styles/base/colours";
 import styled from "styled-components";
 
 interface Props {
   scrolled: boolean;
 }
 
-export const NavbarContainer = styled.nav<Props>`
+export const Nav = styled.nav<Props>`
   position: fixed;
   top: 0;
   width: 100%;
@@ -19,7 +20,7 @@ export const NavbarContainer = styled.nav<Props>`
   z-index: 1000;
 `;
 
-export const StyledContainer = styled(Container)`
+export const NavbarContainer = styled(Container)`
   &&& {
     display: flex;
     flex-direction: row;
@@ -47,23 +48,24 @@ export const NavMenu = styled.ul`
 
 export const NavItem = styled.li`
   position: relative;
-  margin: 0 20px;
+  margin: 0 12px;
 `;
 
 export const NavLink = styled.a`
   cursor: pointer;
   font-size: 18px;
   font-weight: 300;
+  padding: 0 12px;
 
   &:after {
     background: none repeat scroll 0 0 transparent;
     bottom: 0;
     content: "";
     display: block;
-    height: 1px;
+    height: 2px;
     left: 50%;
     position: absolute;
-    background: #ff596d;
+    background: ${PRIMARY_COLOUR};
     transition: width 0.3s ease 0s, left 0.3s ease 0s;
     width: 0;
   }
@@ -76,19 +78,5 @@ export const NavLink = styled.a`
 export const NavButtons = styled.div`
   button {
     margin: 0 5px;
-    width: 100px;
   }
-`;
-
-export const Profile = styled.div`
-  width: 45px;
-  height: 45px;
-  border-radius: 50vh;
-  background-color: #696969;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: #ffffff;
-  font-size: 18px;
-  cursor: pointer;
 `;

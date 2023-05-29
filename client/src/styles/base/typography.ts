@@ -1,0 +1,11 @@
+export const FONT_SIZE_84 = "8.4rem";
+export const FONT_SIZE_72 = "7.2rem";
+export const FONT_SIZE_60 = "6.0rem";
+export const FONT_SIZE_48 = "4.8rem";
+export const FONT_SIZE_36 = "3.6rem";
+export const FONT_SIZE_30 = "3.0rem";
+export const FONT_SIZE_24 = "2.4rem";
+export const FONT_SIZE_18 = "1.8rem";
+export const FONT_SIZE_16 = "1.6rem";
+export const FONT_SIZE_14 = "1.4rem";
+export const FONT_SIZE_10 = "1.0rem";
