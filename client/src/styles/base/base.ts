@@ -1,5 +1,6 @@
 import {
   FONT_SIZE_18,
+  FONT_SIZE_24,
   FONT_SIZE_30,
   FONT_SIZE_36,
   FONT_SIZE_48,
@@ -65,6 +66,12 @@ export const GlobalStyles = createGlobalStyle`
 
     h4 {
         font-size: ${FONT_SIZE_30};
+        font-weight: 500;
+        line-height: 100%;
+    }
+
+    h5 {
+        font-size: ${FONT_SIZE_24};
         font-weight: 500;
         line-height: 100%;
     }

@@ -1,50 +1,22 @@
-import InputAdornment from "@mui/material/InputAdornment";
-import InputLabel from "@mui/material/InputLabel";
+import FormControl from "@mui/material/FormControl";
 import React from "react";
-import { StyledTextField, TextFieldContainer } from "./styles";
+import { StyledTextField } from "./styles";
 
 interface TextFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
   className?: string;
-  placeholder?: string;
-  label?: string;
-  name: string;
-  error?: boolean;
-  adornment?: JSX.Element | null;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const TextFieldElement: React.FC<TextFieldProps> = ({
+const TextField: React.FC<TextFieldProps> = ({
   className,
   value,
-  type,
-  placeholder,
-  label,
-  name,
-  error,
-  adornment,
   onChange,
 }) => {
   return (
-    <TextFieldContainer className={className}>
-      <InputLabel>{label}</InputLabel>
-      <StyledTextField
-        value={value}
-        type={type}
-        placeholder={placeholder}
-        endAdornment={
-          <InputAdornment position="end">{adornment}</InputAdornment>
-        }
-        aria-describedby="outlined-weight-helper-text"
-        inputProps={{
-          "aria-label": "weight",
-        }}
-        onChange={onChange}
-        name={name}
-        error={error}
-        autoComplete="off"
-      />
-    </TextFieldContainer>
+    <FormControl className={className}>
+      <StyledTextField value={value} onChange={onChange} autoComplete="off" />
+    </FormControl>
   );
 };
 
-export default TextFieldElement;
+export default TextField;

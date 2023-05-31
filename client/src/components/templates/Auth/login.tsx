@@ -1,10 +1,11 @@
 import LoginImage from "@assets/LoginImage.png";
-import ButtonLink from "@components/elements/ButtonLink";
 import Checkbox from "@components/elements/Checkbox";
 import Icon from "@components/elements/Icon";
 import Input from "@components/elements/Input";
+import TextButton from "@components/elements/TextButton";
 import { FieldError, useLoginMutation } from "@generated/graphql";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import {
@@ -67,7 +68,11 @@ const LoginTemplate: React.FC<{}> = ({}) => {
             <AuthTitle>Welcome back!</AuthTitle>
             <AuthText>
               {`Don't have an account? `}
-              <ButtonLink link="/register">Sign up here</ButtonLink>
+              <Link href="/register">
+                <a>
+                  <TextButton>Sign up here</TextButton>
+                </a>
+              </Link>
             </AuthText>
           </AuthHeader>
           <AuthForm noValidate onSubmit={handleSubmit}>
@@ -94,7 +99,11 @@ const LoginTemplate: React.FC<{}> = ({}) => {
                   onChange={() => setRememberPassword(!rememberPassword)}
                   label="Remember Me"
                 />
-                <ButtonLink link="/">Forgot Password?</ButtonLink>
+                <Link href="/">
+                  <a>
+                    <TextButton>Forgot Password?</TextButton>
+                  </a>
+                </Link>
               </LoginActions>
             </LoginPasswordContainer>
             <AuthButtons>

@@ -1,5 +1,4 @@
 import BaseLayout from "@components/layouts/Base";
-import BeanLayout from "@components/layouts/Bean";
 import CookbookTemplate from "@components/templates/Cookbook";
 import { useGetCookbookQuery } from "@generated/graphql";
 import { createUrqlClient } from "@utils/createUrqlClient";
