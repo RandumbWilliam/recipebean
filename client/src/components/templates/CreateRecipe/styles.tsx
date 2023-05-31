@@ -3,11 +3,7 @@ import TextFieldElement from "@components/elements/TextField";
 import { Container, Modal } from "@mui/material";
 import styled from "styled-components";
 
-export const CreateRecipeContainer = styled(Container)`
-  &&& {
-    padding: 0 65px;
-  }
-`;
+export const CreateRecipeContainer = styled(Container)``;
 
 export const CreateRecipeHeader = styled.div`
   display: flex;
@@ -54,7 +50,6 @@ export const InputContainer = styled.div`
 export const AddHeader = styled.div`
   display: flex;
   justify-content: flex-start;
-  font-size: 14px;
   margin-top: 8px;
 `;
 

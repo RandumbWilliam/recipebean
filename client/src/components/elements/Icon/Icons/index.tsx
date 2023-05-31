@@ -12,6 +12,7 @@ export * from "./HorizontalKebab";
 export * from "./Ingredient";
 export * from "./Menu";
 export * from "./Pen";
+export * from "./Search";
 export * from "./Stopwatch";
 export * from "./Trash";
 export * from "./Utensils";

@@ -9,7 +9,6 @@ import {
   HeroButtonText,
   HeroContainer,
   HeroParagraph,
-  HeroSection,
   HeroTitle,
 } from "./styles";
 
@@ -17,42 +16,40 @@ interface HeroProps {}
 
 const Hero: React.FC<HeroProps> = ({}) => {
   return (
-    <HeroSection>
-      <HeroContainer>
-        <Grid container spacing={12}>
-          <Grid
-            item
-            display="flex"
-            direction="column"
-            justifyContent="center"
-            lg={5}
-          >
-            <HeroTitle>
-              The Ultimate
-              <br />
-              Cooking App
-            </HeroTitle>
-            <HeroParagraph>
-              Meet the all-in-one cookbook app for recipe saving,
-              <br />
-              meal planning, grocery shopping, and dietary details.
-            </HeroParagraph>
-            <Link href="/register">
-              <a>
-                <Button>
-                  <HeroButtonText>
-                    Get Started <ChevronRightIcon fontSize="large" />
-                  </HeroButtonText>
-                </Button>
-              </a>
-            </Link>
-          </Grid>
-          <Grid item lg={7}>
-            <Image src={HeroImage} alt="Hero Image" />
-          </Grid>
+    <HeroContainer>
+      <Grid container spacing={12}>
+        <Grid
+          item
+          display="flex"
+          direction="column"
+          justifyContent="center"
+          lg={5}
+        >
+          <HeroTitle>
+            The Ultimate
+            <br />
+            Cooking App
+          </HeroTitle>
+          <HeroParagraph>
+            Meet the all-in-one cookbook app for recipe saving,
+            <br />
+            meal planning, grocery shopping, and dietary details.
+          </HeroParagraph>
+          <Link href="/register">
+            <a>
+              <Button>
+                <HeroButtonText>
+                  Get Started <ChevronRightIcon fontSize="large" />
+                </HeroButtonText>
+              </Button>
+            </a>
+          </Link>
         </Grid>
-      </HeroContainer>
-    </HeroSection>
+        <Grid item lg={7}>
+          <Image src={HeroImage} alt="Hero Image" />
+        </Grid>
+      </Grid>
+    </HeroContainer>
   );
 };
 

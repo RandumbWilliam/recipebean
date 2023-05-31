@@ -1,3 +1,4 @@
+import BaseLayout from "@components/layouts/Base";
 import BeanLayout from "@components/layouts/Bean";
 import CookbookTemplate from "@components/templates/Cookbook";
 import { useGetCookbookQuery } from "@generated/graphql";
@@ -18,9 +19,9 @@ const Cookbook = () => {
 
   if (!fetching && data?.getCookbook) {
     return (
-      <BeanLayout>
+      <BaseLayout>
         <CookbookTemplate cookbook={data.getCookbook} />
-      </BeanLayout>
+      </BaseLayout>
     );
   }
 

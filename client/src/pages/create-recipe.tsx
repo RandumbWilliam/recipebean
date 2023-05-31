@@ -1,4 +1,4 @@
-import BeanLayout from "@components/layouts/Bean";
+import BaseLayout from "@components/layouts/Base";
 import CreateRecipeTemplate from "@components/templates/CreateRecipe";
 import { useGetCookbooksQuery } from "@generated/graphql";
 import { createUrqlClient } from "@utils/createUrqlClient";
@@ -10,9 +10,9 @@ const CreateRecipe = () => {
 
   if (!fetching && data?.getCookbooks) {
     return (
-      <BeanLayout>
+      <BaseLayout>
         <CreateRecipeTemplate cookbooks={data.getCookbooks} />
-      </BeanLayout>
+      </BaseLayout>
     );
   }
 

@@ -1,9 +1,12 @@
-import CornProfilePicture from "@assets/avatars/Corn.jpg";
 import Button from "@components/elements/Button";
+import Profile from "@components/elements/Profile";
+import SearchField from "@components/elements/SearchField";
 import { useMyUserQuery } from "@generated/graphql";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import {
+  AuthenticatedContainer,
   Nav,
   NavButtons,
   NavItem,
@@ -12,8 +15,7 @@ import {
   NavLogoLink,
   NavMenu,
   NavbarContainer,
-  Profile,
-  StyledImage,
+  SearchContainer,
 } from "./styles";
 
 interface NavbarProps {}
@@ -25,12 +27,13 @@ const MenuLinks = [
 ];
 
 const AuthenticatedLinks = [
-  { key: "cookbooks", label: "My Cookbooks", url: "/" },
+  { key: "cookbooks", label: "My Cookbooks", url: "/cookbooks" },
   { key: "ingredients", label: "My Ingredients", url: "/" },
   { key: "planner", label: "Planner", url: "/" },
 ];
 
 const Navbar: React.FC<NavbarProps> = ({}) => {
+  const router = useRouter();
   const [scrolled, setScrolled] = useState(false);
   const [{ data, fetching }] = useMyUserQuery();
   const authenticated = data?.myUser;
@@ -49,40 +52,65 @@ const Navbar: React.FC<NavbarProps> = ({}) => {
     return () => window.removeEventListener("scroll", onScroll);
   });
 
+  console.log(router.pathname);
+
   return (
     <Nav scrolled={scrolled}>
       <NavbarContainer>
-        <Link href="/">
-          <NavLogoLink>
-            <NavLogo scrolled={scrolled} color="#ff596d" />
-          </NavLogoLink>
-        </Link>
-        <NavMenu>
-          {MenuLinks.map((item) => (
-            <NavItem key={item.key}>
-              <Link href={item.url}>
-                <NavLink>{item.label}</NavLink>
-              </Link>
-            </NavItem>
-          ))}
-        </NavMenu>
         {authenticated ? (
-          <Profile>
-            <StyledImage src={CornProfilePicture} alt="profile picture" />
-          </Profile>
+          <>
+            <AuthenticatedContainer>
+              <Link href="/">
+                <NavLogoLink>
+                  <NavLogo scrolled={scrolled} color="#ff596d" />
+                </NavLogoLink>
+              </Link>
+              <NavMenu>
+                {AuthenticatedLinks.map((item) => (
+                  <NavItem key={item.key}>
+                    <Link href={item.url} passHref>
+                      <NavLink pathName={router.pathname}>{item.label}</NavLink>
+                    </Link>
+                  </NavItem>
+                ))}
+              </NavMenu>
+            </AuthenticatedContainer>
+            <AuthenticatedContainer>
+              <SearchContainer>
+                <SearchField />
+              </SearchContainer>
+              <Profile />
+            </AuthenticatedContainer>
+          </>
         ) : (
-          <NavButtons>
-            <Link href="/login">
-              <a>
-                <Button primary={false}>Log In</Button>
-              </a>
+          <>
+            <Link href="/">
+              <NavLogoLink>
+                <NavLogo scrolled={scrolled} color="#ff596d" />
+              </NavLogoLink>
             </Link>
-            <Link href="/register">
-              <a>
-                <Button>Sign Up</Button>
-              </a>
-            </Link>
-          </NavButtons>
+            <NavMenu>
+              {MenuLinks.map((item) => (
+                <NavItem key={item.key}>
+                  <Link href={item.url} passHref>
+                    <NavLink pathName={router.pathname}>{item.label}</NavLink>
+                  </Link>
+                </NavItem>
+              ))}
+            </NavMenu>
+            <NavButtons>
+              <Link href="/login">
+                <a>
+                  <Button primary={false}>Log In</Button>
+                </a>
+              </Link>
+              <Link href="/register">
+                <a>
+                  <Button>Sign Up</Button>
+                </a>
+              </Link>
+            </NavButtons>
+          </>
         )}
       </NavbarContainer>
     </Nav>

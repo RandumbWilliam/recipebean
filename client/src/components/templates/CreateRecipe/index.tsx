@@ -3,6 +3,7 @@ import ButtonLink from "@components/elements/ButtonLink";
 import Counter from "@components/elements/Counter";
 import Dropzone from "@components/elements/Dropzone";
 import Icon from "@components/elements/Icon";
+import TextButton from "@components/elements/TextButton";
 import TextFieldElement from "@components/elements/TextField";
 import {
   CookbookResponseFragment,
@@ -437,13 +438,13 @@ const CreateRecipeTemplate: React.FC<CreateRecipeTemplateProps> = ({
                       type="text"
                       placeholder={`"Example "For the sauce"`}
                       name="instruction"
-                      adornment={
-                        <ButtonLink
-                          onClick={() => setShowInstructionHeader(false)}
-                        >
-                          <Icon name="Cross" size={14} color="#B9BDC3" />
-                        </ButtonLink>
-                      }
+                      // adornment={
+                      //   <ButtonLink
+                      //     onClick={() => setShowInstructionHeader(false)}
+                      //   >
+                      //     <Icon name="Cross" size={14} color="#B9BDC3" />
+                      //   </ButtonLink>
+                      // }
                       onChange={handleInstructionHeader}
                     />
                     <StyledButton disabled={!instructionHeader} type="submit">
@@ -466,9 +467,9 @@ const CreateRecipeTemplate: React.FC<CreateRecipeTemplateProps> = ({
                   </StyledButton>
                 </InputContainer>
                 <AddHeader>
-                  <ButtonLink onClick={() => setShowInstructionHeader(true)}>
+                  {/* <ButtonLink onClick={() => setShowInstructionHeader(true)}>
                     + Add Header
-                  </ButtonLink>
+                  </ButtonLink> */}
                 </AddHeader>
               </form>
             </ColumnContainer>
@@ -593,13 +594,13 @@ const CreateRecipeTemplate: React.FC<CreateRecipeTemplateProps> = ({
                         type="text"
                         placeholder={`"Example "For the sauce"`}
                         name="ingredient"
-                        adornment={
-                          <ButtonLink
-                            onClick={() => setShowIngredientHeader(false)}
-                          >
-                            <Icon name="Cross" size={14} color="#B9BDC3" />
-                          </ButtonLink>
-                        }
+                        // adornment={
+                        //   <ButtonLink
+                        //     onClick={() => setShowIngredientHeader(false)}
+                        //   >
+                        //     <Icon name="Cross" size={14} color="#B9BDC3" />
+                        //   </ButtonLink>
+                        // }
                         onChange={handleIngredientHeader}
                       />
                       <StyledButton disabled={!ingredientHeader} type="submit">
@@ -622,9 +623,9 @@ const CreateRecipeTemplate: React.FC<CreateRecipeTemplateProps> = ({
                     </StyledButton>
                   </InputContainer>
                   <AddHeader>
-                    <ButtonLink onClick={() => setShowIngredientHeader(true)}>
-                      + Add Header
-                    </ButtonLink>
+                    <TextButton onClick={() => setShowIngredientHeader(true)}>
+                      + Header
+                    </TextButton>
                   </AddHeader>
                 </form>
               </ColumnContainer>

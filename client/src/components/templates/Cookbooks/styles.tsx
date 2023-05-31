@@ -3,20 +3,17 @@ import { ONYX_20 } from "@styles/base/colours";
 import styled from "styled-components";
 import Button from "../../elements/Button";
 
-export const CookbooksContainer = styled(Container)`
-  &&& {
-    margin-top: 200px;
-  }
-`;
+export const CookbooksContainer = styled(Container)``;
 
 export const CookbooksHeaderContainer = styled.div`
-  margin-bottom: 24px;
+  margin-bottom: 32px;
 `;
 
 export const CookbooksHeader = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin-bottom: 12px;
 `;
 
 export const CookbooksTitle = styled.h2``;
