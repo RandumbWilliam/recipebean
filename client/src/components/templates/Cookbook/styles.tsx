@@ -5,12 +5,7 @@ interface Props {
   active: boolean;
 }
 
-export const CookbookContainer = styled(Container)`
-  &&& {
-    padding: 0 65px;
-    margin-top: 50px;
-  }
-`;
+export const CookbookContainer = styled(Container)``;
 
 export const CookbookHeader = styled.div`
   display: flex;

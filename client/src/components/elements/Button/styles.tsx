@@ -18,7 +18,6 @@ export const StyledButton = styled.button<Props>`
   border: ${(props) =>
     props.primary ? "none" : `2px solid ${PRIMARY_COLOUR}`};
   color: ${(props) => (props.primary ? WHITE_COLOUR : PRIMARY_COLOUR)};
-  cursor: pointer;
   padding: 8px 24px;
   height: 48px;
   box-sizing: border-box;
@@ -38,8 +37,8 @@ export const StyledButton = styled.button<Props>`
     props.disabled &&
     `
     background-color: ${props.primary && DISABLED_COLOUR};
-    color: ${!props.primary && DISABLED_COLOUR};
-    border-color:  ${!props.primary && DISABLED_COLOUR};
+    color: ${props.primary ? WHITE_COLOUR : DISABLED_COLOUR};
+    border-color:  ${props.primary ? WHITE_COLOUR : DISABLED_COLOUR};
     cursor: default;
 
     &:hover {

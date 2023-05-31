@@ -14,6 +14,7 @@ import {
   IngredientIcon,
   MenuIcon,
   PenIcon,
+  SearchIcon,
   StopwatchIcon,
   TrashIcon,
   UtensilsIcon,
@@ -48,6 +49,7 @@ export const Icons = {
   Error: ErrorIcon,
   Cross: CrossIcon,
   Google: GoogleIcon,
+  Search: SearchIcon,
 };
 
 const Icon: React.FC<IconProps> = ({

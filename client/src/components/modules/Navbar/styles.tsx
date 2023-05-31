@@ -8,6 +8,10 @@ interface Props {
   scrolled: boolean;
 }
 
+interface NavLinkProps {
+  pathName: string;
+}
+
 export const Nav = styled.nav<Props>`
   position: fixed;
   top: 0;
@@ -26,6 +30,7 @@ export const NavbarContainer = styled(Container)`
     display: flex;
     flex-direction: row;
     align-items: center;
+    justify-content: space-between;
   }
 `;
 
@@ -52,11 +57,29 @@ export const NavItem = styled.li`
   margin: 0 12px;
 `;
 
-export const NavLink = styled.a`
+export const NavLink = styled.a<NavLinkProps>`
   cursor: pointer;
   font-size: 18px;
   font-weight: 300;
   padding: 0 12px;
+
+  ${(props) =>
+    props.href === props.pathName &&
+    `
+      color: ${PRIMARY_COLOUR};
+      &:before {
+        background: none repeat scroll 0 0 transparent;
+        bottom: 0;
+        content: "";
+        display: block;
+        height: 2px;
+        left: 50%;
+        position: absolute;
+        background: ${PRIMARY_COLOUR};
+        width: 100%;
+        left: 0;
+      }
+  `}
 
   &:after {
     background: none repeat scroll 0 0 transparent;
@@ -82,12 +105,12 @@ export const NavButtons = styled.div`
   }
 `;
 
-export const Profile = styled.div`
-  width: 60px;
-  height: 60px;
-  border-radius: 12px;
+export const AuthenticatedContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 32px;
 `;
 
-export const StyledImage = styled(Image)`
-  border-radius: 12px;
+export const SearchContainer = styled.div`
+  width: 250px;
 `;

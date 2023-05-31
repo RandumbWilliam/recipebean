@@ -1,6 +1,7 @@
 import Button from "@components/elements/Button";
 import ButtonLink from "@components/elements/ButtonLink";
 import Icon from "@components/elements/Icon";
+import TextButton from "@components/elements/TextButton";
 import {
   CookbookResponseFragment,
   useDeleteCookbookMutation,
@@ -141,10 +142,10 @@ const CookbookTemplate: React.FC<CookbookTemplateProps> = ({ cookbook }) => {
               onChange={handleTitleChange}
             />
             <CookbookEditActions>
-              <ButtonLink color="#B9BDC3" onClick={() => setEditTitle(false)}>
+              <TextButton color="#B9BDC3" onClick={() => setEditTitle(false)}>
                 CANCEL
-              </ButtonLink>
-              <ButtonLink onClick={handleTitleSave}>SAVE</ButtonLink>
+              </TextButton>
+              <TextButton onClick={handleTitleSave}>SAVE</TextButton>
             </CookbookEditActions>
           </CookbookEditHeader>
         ) : (
@@ -163,6 +164,11 @@ const CookbookTemplate: React.FC<CookbookTemplateProps> = ({ cookbook }) => {
                 <Icon name="Trash" size={22} color="#ff596d" />
               </CookbookEditIcon>
             </CookbookActions>
+            <Link href="/create-recipe">
+              <a>
+                <Button>Add Recipe</Button>
+              </a>
+            </Link>
           </CookbookHeader>
         )}
         <CookbookRecipeCountText>
@@ -192,13 +198,13 @@ const CookbookTemplate: React.FC<CookbookTemplateProps> = ({ cookbook }) => {
             </span>
           </WarningText>
           <CookbookEditActions>
-            <ButtonLink
+            <TextButton
               color="#B9BDC3"
               onClick={() => setDeleteModalOpen(false)}
             >
               CANCEL
-            </ButtonLink>
-            <ButtonLink onClick={handleDeleteCookbook}>DELETE</ButtonLink>
+            </TextButton>
+            <TextButton onClick={handleDeleteCookbook}>DELETE</TextButton>
           </CookbookEditActions>
         </ModalContainer>
       </StyledModal>
