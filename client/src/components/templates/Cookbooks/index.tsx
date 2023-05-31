@@ -1,3 +1,4 @@
+import CookbookCard from "@components/elements/CookbookCard";
 import Icon from "@components/elements/Icon";
 import {
   CookbookResponseFragment,
@@ -9,14 +10,11 @@ import { useRouter } from "next/router";
 import React, { useState } from "react";
 import {
   CloseButton,
-  CookbookCard,
-  CookbookCover,
-  CookbookRecipeCount,
-  CookbookSpine,
-  CookbookTitle,
   CookbooksButton,
   CookbooksContainer,
   CookbooksHeader,
+  CookbooksHeaderContainer,
+  CookbooksText,
   CookbooksTitle,
   ModalButton,
   ModalContainer,
@@ -68,30 +66,38 @@ const CookbooksTemplate: React.FC<CookbooksTemplateProps> = ({ cookbooks }) => {
     }
   };
 
+  const cookbookCountText = (cookbookCount: number) => {
+    if (cookbookCount > 1) {
+      return `${cookbookCount} cookbooks`;
+    } else if (cookbookCount === 1) {
+      return `${cookbookCount} cookbook`;
+    } else {
+      return "no cookbooks";
+    }
+  };
+
   return (
     <>
       <CookbooksContainer>
-        <CookbooksHeader>
-          <CookbooksTitle>Your Cookbooks</CookbooksTitle>
-          <CookbooksButton onClick={handleOpenModal}>
-            <Icon name="AddCookbook" size={20} color="#fff" />
-            Add Book
-          </CookbooksButton>
-        </CookbooksHeader>
-        <Grid container columnSpacing={3} rowSpacing={4}>
+        <CookbooksHeaderContainer>
+          <CookbooksHeader>
+            <CookbooksTitle>My Cookbooks</CookbooksTitle>
+            <CookbooksButton onClick={handleOpenModal}>
+              <Icon name="AddCookbook" size={20} color="#fff" />
+              Add Cookbook
+            </CookbooksButton>
+          </CookbooksHeader>
+          <CookbooksText>{cookbookCountText(cookbooks.length)}</CookbooksText>
+        </CookbooksHeaderContainer>
+        <Grid container columnSpacing={3} rowSpacing={3}>
           {cookbooks.map((cookbook) => (
-            <Grid key={cookbook.id} item md={3} sm={4} xs={6}>
+            <Grid key={cookbook.id} item lg={4}>
               <Link href={`/cookbook/${cookbook.id}`}>
                 <a>
-                  <CookbookCard>
-                    <CookbookSpine />
-                    <CookbookCover>
-                      <CookbookTitle>{cookbook.cookbookName}</CookbookTitle>
-                      <CookbookRecipeCount>
-                        {recipeCountText(cookbook.recipes.length)}
-                      </CookbookRecipeCount>
-                    </CookbookCover>
-                  </CookbookCard>
+                  <CookbookCard
+                    cookbookName={cookbook.cookbookName}
+                    recipeText={recipeCountText(cookbook.recipes.length)}
+                  />
                 </a>
               </Link>
             </Grid>

@@ -1,6 +1,7 @@
 import Logo from "@components/elements/Logo";
 import { Container } from "@mui/material";
 import { PRIMARY_COLOUR } from "@styles/base/colours";
+import Image from "next/image";
 import styled from "styled-components";
 
 interface Props {
@@ -79,4 +80,14 @@ export const NavButtons = styled.div`
   button {
     margin: 0 5px;
   }
+`;
+
+export const Profile = styled.div`
+  width: 60px;
+  height: 60px;
+  border-radius: 12px;
+`;
+
+export const StyledImage = styled(Image)`
+  border-radius: 12px;
 `;

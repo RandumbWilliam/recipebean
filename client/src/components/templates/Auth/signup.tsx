@@ -145,17 +145,17 @@ const SignupTemplate: React.FC<{}> = ({}) => {
                 }
               />
             )}
+            <AuthButtons>
+              <AuthSubmitButton type="submit">Create Account</AuthSubmitButton>
+              <TextDivider>or</TextDivider>
+              <AuthGoogleButton primary={false} onClick={handleGoogleSignup}>
+                <AuthGoogleButtonText>
+                  <Icon name="Google" size={22} />
+                  Sign up with Google
+                </AuthGoogleButtonText>
+              </AuthGoogleButton>
+            </AuthButtons>
           </AuthForm>
-          <AuthButtons>
-            <AuthSubmitButton type="submit">Create Account</AuthSubmitButton>
-            <TextDivider>or</TextDivider>
-            <AuthGoogleButton primary={false} onClick={handleGoogleSignup}>
-              <AuthGoogleButtonText>
-                <Icon name="Google" size={22} />
-                Sign up with Google
-              </AuthGoogleButtonText>
-            </AuthGoogleButton>
-          </AuthButtons>
         </AuthCard>
       </AuthContentContainer>
     </>
