@@ -1,40 +1,34 @@
 import Button from "@components/elements/Button";
-import ButtonLink from "@components/elements/ButtonLink";
 import Icon from "@components/elements/Icon";
+import IconButton from "@components/elements/IconButton";
+import RecipeCard from "@components/elements/RecipeCard";
 import TextButton from "@components/elements/TextButton";
+import TextField from "@components/elements/TextField";
 import {
   CookbookResponseFragment,
   useDeleteCookbookMutation,
   useUpdateCookbookMutation,
 } from "@generated/graphql";
-import TextField from "@mui/material/TextField";
+import { Grid } from "@mui/material";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import {
   CloseButton,
-  CookbookActions,
   CookbookContainer,
   CookbookEditActions,
   CookbookEditHeader,
-  CookbookEditIcon,
   CookbookHeader,
-  CookbookRecipeContainer,
-  CookbookRecipeCountText,
+  CookbookHeaderContainer,
+  CookbookSubheader,
+  CookbookText,
   CookbookTitle,
   EmptyContainer,
   EmptyText,
-  FavouriteButton,
   ModalContainer,
   ModalHeader,
   ModalTitle,
-  RecipeCard,
-  RecipeCardContainer,
-  RecipeHeader,
-  RecipeName,
   StyledModal,
-  TimeBanner,
-  TimeText,
   WarningText,
 } from "./styles";
 
@@ -102,26 +96,29 @@ const CookbookTemplate: React.FC<CookbookTemplateProps> = ({ cookbook }) => {
     body = (
       <>
         {cookbook.recipes?.map((recipe) => {
-          const totalTime = recipe.cookTime + recipe.prepTime;
-          const hours = Math.floor(totalTime / 60);
-          const minutes = totalTime % 60;
+          const timeString = (totalTime: number) => {
+            const hours = Math.floor(totalTime / 60);
+            const minutes = totalTime % 60;
+
+            let result = [];
+            if (hours !== 0) {
+              result.push(`${hours}h`);
+            }
+
+            if (minutes !== 0) {
+              result.push(`${minutes}m`);
+            }
+
+            return result.join(" ");
+          };
           return (
-            <RecipeCardContainer key={recipe.id}>
-              <RecipeCard>
-                <RecipeHeader>
-                  <TimeBanner>
-                    <Icon name="Stopwatch" size={18} color="#fff" />
-                    <TimeText>
-                      {hours} h {minutes !== 0 && `${minutes} m`}
-                    </TimeText>
-                  </TimeBanner>
-                  <FavouriteButton>
-                    <Icon name="HeartOutline" size={22} color="#fff" />
-                  </FavouriteButton>
-                </RecipeHeader>
-              </RecipeCard>
-              <RecipeName>{recipe.recipeName}</RecipeName>
-            </RecipeCardContainer>
+            <Grid key={cookbook.id} item lg={4}>
+              <RecipeCard
+                key={recipe.id}
+                reicpeName={recipe.recipeName}
+                time={timeString(recipe.prepTime + recipe.cookTime)}
+              />
+            </Grid>
           );
         })}
       </>
@@ -131,50 +128,46 @@ const CookbookTemplate: React.FC<CookbookTemplateProps> = ({ cookbook }) => {
   return (
     <>
       <CookbookContainer>
-        {editTitle ? (
-          <CookbookEditHeader>
-            <TextField
-              hiddenLabel
-              id="filled-hidden-label-small"
-              defaultValue={title}
-              variant="standard"
-              size="small"
-              onChange={handleTitleChange}
-            />
-            <CookbookEditActions>
-              <TextButton color="#B9BDC3" onClick={() => setEditTitle(false)}>
-                CANCEL
-              </TextButton>
-              <TextButton onClick={handleTitleSave}>SAVE</TextButton>
-            </CookbookEditActions>
-          </CookbookEditHeader>
-        ) : (
-          <CookbookHeader>
-            <CookbookTitle>{title}</CookbookTitle>
-            <CookbookActions>
-              <CookbookEditIcon
-                onClick={() => {
-                  setEditTitle(true);
-                  setTitle(cookbook.cookbookName!);
-                }}
-              >
-                <Icon name="Pen" size={22} color="#ff596d" />
-              </CookbookEditIcon>
-              <CookbookEditIcon onClick={handleDeleteOpenModal}>
-                <Icon name="Trash" size={22} color="#ff596d" />
-              </CookbookEditIcon>
-            </CookbookActions>
-            <Link href="/create-recipe">
-              <a>
-                <Button>Add Recipe</Button>
-              </a>
-            </Link>
-          </CookbookHeader>
-        )}
-        <CookbookRecipeCountText>
-          {recipeCountText(cookbook.recipes.length)}
-        </CookbookRecipeCountText>
-        <CookbookRecipeContainer>{body}</CookbookRecipeContainer>
+        <CookbookHeaderContainer>
+          {editTitle ? (
+            <CookbookEditHeader>
+              <TextField value={title} onChange={handleTitleChange} />
+              <CookbookEditActions>
+                <TextButton onClick={() => setEditTitle(false)}>
+                  Cancel
+                </TextButton>
+                <TextButton onClick={handleTitleSave}>Save</TextButton>
+              </CookbookEditActions>
+            </CookbookEditHeader>
+          ) : (
+            <>
+              <CookbookHeader>
+                <CookbookTitle>{title}</CookbookTitle>
+                <Link href="/create-recipe">
+                  <a>
+                    <Button>Add Recipe</Button>
+                  </a>
+                </Link>
+              </CookbookHeader>
+              <CookbookSubheader>
+                <CookbookText>
+                  {recipeCountText(cookbook.recipes.length)}
+                </CookbookText>
+                <IconButton
+                  name="Pen"
+                  onClick={() => {
+                    setEditTitle(true);
+                    setTitle(cookbook.cookbookName!);
+                  }}
+                />
+                <IconButton name="Trash" onClick={handleDeleteOpenModal} />
+              </CookbookSubheader>
+            </>
+          )}
+        </CookbookHeaderContainer>
+        <Grid container columnSpacing={3} rowSpacing={3}>
+          {body}
+        </Grid>
       </CookbookContainer>
       <StyledModal
         open={deleteModalOpen}
@@ -198,13 +191,10 @@ const CookbookTemplate: React.FC<CookbookTemplateProps> = ({ cookbook }) => {
             </span>
           </WarningText>
           <CookbookEditActions>
-            <TextButton
-              color="#B9BDC3"
-              onClick={() => setDeleteModalOpen(false)}
-            >
-              CANCEL
+            <TextButton onClick={() => setDeleteModalOpen(false)}>
+              Cancel
             </TextButton>
-            <TextButton onClick={handleDeleteCookbook}>DELETE</TextButton>
+            <TextButton onClick={handleDeleteCookbook}>Delete</TextButton>
           </CookbookEditActions>
         </ModalContainer>
       </StyledModal>

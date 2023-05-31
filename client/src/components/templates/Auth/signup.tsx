@@ -1,8 +1,12 @@
+import SignUpImage from "@assets/SignUpImage.png";
 import ErrorMessage from "@components/elements/ErrorMessage";
 import Icon from "@components/elements/Icon";
 import Input from "@components/elements/Input";
+import TextButton from "@components/elements/TextButton";
 import { FieldError, useRegisterMutation } from "@generated/graphql";
 import { Grid } from "@mui/material";
+import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import {
@@ -20,10 +24,6 @@ import {
   AuthTitle,
   TextDivider,
 } from "./styles";
-
-import SignUpImage from "@assets/SignUpImage.png";
-import ButtonLink from "@components/elements/ButtonLink";
-import Image from "next/image";
 
 const initialForm = {
   email: "",
@@ -73,7 +73,11 @@ const SignupTemplate: React.FC<{}> = ({}) => {
             <AuthTitle>Create Account</AuthTitle>
             <AuthText>
               Already have an account?{" "}
-              <ButtonLink link="/login">Log In</ButtonLink>
+              <Link href="/register">
+                <a>
+                  <TextButton>Sign up here</TextButton>
+                </a>
+              </Link>
             </AuthText>
           </AuthHeader>
           <AuthForm noValidate onSubmit={handleSubmit}>
