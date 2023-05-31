@@ -46,6 +46,7 @@ const LoginTemplate: React.FC<{}> = ({}) => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    console.log(formData);
     const response = await login(formData);
     if (response.data?.login.errors) {
       setErrors(response.data.login.errors);
@@ -96,17 +97,17 @@ const LoginTemplate: React.FC<{}> = ({}) => {
                 <ButtonLink link="/">Forgot Password?</ButtonLink>
               </LoginActions>
             </LoginPasswordContainer>
+            <AuthButtons>
+              <AuthSubmitButton type="submit">Log In</AuthSubmitButton>
+              <TextDivider>or</TextDivider>
+              <AuthGoogleButton primary={false}>
+                <AuthGoogleButtonText>
+                  <Icon name="Google" size={22} />
+                  Continue with Google
+                </AuthGoogleButtonText>
+              </AuthGoogleButton>
+            </AuthButtons>
           </AuthForm>
-          <AuthButtons>
-            <AuthSubmitButton type="submit">Log In</AuthSubmitButton>
-            <TextDivider>or</TextDivider>
-            <AuthGoogleButton primary={false}>
-              <AuthGoogleButtonText>
-                <Icon name="Google" size={22} />
-                Continue with Google
-              </AuthGoogleButtonText>
-            </AuthGoogleButton>
-          </AuthButtons>
           {errors && (
             <div>
               {errors.map((error) => (

@@ -56,6 +56,8 @@ export const AuthButtons = styled.div`
   display: flex;
   flex-direction: column;
   gap: 12px;
+  width: 100%;
+  margin-top: 12px;
 `;
 
 export const AuthSubmitButton = styled(Button)`
