@@ -66,8 +66,7 @@ export class RecipeResolver {
     const cookbookRepository = em.getRepository(Cookbook);
 
     const creator = await userRepository.findOneOrFail({
-      // id: req.session.userId,
-      id: "d70400a3-2d20-4c70-9a70-3bb5efd94042",
+      id: req.session.userId,
     });
 
     const recipe = em.create(Recipe, {
@@ -88,7 +87,7 @@ export class RecipeResolver {
 
     await em.persistAndFlush(recipe);
 
-    for (const ingredientItem of input.ingredients) {
+    for (const ingredientItem of input.ingredientValues) {
       const ingredientEntity = em.create(RecipeIngredient, {
         order: ingredientItem.order,
         ingredient: ingredientItem.ingredient,
@@ -110,7 +109,7 @@ export class RecipeResolver {
       await em.persistAndFlush(ingredientHeaderEntity);
     }
 
-    for (const instructionItem of input.instructions) {
+    for (const instructionItem of input.instructionValues) {
       const instructionEntity = em.create(RecipeInstruction, {
         order: instructionItem.order,
         instruction: instructionItem.instruction,

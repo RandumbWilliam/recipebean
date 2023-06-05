@@ -75,4 +75,10 @@ export const GlobalStyles = createGlobalStyle`
         font-weight: 500;
         line-height: 100%;
     }
+
+    h6 {
+        font-size: ${FONT_SIZE_18};
+        font-weight: 500;
+        line-height: 100%;
+    }
 `;

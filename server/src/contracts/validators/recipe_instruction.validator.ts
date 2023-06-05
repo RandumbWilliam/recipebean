@@ -5,15 +5,15 @@ import { Field, InputType } from "type-graphql";
 class RecipeInstructionValidator {
   @Field()
   @IsInt()
-  order: number;
+  public order: number;
 
   @Field()
   @IsString()
-  instruction: string;
+  public instruction: string;
 
   @Field()
   @IsInt()
-  step: number;
+  public step: number;
 }
 
 export default RecipeInstructionValidator;

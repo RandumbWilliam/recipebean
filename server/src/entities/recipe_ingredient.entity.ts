@@ -15,13 +15,13 @@ export class RecipeIngredient extends Base<RecipeIngredient> {
   @Property()
   public ingredient: string;
 
-  @Field()
-  @Property()
-  public unit: string;
+  @Field({ nullable: true })
+  @Property({ nullable: true })
+  public unit?: string;
 
-  @Field()
-  @Property()
-  public quantity: number;
+  @Field({ nullable: true })
+  @Property({ nullable: true })
+  public quantity?: number;
 
   @Field(() => Recipe)
   @ManyToOne(() => Recipe, { onDelete: "cascade" })

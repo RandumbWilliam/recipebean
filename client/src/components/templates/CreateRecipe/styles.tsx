@@ -1,90 +1,114 @@
 import Button from "@components/elements/Button";
-import TextFieldElement from "@components/elements/TextField";
-import { Container, Modal } from "@mui/material";
+import Input from "@components/elements/Input";
+import {
+  Container,
+  FormControl,
+  InputBase,
+  MenuItem,
+  Modal,
+  Select,
+} from "@mui/material";
+import { ONYX_10, ONYX_20, PRIMARY_COLOUR } from "@styles/base/colours";
 import styled from "styled-components";
 
-export const CreateRecipeContainer = styled(Container)``;
+export const CreateRecipeContainer = styled(Container)`
+  margin-bottom: 128px;
+`;
+
+export const CreateRecipeHeaderContainer = styled.div`
+  margin-bottom: 32px;
+`;
 
 export const CreateRecipeHeader = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin-bottom: 12px;
 `;
 
-export const CreateRecipeTitle = styled.h1`
-  font-size: 48px;
-  font-weight: 700;
-`;
+export const CreateRecipeTitle = styled.h2``;
 
-export const ColumnContainer = styled.div`
+export const FormContainer = styled.div`
   display: flex;
   flex-direction: column;
-  margin-bottom: 40px;
+  gap: 24px;
+  max-width: 564px;
+  margin-left: auto;
+  margin-right: auto;
 `;
 
-export const RowContainer = styled.div`
+export const InputContainer = styled.div``;
+
+export const InputHeaderContainer = styled.div`
   display: flex;
-  flex-direction: row;
   justify-content: space-between;
-  column-gap: 25px;
 `;
 
-export const RowGap = styled.div`
-  display: flex;
-  flex-direction: column;
-  row-gap: 20px;
-`;
+export const InputHeaderDescriptionContainer = styled.div``;
 
-export const SubHeader = styled.h2`
-  font-size: 24px;
-  font-weight: 500;
-  margin: 0;
+export const InputHeader = styled.h6`
   margin-bottom: 8px;
 `;
 
-export const InputContainer = styled.div`
-  display: flex;
-  margin-bottom: 20px;
+export const InputDescription = styled.p`
+  color: ${ONYX_20};
 `;
 
-export const AddHeader = styled.div`
+export const InputForm = styled.form`
   display: flex;
-  justify-content: flex-start;
-  margin-top: 8px;
+  gap: 8px;
+  margin-bottom: 8px;
 `;
+
+export const SubHeader = styled.p`
+  font-weight: 600;
+`;
+
+export const ItemList = styled.div`
+  margin-bottom: 8px;
+`;
+
+export const Item = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-left: 12px;
+`;
+
+export const SubItem = styled.div`
+  display: flex;
+  gap: 12px;
+`;
+
+export const IngredientText = styled.p`
+  margin-left: 12px;
+`;
+
+export const InstructionItem = styled.div`
+  margin-left: 12px;
+`;
+
+export const InstructionStep = styled.p`
+  color: ${PRIMARY_COLOUR};
+  font-weight: 600;
+`;
+
+export const InstructionText = styled.p``;
+
+interface DragHandlerProps {
+  dragging: boolean;
+}
+
+export const DragHandler = styled.div<DragHandlerProps>`
+  cursor: ${(props) => (props.dragging ? "grabbing" : "grab")};
+  margin-right: 12px;
+`;
+
+export const StyledInput = styled(Input)``;
 
 export const StyledButton = styled(Button)`
-  font-size: 40px;
-  line-height: 10px;
-  margin-left: 10px;
-`;
-
-export const TimeInput = styled(TextFieldElement)`
-  &&& {
-    width: 180px;
-  }
-`;
-
-export const NuritionText = styled.span`
-  display: flex;
-  column-gap: 14px;
-  line-height: 25px;
-  font-size: 18px;
-  font-weight: 500;
-  color: #b9bdc3;
-  align-items: center;
-`;
-
-export const Filler = styled.div`
-  height: -9.13px;
-`;
-
-export const Box = styled.div`
-  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
-  padding: 50px;
-  border-radius: 20px;
-  min-height: 1000px;
-  overflow-y: auto;
+  padding: 0;
+  min-width: 48px;
+  min-height: 48px;
 `;
 
 export const StyledModal = styled(Modal)`
@@ -94,13 +118,14 @@ export const StyledModal = styled(Modal)`
 `;
 
 export const ModalContainer = styled.div`
-  width: 500px;
+  width: 564px;
   min-height: 200px;
   height: auto;
   background-color: #fff;
   border-radius: 12px;
   padding: 24px;
   display: flex;
+  gap: 24px;
   flex-direction: column;
   justify-content: space-between;
 `;
@@ -130,5 +155,40 @@ export const CloseButton = styled.button`
 export const ConfirmButton = styled(Button)`
   &&& {
     align-self: flex-end;
+  }
+`;
+
+export const StyledMenuItem = styled(MenuItem)`
+  font: inherit;
+`;
+
+export const SelectInput = styled(InputBase)`
+  font: inherit;
+  border-radius: 8px;
+  width: 100%;
+  border: 0;
+  background-color: transparent;
+  border: 1px solid ${ONYX_20};
+  position: "relative";
+
+  & .MuiInputBase-input {
+    height: auto;
+    padding: 7px 16px;
+  }
+`;
+
+export const StyledSelect = styled(({ className, ...props }) => (
+  <Select {...props} MenuProps={{ classes: { paper: className } }} />
+))`
+  &&& {
+    margin-top: 8px;
+  }
+`;
+
+export const StyledFormControl = styled(FormControl)`
+  & .MuiPaper-root {
+    border-radius: 12px;
+    margin-top: 8px;
+    width: 150px;
   }
 `;

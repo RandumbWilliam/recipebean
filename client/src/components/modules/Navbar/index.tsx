@@ -52,15 +52,13 @@ const Navbar: React.FC<NavbarProps> = ({}) => {
     return () => window.removeEventListener("scroll", onScroll);
   });
 
-  console.log(router.pathname);
-
   return (
     <Nav scrolled={scrolled}>
       <NavbarContainer>
         {authenticated ? (
           <>
             <AuthenticatedContainer>
-              <Link href="/">
+              <Link href="/cookbooks">
                 <NavLogoLink>
                   <NavLogo scrolled={scrolled} color="#ff596d" />
                 </NavLogoLink>

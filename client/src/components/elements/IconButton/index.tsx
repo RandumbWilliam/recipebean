@@ -8,6 +8,7 @@ interface IconButtonProps
   className?: string;
   name: keyof typeof Icons;
   size?: number;
+  color?: string;
   onClick?: (event: any) => void;
 }
 
@@ -16,10 +17,11 @@ const IconButton: React.FC<IconButtonProps> = ({
   onClick,
   name,
   size,
+  color = PRIMARY_COLOUR,
 }) => {
   return (
     <StyledIconButton className={className} onClick={onClick}>
-      <Icon name={name} size={size} color={PRIMARY_COLOUR} />
+      <Icon name={name} size={size} color={color} />
     </StyledIconButton>
   );
 };

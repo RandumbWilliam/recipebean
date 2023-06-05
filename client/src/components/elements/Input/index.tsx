@@ -1,10 +1,12 @@
+import { InputAdornment } from "@mui/material";
 import React, { ChangeEvent } from "react";
-import { Adornment, Field, InputContainer, Label } from "./styles";
+import { Adornment, Description, Field, InputContainer, Label } from "./styles";
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   className?: string;
   placeholder?: string;
   label?: string;
+  description?: string;
   name: string;
   error?: boolean;
   adornment?: JSX.Element | null;
@@ -21,11 +23,12 @@ const Input: React.FC<InputProps> = ({
   error,
   adornment,
   onChange,
+  description,
 }) => {
   return (
     <InputContainer className={className}>
       <Label>{label}</Label>
-      {adornment && <Adornment>{adornment}</Adornment>}
+      {description && <Description>{description}</Description>}
       <Field
         value={value}
         type={type}
@@ -33,6 +36,9 @@ const Input: React.FC<InputProps> = ({
         onChange={onChange}
         name={name}
         error={error}
+        endAdornment={
+          <InputAdornment position="end">{adornment}</InputAdornment>
+        }
       />
     </InputContainer>
   );

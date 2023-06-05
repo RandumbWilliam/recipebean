@@ -1,6 +1,12 @@
-import React, { useState, useRef, DragEvent } from "react";
+import React, { DragEvent, useRef, useState } from "react";
 import Icon from "../Icon";
-import { DropzoneInput, DropzoneMessage, DropzoneWrapper } from "./styles";
+import {
+  AdditionalText,
+  ClickText,
+  DropzoneInput,
+  DropzoneMessage,
+  DropzoneWrapper,
+} from "./styles";
 
 interface DropzoneProps {
   fileCallback: (file: File) => void;
@@ -64,8 +70,11 @@ const Dropzone: React.FC<DropzoneProps> = ({ fileCallback }) => {
           ref={fileInputRef}
           onChange={filesSelected}
         />
-        <Icon name="Camera" size={50} color="#ff596d" />
-        Add a cover photo
+        <Icon name="Photo" size={50} color="#ff596d" />
+        <p>
+          Drag and drop an image, or <ClickText>Browse</ClickText>
+        </p>
+        <AdditionalText>Max 6MB, Recommended: 564 x 352</AdditionalText>
       </DropzoneMessage>
     </DropzoneWrapper>
   );

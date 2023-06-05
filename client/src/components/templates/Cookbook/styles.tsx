@@ -52,7 +52,6 @@ export const EmptyContainer = styled.div`
 `;
 
 export const EmptyText = styled.span`
-  font-size: 18px;
   margin: 12px 0;
 `;
 

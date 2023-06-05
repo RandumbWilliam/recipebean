@@ -34,9 +34,7 @@ export const NavbarContainer = styled(Container)`
   }
 `;
 
-export const NavLogoLink = styled.a`
-  width: 250px;
-`;
+export const NavLogoLink = styled.a``;
 
 export const NavLogo = styled(Logo)<Props>`
   height: ${(props) => (props.scrolled ? "45px" : "60px")};

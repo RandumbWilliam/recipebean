@@ -1,3 +1,4 @@
+import { ONYX_20, PRIMARY_COLOUR } from "@styles/base/colours";
 import styled from "styled-components";
 
 interface Props {
@@ -10,9 +11,9 @@ export const DropzoneWrapper = styled.div<Props>`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  border: 3px ${(props) => (props.active ? `solid` : `dashed`)} #b9bdc3;
+  border: 2px ${(props) => (props.active ? `solid` : `dashed`)} ${ONYX_20};
   border-radius: 10px;
-  height: 280px;
+  height: 220px;
   width: 100%;
   cursor: pointer;
   ${(props) => props.active && `background-color: rgba(255, 89, 109, 0.1);`}
@@ -27,7 +28,6 @@ export const DropzoneMessage = styled.div`
   align-items: center;
   justify-content: center;
   text-align: center;
-  color: #ff596d;
 `;
 
 export const DropzoneInput = styled.input`
@@ -35,4 +35,12 @@ export const DropzoneInput = styled.input`
   position: absolute;
   left: 0;
   top: 0;
+`;
+
+export const ClickText = styled.span`
+  color: ${PRIMARY_COLOUR};
+`;
+
+export const AdditionalText = styled.p`
+  color: ${ONYX_20};
 `;

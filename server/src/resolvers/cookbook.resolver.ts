@@ -51,8 +51,7 @@ export class CookbookResolver {
     const userRepository = em.getRepository(User);
 
     const creator = await userRepository.findOneOrFail({
-      // id: req.session.userId,
-      id: "d70400a3-2d20-4c70-9a70-3bb5efd94042",
+      id: req.session.userId,
     });
 
     const cookbook = em.create(Cookbook, {

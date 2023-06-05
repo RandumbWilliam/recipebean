@@ -4,11 +4,13 @@ import { Arg, Field, Mutation, ObjectType, Resolver } from "type-graphql";
 @ObjectType()
 class ParsedIngredient {
   @Field()
-  quantity: number;
-  @Field()
-  unit: string;
-  @Field()
   ingredient: string;
+
+  @Field({ nullable: true })
+  unit?: string;
+
+  @Field({ nullable: true })
+  quantity?: number;
 }
 
 @Resolver(() => ParsedIngredient)

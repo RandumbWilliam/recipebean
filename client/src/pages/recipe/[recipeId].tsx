@@ -1,17 +1,15 @@
-import React from "react";
+import BaseLayout from "@components/layouts/Base";
 import { useRouter } from "next/router";
-import BeanLayout from "../../components/layouts/Bean";
+import React from "react";
 
 const Recipe = () => {
   const router = useRouter();
   const { recipeId } = router.query;
 
-  console.log(recipeId);
-
   return (
-    <BeanLayout>
-      <div>help</div>
-    </BeanLayout>
+    <BaseLayout>
+      <div>{recipeId}</div>
+    </BaseLayout>
   );
 };
 

@@ -24,11 +24,11 @@ class RecipeValidator {
 
   @Field(() => [RecipeIngredientValidator])
   @IsArray()
-  public ingredients: RecipeIngredientValidator[];
+  public ingredientValues: RecipeIngredientValidator[];
 
   @Field(() => [RecipeInstructionValidator])
   @IsArray()
-  public instructions: RecipeInstructionValidator[];
+  public instructionValues: RecipeInstructionValidator[];
 
   @Field(() => [RecipeHeaderValidator])
   @IsArray()
