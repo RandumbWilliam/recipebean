@@ -217,9 +217,9 @@ export type RecipeInstructionValidator = {
 export type RecipeValidator = {
   cookTime: Scalars['Float'];
   ingredientHeaders: Array<RecipeHeaderValidator>;
-  ingredients: Array<RecipeIngredientValidator>;
+  ingredientValues: Array<RecipeIngredientValidator>;
   instructionHeaders: Array<RecipeHeaderValidator>;
-  instructions: Array<RecipeInstructionValidator>;
+  instructionValues: Array<RecipeInstructionValidator>;
   prepTime: Scalars['Float'];
   recipeName: Scalars['String'];
   servings: Scalars['Float'];

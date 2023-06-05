@@ -1,23 +1,25 @@
-import { IsInt, IsNumber, IsString } from "class-validator";
+import { IsInt, IsNumber, IsOptional, IsString } from "class-validator";
 import { Field, InputType } from "type-graphql";
 
 @InputType()
 class RecipeIngredientValidator {
   @Field()
   @IsInt()
-  order: number;
+  public order: number;
 
   @Field()
   @IsString()
-  ingredient: string;
+  public ingredient: string;
 
-  @Field()
+  @Field({ nullable: true })
   @IsString()
-  unit: string;
+  @IsOptional()
+  public unit?: string;
 
-  @Field()
+  @Field({ nullable: true })
   @IsNumber()
-  quantity: number;
+  @IsOptional()
+  public quantity?: number;
 }
 
 export default RecipeIngredientValidator;

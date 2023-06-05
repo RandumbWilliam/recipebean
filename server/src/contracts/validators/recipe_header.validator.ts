@@ -5,11 +5,11 @@ import { Field, InputType } from "type-graphql";
 class RecipeHeaderValidator {
   @Field()
   @IsInt()
-  order: number;
+  public order: number;
 
   @Field()
   @IsString()
-  header: string;
+  public header: string;
 }
 
 export default RecipeHeaderValidator;

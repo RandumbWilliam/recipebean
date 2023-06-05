@@ -84,13 +84,15 @@ const CookbookTemplate: React.FC<CookbookTemplateProps> = ({ cookbook }) => {
 
   if (cookbook.recipes?.length === 0) {
     body = (
-      <EmptyContainer>
-        <Icon name="Cookbook" size={102} color="#B9BDC3" />
-        <EmptyText>Create a recipe</EmptyText>
-        <Link href="/create-recipe">
-          <Button>Add Recipe</Button>
-        </Link>
-      </EmptyContainer>
+      <Grid item lg={12}>
+        <EmptyContainer>
+          <Icon name="Cookbook" size={102} color="#B9BDC3" />
+          <EmptyText>Create a recipe</EmptyText>
+          <Link href="/create-recipe">
+            <Button>Add Recipe</Button>
+          </Link>
+        </EmptyContainer>
+      </Grid>
     );
   } else {
     body = (
@@ -113,11 +115,15 @@ const CookbookTemplate: React.FC<CookbookTemplateProps> = ({ cookbook }) => {
           };
           return (
             <Grid key={cookbook.id} item lg={4}>
-              <RecipeCard
-                key={recipe.id}
-                reicpeName={recipe.recipeName}
-                time={timeString(recipe.prepTime + recipe.cookTime)}
-              />
+              <Link href={`/recipe/${recipe.id}`}>
+                <a>
+                  <RecipeCard
+                    key={recipe.id}
+                    reicpeName={recipe.recipeName}
+                    time={timeString(recipe.prepTime + recipe.cookTime)}
+                  />
+                </a>
+              </Link>
             </Grid>
           );
         })}
