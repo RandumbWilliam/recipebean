@@ -12,6 +12,7 @@ import {
   HeartOutlineIcon,
   HorizontalKebabIcon,
   IngredientIcon,
+  MinusIcon,
   PenIcon,
   PhotoIcon,
   PlusIcon,
@@ -52,6 +53,7 @@ export const Icons = {
   Google: GoogleIcon,
   Search: SearchIcon,
   Plus: PlusIcon,
+  Minus: MinusIcon,
 };
 
 const Icon: React.FC<IconProps> = ({

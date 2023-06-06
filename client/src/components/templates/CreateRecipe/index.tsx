@@ -174,7 +174,7 @@ const CreateRecipeTemplate: React.FC<CreateRecipeTemplateProps> = ({
             <CreateRecipeTitle>Create Recipe</CreateRecipeTitle>
             <Button
               onClick={() => setShowSaveModal(true)}
-              disabled={!disableSave()}
+              disabled={disableSave()}
             >
               Save
             </Button>

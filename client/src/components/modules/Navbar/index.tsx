@@ -2,6 +2,7 @@ import Button from "@components/elements/Button";
 import Profile from "@components/elements/Profile";
 import SearchField from "@components/elements/SearchField";
 import { useMyUserQuery } from "@generated/graphql";
+import { PRIMARY_COLOUR, WHITE_COLOUR } from "@styles/base/colours";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
@@ -18,7 +19,9 @@ import {
   SearchContainer,
 } from "./styles";
 
-interface NavbarProps {}
+interface NavbarProps {
+  alternate?: boolean;
+}
 
 const MenuLinks = [
   { key: "recipes", label: "Recipes", url: "/" },
@@ -32,7 +35,7 @@ const AuthenticatedLinks = [
   { key: "planner", label: "Planner", url: "/" },
 ];
 
-const Navbar: React.FC<NavbarProps> = ({}) => {
+const Navbar: React.FC<NavbarProps> = ({ alternate }) => {
   const router = useRouter();
   const [scrolled, setScrolled] = useState(false);
   const [{ data, fetching }] = useMyUserQuery();
@@ -53,17 +56,22 @@ const Navbar: React.FC<NavbarProps> = ({}) => {
   });
 
   return (
-    <Nav scrolled={scrolled}>
+    <Nav scrolled={scrolled} alternate={alternate}>
       <NavbarContainer>
         {authenticated ? (
           <>
             <AuthenticatedContainer>
               <Link href="/cookbooks">
                 <NavLogoLink>
-                  <NavLogo scrolled={scrolled} color="#ff596d" />
+                  <NavLogo
+                    scrolled={scrolled}
+                    color={
+                      alternate && !scrolled ? WHITE_COLOUR : PRIMARY_COLOUR
+                    }
+                  />
                 </NavLogoLink>
               </Link>
-              <NavMenu>
+              <NavMenu alternate={alternate} scrolled={scrolled}>
                 {AuthenticatedLinks.map((item) => (
                   <NavItem key={item.key}>
                     <Link href={item.url} passHref>
@@ -75,7 +83,7 @@ const Navbar: React.FC<NavbarProps> = ({}) => {
             </AuthenticatedContainer>
             <AuthenticatedContainer>
               <SearchContainer>
-                <SearchField />
+                <SearchField alternate={alternate && !scrolled} />
               </SearchContainer>
               <Profile />
             </AuthenticatedContainer>
