@@ -1,22 +1,16 @@
+import { WHITE_COLOUR } from "@styles/base/colours";
 import React from "react";
-import {
-  CounterButton,
-  CounterDisplay,
-  CounterItem,
-  CounterWrapper,
-} from "./styles";
+import Icon from "../Icon";
+import { CounterButton, CounterContainer, CounterDisplay } from "./styles";
 
 interface CounterProps {
-  vertical?: boolean;
   value: number;
   setValue: (value: number | ((prevVar: number) => number)) => void;
+  min: number;
+  max: number;
 }
 
-const Counter: React.FC<CounterProps> = ({
-  value,
-  setValue,
-  vertical = false,
-}) => {
+const Counter: React.FC<CounterProps> = ({ value, setValue, min, max }) => {
   const handleIncrement = () => {
     setValue((value: number) => value + 1);
   };
@@ -25,62 +19,24 @@ const Counter: React.FC<CounterProps> = ({
     setValue((value: number) => value - 1);
   };
 
+  const servingsText = () => {
+    if (value === 1) {
+      return `${value} serving`;
+    } else {
+      return `${value} servings`;
+    }
+  };
+
   return (
-    <CounterWrapper vertical={vertical}>
-      {vertical ? (
-        <>
-          <CounterItem>
-            <CounterButton
-              disabled={value === 99}
-              onClick={handleDecrement}
-              vertical={vertical}
-            >
-              +
-            </CounterButton>
-          </CounterItem>
-          <CounterItem>
-            <CounterDisplay vertical={vertical}>
-              <span>{value}</span>
-            </CounterDisplay>
-          </CounterItem>
-          <CounterItem>
-            <CounterButton
-              disabled={value === 0}
-              onClick={handleIncrement}
-              vertical={vertical}
-            >
-              -
-            </CounterButton>
-          </CounterItem>
-        </>
-      ) : (
-        <>
-          <CounterItem>
-            <CounterButton
-              disabled={value === 0}
-              onClick={handleDecrement}
-              vertical={vertical}
-            >
-              -
-            </CounterButton>
-          </CounterItem>
-          <CounterItem>
-            <CounterDisplay vertical={vertical}>
-              <span>{value}</span>
-            </CounterDisplay>
-          </CounterItem>
-          <CounterItem>
-            <CounterButton
-              disabled={value === 99}
-              onClick={handleIncrement}
-              vertical={vertical}
-            >
-              +
-            </CounterButton>
-          </CounterItem>
-        </>
-      )}
-    </CounterWrapper>
+    <CounterContainer>
+      <CounterButton disabled={value === min} onClick={handleDecrement}>
+        <Icon name="Minus" size={12} color={WHITE_COLOUR} />
+      </CounterButton>
+      <CounterDisplay>{servingsText()}</CounterDisplay>
+      <CounterButton disabled={value === max} onClick={handleIncrement}>
+        <Icon name="Plus" size={12} color={WHITE_COLOUR} />
+      </CounterButton>
+    </CounterContainer>
   );
 };
 

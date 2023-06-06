@@ -1,11 +1,16 @@
 import Logo from "@components/elements/Logo";
 import { Container } from "@mui/material";
-import { PRIMARY_COLOUR } from "@styles/base/colours";
+import {
+  PRIMARY_COLOUR,
+  SECONDARY_COLOUR,
+  WHITE_COLOUR,
+} from "@styles/base/colours";
 import Image from "next/image";
 import styled from "styled-components";
 
 interface Props {
-  scrolled: boolean;
+  scrolled?: boolean;
+  alternate?: boolean;
 }
 
 interface NavLinkProps {
@@ -43,11 +48,13 @@ export const NavLogo = styled(Logo)<Props>`
   cursor: pointer;
 `;
 
-export const NavMenu = styled.ul`
+export const NavMenu = styled.ul<Props>`
   display: flex;
   align-items: center;
   margin: 0 auto;
   list-style: none;
+  color: ${(props) =>
+    props.alternate && !props.scrolled ? WHITE_COLOUR : SECONDARY_COLOUR};
 `;
 
 export const NavItem = styled.li`

@@ -10,6 +10,7 @@ export * from "./Heart";
 export * from "./HeartOutline";
 export * from "./HorizontalKebab";
 export * from "./Ingredient";
+export * from "./Minus";
 export * from "./Pen";
 export * from "./Photo";
 export * from "./Plus";

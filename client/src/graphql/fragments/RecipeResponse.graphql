@@ -1,0 +1,19 @@
+fragment RecipeResponse on Recipe {
+  id
+  recipeName
+  prepTime
+  cookTime
+  servings
+  recipeIngredient {
+    ...RecipeIngredientResponse
+  }
+  recipeInstruction {
+    ...RecipeInstructionResponse
+  }
+  recipeHeaderIngredient {
+    ...RecipeHeaderIngredientResponse
+  }
+  recipeHeaderInstruction {
+    ...RecipeHeaderInstructionResponse
+  }
+}

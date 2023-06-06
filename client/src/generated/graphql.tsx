@@ -114,8 +114,8 @@ export type MutationUpdateRecipeArgs = {
 export type ParsedIngredient = {
   __typename?: 'ParsedIngredient';
   ingredient: Scalars['String'];
-  quantity: Scalars['Float'];
-  unit: Scalars['String'];
+  quantity?: Maybe<Scalars['Float']>;
+  unit?: Maybe<Scalars['String']>;
 };
 
 export type Query = {
@@ -184,17 +184,17 @@ export type RecipeIngredient = {
   id: Scalars['ID'];
   ingredient: Scalars['String'];
   order: Scalars['Float'];
-  quantity: Scalars['Float'];
+  quantity?: Maybe<Scalars['Float']>;
   recipes: Recipe;
-  unit: Scalars['String'];
+  unit?: Maybe<Scalars['String']>;
   updatedAt: Scalars['DateTime'];
 };
 
 export type RecipeIngredientValidator = {
   ingredient: Scalars['String'];
   order: Scalars['Float'];
-  quantity: Scalars['Float'];
-  unit: Scalars['String'];
+  quantity?: InputMaybe<Scalars['Float']>;
+  unit?: InputMaybe<Scalars['String']>;
 };
 
 export type RecipeInstruction = {
@@ -256,9 +256,11 @@ export type RecipeHeaderIngredientResponseFragment = { __typename?: 'RecipeHeade
 
 export type RecipeHeaderInstructionResponseFragment = { __typename?: 'RecipeHeaderInstruction', order: number, header: string };
 
-export type RecipeIngredientResponseFragment = { __typename?: 'RecipeIngredient', order: number, ingredient: string, quantity: number, unit: string };
+export type RecipeIngredientResponseFragment = { __typename?: 'RecipeIngredient', order: number, ingredient: string, quantity?: number | null, unit?: string | null };
 
 export type RecipeInstructionResponseFragment = { __typename?: 'RecipeInstruction', order: number, step: number, instruction: string };
+
+export type RecipeResponseFragment = { __typename?: 'Recipe', id: string, recipeName: string, prepTime: number, cookTime: number, servings: number, recipeIngredient: Array<{ __typename?: 'RecipeIngredient', order: number, ingredient: string, quantity?: number | null, unit?: string | null }>, recipeInstruction: Array<{ __typename?: 'RecipeInstruction', order: number, step: number, instruction: string }>, recipeHeaderIngredient: Array<{ __typename?: 'RecipeHeaderIngredient', order: number, header: string }>, recipeHeaderInstruction: Array<{ __typename?: 'RecipeHeaderInstruction', order: number, header: string }> };
 
 export type UserErrorResponseFragment = { __typename?: 'UserError', errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null, user?: { __typename?: 'User', id: string, email: string, firstName: string, lastName: string } | null };
 
@@ -319,7 +321,7 @@ export type ParseIngredientMutationVariables = Exact<{
 }>;
 
 
-export type ParseIngredientMutation = { __typename?: 'Mutation', parseIngredient: { __typename?: 'ParsedIngredient', unit: string, ingredient: string, quantity: number } };
+export type ParseIngredientMutation = { __typename?: 'Mutation', parseIngredient: { __typename?: 'ParsedIngredient', unit?: string | null, ingredient: string, quantity?: number | null } };
 
 export type RegisterMutationVariables = Exact<{
   input: UserValidator;
@@ -353,12 +355,12 @@ export type GetRecipeByIdQueryVariables = Exact<{
 }>;
 
 
-export type GetRecipeByIdQuery = { __typename?: 'Query', getRecipe?: { __typename?: 'Recipe', id: string, recipeName: string, prepTime: number, cookTime: number, servings: number, recipeIngredient: Array<{ __typename?: 'RecipeIngredient', id: string, order: number, ingredient: string, quantity: number, unit: string }>, recipeInstruction: Array<{ __typename?: 'RecipeInstruction', id: string, order: number, instruction: string, step: number }>, recipeHeaderIngredient: Array<{ __typename?: 'RecipeHeaderIngredient', id: string, order: number, header: string }>, recipeHeaderInstruction: Array<{ __typename?: 'RecipeHeaderInstruction', id: string, order: number, header: string }> } | null };
+export type GetRecipeByIdQuery = { __typename?: 'Query', getRecipe?: { __typename?: 'Recipe', id: string, recipeName: string, prepTime: number, cookTime: number, servings: number, recipeIngredient: Array<{ __typename?: 'RecipeIngredient', id: string, order: number, ingredient: string, quantity?: number | null, unit?: string | null }>, recipeInstruction: Array<{ __typename?: 'RecipeInstruction', id: string, order: number, instruction: string, step: number }>, recipeHeaderIngredient: Array<{ __typename?: 'RecipeHeaderIngredient', id: string, order: number, header: string }>, recipeHeaderInstruction: Array<{ __typename?: 'RecipeHeaderInstruction', id: string, order: number, header: string }> } | null };
 
 export type GetRecipesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetRecipesQuery = { __typename?: 'Query', getRecipes: Array<{ __typename?: 'Recipe', id: string, recipeName: string, prepTime: number, cookTime: number, servings: number, recipeIngredient: Array<{ __typename?: 'RecipeIngredient', id: string, order: number, ingredient: string, quantity: number, unit: string }>, recipeInstruction: Array<{ __typename?: 'RecipeInstruction', id: string, order: number, instruction: string, step: number }>, recipeHeaderIngredient: Array<{ __typename?: 'RecipeHeaderIngredient', id: string, order: number, header: string }>, recipeHeaderInstruction: Array<{ __typename?: 'RecipeHeaderInstruction', id: string, order: number, header: string }> }> };
+export type GetRecipesQuery = { __typename?: 'Query', getRecipes: Array<{ __typename?: 'Recipe', id: string, recipeName: string, prepTime: number, cookTime: number, servings: number, recipeIngredient: Array<{ __typename?: 'RecipeIngredient', id: string, order: number, ingredient: string, quantity?: number | null, unit?: string | null }>, recipeInstruction: Array<{ __typename?: 'RecipeInstruction', id: string, order: number, instruction: string, step: number }>, recipeHeaderIngredient: Array<{ __typename?: 'RecipeHeaderIngredient', id: string, order: number, header: string }>, recipeHeaderInstruction: Array<{ __typename?: 'RecipeHeaderInstruction', id: string, order: number, header: string }> }> };
 
 export type MyUserQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -377,18 +379,6 @@ export const CookbookResponseFragmentDoc = gql`
   }
 }
     `;
-export const RecipeHeaderIngredientResponseFragmentDoc = gql`
-    fragment RecipeHeaderIngredientResponse on RecipeHeaderIngredient {
-  order
-  header
-}
-    `;
-export const RecipeHeaderInstructionResponseFragmentDoc = gql`
-    fragment RecipeHeaderInstructionResponse on RecipeHeaderInstruction {
-  order
-  header
-}
-    `;
 export const RecipeIngredientResponseFragmentDoc = gql`
     fragment RecipeIngredientResponse on RecipeIngredient {
   order
@@ -404,6 +394,42 @@ export const RecipeInstructionResponseFragmentDoc = gql`
   instruction
 }
     `;
+export const RecipeHeaderIngredientResponseFragmentDoc = gql`
+    fragment RecipeHeaderIngredientResponse on RecipeHeaderIngredient {
+  order
+  header
+}
+    `;
+export const RecipeHeaderInstructionResponseFragmentDoc = gql`
+    fragment RecipeHeaderInstructionResponse on RecipeHeaderInstruction {
+  order
+  header
+}
+    `;
+export const RecipeResponseFragmentDoc = gql`
+    fragment RecipeResponse on Recipe {
+  id
+  recipeName
+  prepTime
+  cookTime
+  servings
+  recipeIngredient {
+    ...RecipeIngredientResponse
+  }
+  recipeInstruction {
+    ...RecipeInstructionResponse
+  }
+  recipeHeaderIngredient {
+    ...RecipeHeaderIngredientResponse
+  }
+  recipeHeaderInstruction {
+    ...RecipeHeaderInstructionResponse
+  }
+}
+    ${RecipeIngredientResponseFragmentDoc}
+${RecipeInstructionResponseFragmentDoc}
+${RecipeHeaderIngredientResponseFragmentDoc}
+${RecipeHeaderInstructionResponseFragmentDoc}`;
 export const ErrorResponseFragmentDoc = gql`
     fragment ErrorResponse on FieldError {
   field
