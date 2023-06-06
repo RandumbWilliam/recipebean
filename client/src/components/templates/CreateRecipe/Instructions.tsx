@@ -6,7 +6,7 @@ import {
   RecipeInstructionResponseFragment,
 } from "@generated/graphql";
 import { ONYX_20, WHITE_COLOUR } from "@styles/base/colours";
-import React, { SetStateAction, useState } from "react";
+import React, { SetStateAction, useState, useEffect, useRef } from "react";
 import { DragDropContext, Draggable, DropResult } from "react-beautiful-dnd";
 import { StrictModeDroppable } from "./StrictModeDroppable";
 import {
@@ -36,6 +36,8 @@ const Instructions: React.FC<InstructionProps> = ({
   instructions,
   setInstructions,
 }) => {
+  const editInputRef = useRef<HTMLFormElement>(null);
+
   const [currentOrder, setCurrentOrder] = useState(0);
   const [step, setStep] = useState(1);
   const [instructionValue, setInstructionValue] = useState("");
@@ -46,6 +48,30 @@ const Instructions: React.FC<InstructionProps> = ({
 
   const [reorder, setReorder] = useState(false);
   const [showHeader, setShowHeader] = useState(false);
+
+  useEffect(() => {
+    const handleClickOutside = (event: any) => {
+      if (
+        editInputRef.current &&
+        event.target.classList.contains("instructionValue")
+      )
+        return;
+
+      if (
+        editInputRef.current &&
+        !editInputRef.current.contains(event.target)
+      ) {
+        setEditIndex(null);
+        setEditValue(null);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const addInstruction = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -156,6 +182,8 @@ const Instructions: React.FC<InstructionProps> = ({
       const instructionValue = value as RecipeInstructionResponseFragment;
       return instructionValue.instruction;
     }
+
+    return "";
   };
 
   const deleteInstruction = (index: number, type: UnionType) => {
@@ -164,6 +192,18 @@ const Instructions: React.FC<InstructionProps> = ({
     if (type === UnionType.VALUE) {
       setStep(step - 1);
     }
+
+    let j = 1;
+    for (var i = 0; i < newInstructions.length; i++) {
+      newInstructions[i].value.order = i;
+      if (newInstructions[i].type === UnionType.VALUE) {
+        let instructionItem = newInstructions[i]
+          .value as RecipeInstructionResponseFragment;
+        instructionItem.step = j;
+        j += 1;
+      }
+    }
+
     setCurrentOrder(currentOrder - 1);
     setInstructions(newInstructions);
   };
@@ -173,11 +213,15 @@ const Instructions: React.FC<InstructionProps> = ({
     switch (type) {
       case UnionType.HEADER:
         const headerValue = value as RecipeHeaderInstructionResponseFragment;
-        return <SubHeader>{headerValue.header}</SubHeader>;
+        return (
+          <SubHeader className="instructionValue">
+            {headerValue.header}
+          </SubHeader>
+        );
       case UnionType.VALUE:
         const instructionValue = value as RecipeInstructionResponseFragment;
         return (
-          <InstructionItem>
+          <InstructionItem className="instructionValue">
             <InstructionStep>{`Step ${instructionValue.step}`}</InstructionStep>
             <InstructionText>{instructionValue.instruction}</InstructionText>
           </InstructionItem>
@@ -240,8 +284,10 @@ const Instructions: React.FC<InstructionProps> = ({
                           updateInstructions(event, instruction, index)
                         }
                         autoComplete="off"
+                        ref={editInputRef}
                       >
                         <StyledInput
+                          multiline
                           type="text"
                           name="editInstruction"
                           value={
@@ -254,6 +300,7 @@ const Instructions: React.FC<InstructionProps> = ({
                             <button
                               type="button"
                               onClick={() => {
+                                deleteInstruction(index, instruction.type);
                                 setEditIndex(null);
                                 setEditValue(null);
                               }}
@@ -279,7 +326,12 @@ const Instructions: React.FC<InstructionProps> = ({
                             ref={provided.innerRef}
                             {...provided.draggableProps}
                             onClick={() => {
-                              !reorder && setEditIndex(index);
+                              if (!reorder) {
+                                setEditIndex(index);
+                                setEditValue(
+                                  editInstructionString(instruction)
+                                );
+                              }
                             }}
                           >
                             <SubItem>
@@ -318,6 +370,7 @@ const Instructions: React.FC<InstructionProps> = ({
       {showHeader && (
         <InputForm onSubmit={addHeader} autoComplete="off">
           <StyledInput
+            multiline
             type="text"
             name="instructionHeader"
             value={headerValue}
@@ -336,6 +389,7 @@ const Instructions: React.FC<InstructionProps> = ({
       )}
       <InputForm onSubmit={addInstruction} autoComplete="off">
         <StyledInput
+          multiline
           type="text"
           name="instruction"
           value={instructionValue}

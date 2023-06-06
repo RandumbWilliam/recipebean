@@ -1,4 +1,4 @@
-import { InputBase } from "@mui/material";
+import { InputAdornment, InputBase } from "@mui/material";
 import { ONYX_10, ONYX_20 } from "@styles/base/colours";
 import styled from "styled-components";
 
@@ -22,9 +22,8 @@ export const Description = styled.p`
   color: ${ONYX_20};
 `;
 
-export const Adornment = styled.div`
-  position: absolute;
-  right: 15px;
+export const StyledInputAdornment = styled(InputAdornment)`
+  padding
 `;
 
 export const Field = styled(InputBase)<Props>`
@@ -35,6 +34,7 @@ export const Field = styled(InputBase)<Props>`
   border: 0;
   background-color: transparent;
   border: 1px solid ${({ error }) => (error ? "#ff0033" : ONYX_20)};
+  align-items: baseline;
 
   & input {
     padding: 0;

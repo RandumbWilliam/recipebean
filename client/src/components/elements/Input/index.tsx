@@ -1,6 +1,12 @@
 import { InputAdornment } from "@mui/material";
-import React, { ChangeEvent } from "react";
-import { Adornment, Description, Field, InputContainer, Label } from "./styles";
+import React from "react";
+import {
+  Description,
+  Field,
+  InputContainer,
+  Label,
+  StyledInputAdornment,
+} from "./styles";
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   className?: string;
@@ -10,7 +16,9 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   name: string;
   error?: boolean;
   adornment?: JSX.Element | null;
-  onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
+  multiline?: boolean;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onKeyDown?: any;
 }
 
 const Input: React.FC<InputProps> = ({
@@ -22,7 +30,9 @@ const Input: React.FC<InputProps> = ({
   name,
   error,
   adornment,
+  multiline,
   onChange,
+  onKeyDown,
   description,
 }) => {
   return (
@@ -30,6 +40,8 @@ const Input: React.FC<InputProps> = ({
       <Label>{label}</Label>
       {description && <Description>{description}</Description>}
       <Field
+        autoComplete="off"
+        multiline={multiline}
         value={value}
         type={type}
         placeholder={placeholder}
@@ -37,8 +49,11 @@ const Input: React.FC<InputProps> = ({
         name={name}
         error={error}
         endAdornment={
-          <InputAdornment position="end">{adornment}</InputAdornment>
+          <StyledInputAdornment position="end">
+            {adornment}
+          </StyledInputAdornment>
         }
+        onKeyDown={onKeyDown}
       />
     </InputContainer>
   );

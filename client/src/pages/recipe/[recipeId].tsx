@@ -1,4 +1,5 @@
 import BaseLayout from "@components/layouts/Base";
+import Load from "@components/modules/Load";
 import RecipeTemplate from "@components/templates/Recipe";
 import { useGetRecipeByIdQuery } from "@generated/graphql";
 import { useRouter } from "next/router";
@@ -15,6 +16,10 @@ const Recipe = () => {
     },
   });
 
+  if (fetching) {
+    return <Load />;
+  }
+
   if (!fetching && data?.getRecipe) {
     return (
       <BaseLayout alternate>
@@ -22,8 +27,6 @@ const Recipe = () => {
       </BaseLayout>
     );
   }
-
-  return <div>Error</div>;
 };
 
 export default Recipe;

@@ -7,7 +7,7 @@ import {
   useParseIngredientMutation,
 } from "@generated/graphql";
 import { ONYX_20, WHITE_COLOUR } from "@styles/base/colours";
-import React, { SetStateAction, useState } from "react";
+import React, { SetStateAction, useEffect, useRef, useState } from "react";
 import { DragDropContext, Draggable, DropResult } from "react-beautiful-dnd";
 import { StrictModeDroppable } from "./StrictModeDroppable";
 import {
@@ -35,6 +35,8 @@ const Ingredients: React.FC<IngredientsProps> = ({
   ingredients,
   setIngredients,
 }) => {
+  const editInputRef = useRef<HTMLFormElement>(null);
+
   const [, parseIngredient] = useParseIngredientMutation();
 
   const [currentOrder, setCurrentOrder] = useState(0);
@@ -47,8 +49,32 @@ const Ingredients: React.FC<IngredientsProps> = ({
   const [reorder, setReorder] = useState(false);
   const [showHeader, setShowHeader] = useState(false);
 
-  const addIngredient = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  useEffect(() => {
+    const handleClickOutside = (event: any) => {
+      if (
+        editInputRef.current &&
+        event.target.classList.contains("ingredientValue")
+      )
+        return;
+
+      if (
+        editInputRef.current &&
+        !editInputRef.current.contains(event.target)
+      ) {
+        setEditIndex(null);
+        setEditValue(null);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const addIngredient = async (e?: React.FormEvent<HTMLFormElement>) => {
+    e?.preventDefault();
     const response = await parseIngredient({ strIngredient: ingredientValue });
     if (response.data?.parseIngredient) {
       let parsed = response.data.parseIngredient;
@@ -72,8 +98,8 @@ const Ingredients: React.FC<IngredientsProps> = ({
     }
   };
 
-  const addHeader = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const addHeader = (e?: React.FormEvent<HTMLFormElement>) => {
+    e?.preventDefault();
     let headerInput: RecipeHeaderIngredientResponseFragment = {
       order: currentOrder,
       header: headerValue,
@@ -105,51 +131,51 @@ const Ingredients: React.FC<IngredientsProps> = ({
   };
 
   const updateIngredients = async (
-    e: React.FormEvent<HTMLFormElement>,
     ingredient: IngredientHeaderUnion,
-    index: number
+    index: number,
+    e?: React.FormEvent<HTMLFormElement>
   ) => {
-    e.preventDefault();
-    if (editValue === null) return;
+    e?.preventDefault();
+    if (editValue !== null) {
+      const { type, value } = ingredient;
+      const newIngredients = [...ingredients];
 
-    const { type, value } = ingredient;
-    const newIngredients = [...ingredients];
-
-    if (type === UnionType.HEADER) {
-      let headerInput: RecipeHeaderIngredientResponseFragment = {
-        order: value.order,
-        header: editValue,
-      };
-
-      let headerItem: IngredientHeaderUnion = {
-        type: UnionType.HEADER,
-        value: headerInput,
-      };
-
-      newIngredients[index] = headerItem;
-      setIngredients(newIngredients);
-    }
-
-    if (type === UnionType.VALUE) {
-      const response = await parseIngredient({
-        strIngredient: editValue,
-      });
-      if (response.data?.parseIngredient) {
-        let parsed = response.data.parseIngredient;
-        let updateVal: RecipeIngredientResponseFragment = {
+      if (type === UnionType.HEADER) {
+        let headerInput: RecipeHeaderIngredientResponseFragment = {
           order: value.order,
-          ingredient: parsed.ingredient,
-          unit: parsed.unit,
-          quantity: parsed.quantity,
+          header: editValue,
         };
 
-        let ingredientItem: IngredientHeaderUnion = {
-          type: UnionType.VALUE,
-          value: updateVal,
+        let headerItem: IngredientHeaderUnion = {
+          type: UnionType.HEADER,
+          value: headerInput,
         };
 
-        newIngredients[index] = ingredientItem;
+        newIngredients[index] = headerItem;
         setIngredients(newIngredients);
+      }
+
+      if (type === UnionType.VALUE) {
+        const response = await parseIngredient({
+          strIngredient: editValue,
+        });
+        if (response.data?.parseIngredient) {
+          let parsed = response.data.parseIngredient;
+          let updateVal: RecipeIngredientResponseFragment = {
+            order: value.order,
+            ingredient: parsed.ingredient,
+            unit: parsed.unit,
+            quantity: parsed.quantity,
+          };
+
+          let ingredientItem: IngredientHeaderUnion = {
+            type: UnionType.VALUE,
+            value: updateVal,
+          };
+
+          newIngredients[index] = ingredientItem;
+          setIngredients(newIngredients);
+        }
       }
     }
 
@@ -175,10 +201,16 @@ const Ingredients: React.FC<IngredientsProps> = ({
       }
       return `${ingredientValue.quantity}${ingredientValue.unit} ${ingredientValue.ingredient}`;
     }
+
+    return "";
   };
 
   const deleteIngredient = (index: number) => {
     const newIngredients = ingredients.filter((_, i) => i !== index);
+
+    for (var i = 0; i < newIngredients.length; i++) {
+      newIngredients[i].value.order = i;
+    }
 
     setCurrentOrder(currentOrder - 1);
     setIngredients(newIngredients);
@@ -189,30 +221,36 @@ const Ingredients: React.FC<IngredientsProps> = ({
     switch (type) {
       case UnionType.HEADER:
         const headerValue = value as RecipeHeaderIngredientResponseFragment;
-        return <SubHeader>{headerValue.header}</SubHeader>;
+        return (
+          <SubHeader className="ingredientValue">
+            {headerValue.header}
+          </SubHeader>
+        );
       case UnionType.VALUE:
         const ingredientValue = value as RecipeIngredientResponseFragment;
         if (ingredientValue.unit === null) {
           if (ingredientValue.quantity === 0) {
             return (
-              <IngredientText>{ingredientValue.ingredient}</IngredientText>
+              <IngredientText className="ingredientValue">
+                {ingredientValue.ingredient}
+              </IngredientText>
             );
           } else {
             return (
-              <IngredientText>
+              <IngredientText className="ingredientValue">
                 {ingredientValue.quantity} {ingredientValue.ingredient}
               </IngredientText>
             );
           }
         }
         return (
-          <IngredientText>
-            {ingredientValue.quantity}
-            {ingredientValue.unit} {ingredientValue.ingredient}
+          <IngredientText className="ingredientValue">
+            {ingredientValue.quantity} {ingredientValue.unit}{" "}
+            {ingredientValue.ingredient}
           </IngredientText>
         );
       default:
-        return <div>None</div>;
+        return <div className="ingredientValue">None</div>;
     }
   };
 
@@ -259,11 +297,13 @@ const Ingredients: React.FC<IngredientsProps> = ({
                     return (
                       <InputForm
                         onSubmit={(event: React.FormEvent<HTMLFormElement>) =>
-                          updateIngredients(event, ingredient, index)
+                          updateIngredients(ingredient, index, event)
                         }
                         autoComplete="off"
+                        ref={editInputRef}
                       >
                         <StyledInput
+                          multiline
                           type="text"
                           name="editIngredient"
                           value={
@@ -278,11 +318,20 @@ const Ingredients: React.FC<IngredientsProps> = ({
                               onClick={() => {
                                 setEditIndex(null);
                                 setEditValue(null);
+                                deleteIngredient(index);
                               }}
                             >
                               <Icon name="Cross" color={ONYX_20} size={12} />
                             </button>
                           }
+                          onKeyDown={(
+                            e: React.KeyboardEvent<HTMLInputElement>
+                          ) => {
+                            if (e.key === "Enter" && !e.shiftKey) {
+                              e.preventDefault();
+                              updateIngredients(ingredient, index);
+                            }
+                          }}
                         />
                         <StyledButton disabled={editValue === ""} type="submit">
                           <Icon name="Plus" color={WHITE_COLOUR} size={22} />
@@ -301,7 +350,10 @@ const Ingredients: React.FC<IngredientsProps> = ({
                             ref={provided.innerRef}
                             {...provided.draggableProps}
                             onClick={() => {
-                              !reorder && setEditIndex(index);
+                              if (!reorder) {
+                                setEditIndex(index);
+                                setEditValue(editIngredientString(ingredient));
+                              }
                             }}
                           >
                             <SubItem>
@@ -338,6 +390,7 @@ const Ingredients: React.FC<IngredientsProps> = ({
       {showHeader && (
         <InputForm onSubmit={addHeader} autoComplete="off">
           <StyledInput
+            multiline
             type="text"
             name="ingredientHeader"
             value={headerValue}
@@ -348,6 +401,12 @@ const Ingredients: React.FC<IngredientsProps> = ({
                 <Icon name="Cross" color={ONYX_20} size={12} />
               </button>
             }
+            onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+              if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                addHeader();
+              }
+            }}
           />
           <StyledButton disabled={!headerValue} type="submit">
             <Icon name="Plus" color={WHITE_COLOUR} size={22} />
@@ -356,11 +415,18 @@ const Ingredients: React.FC<IngredientsProps> = ({
       )}
       <InputForm onSubmit={addIngredient} autoComplete="off">
         <StyledInput
+          multiline
           type="text"
           name="ingredient"
           value={ingredientValue}
           placeholder="Add one or paste multiple items"
           onChange={handleIngredient}
+          onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+            if (e.key === "Enter" && !e.shiftKey) {
+              e.preventDefault();
+              addIngredient();
+            }
+          }}
         />
         <StyledButton disabled={!ingredientValue} type="submit">
           <Icon name="Plus" color={WHITE_COLOUR} size={22} />

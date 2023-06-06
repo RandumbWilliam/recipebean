@@ -47,6 +47,7 @@ const SignupTemplate: React.FC<{}> = ({}) => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const response = await register({ input: formData });
+    console.log(response);
     if (response.data?.register.errors) {
       setErrors(response.data.register.errors);
     } else if (response.data?.register.user) {
