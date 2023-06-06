@@ -250,10 +250,10 @@ const RecipeTemplate: React.FC<RecipeTemplateProps> = ({ recipe }) => {
             <Icon name="Stopwatch" color={ONYX_20} size={22} />
             <TimeTextContainer>
               <TimeText>
-                <TimeTitle>Prep:</TimeTitle> 1h 20min
+                <TimeTitle>Prep:</TimeTitle> {recipe.prepTime} mins
               </TimeText>
               <TimeText>
-                <TimeTitle>Prep:</TimeTitle> 10min
+                <TimeTitle>Cook:</TimeTitle> {recipe.cookTime} mins
               </TimeText>
             </TimeTextContainer>
           </TimeContainer>

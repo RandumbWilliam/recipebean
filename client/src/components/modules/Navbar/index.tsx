@@ -24,15 +24,15 @@ interface NavbarProps {
 }
 
 const MenuLinks = [
-  { key: "recipes", label: "Recipes", url: "/" },
-  { key: "planning", label: "Planning", url: "/" },
-  { key: "shopping", label: "Shopping", url: "/" },
+  // { key: "recipes", label: "Recipes", url: "/" },
+  // { key: "planning", label: "Planning", url: "/" },
+  // { key: "shopping", label: "Shopping", url: "/" },
 ];
 
 const AuthenticatedLinks = [
-  { key: "cookbooks", label: "My Cookbooks", url: "/cookbooks" },
-  { key: "ingredients", label: "My Ingredients", url: "/" },
-  { key: "planner", label: "Planner", url: "/" },
+  // { key: "cookbooks", label: "My Cookbooks", url: "/cookbooks" },
+  // { key: "ingredients", label: "My Ingredients", url: "/" },
+  // { key: "planner", label: "Planner", url: "/" },
 ];
 
 const Navbar: React.FC<NavbarProps> = ({ alternate }) => {

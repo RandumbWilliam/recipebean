@@ -184,6 +184,7 @@ const CreateRecipeTemplate: React.FC<CreateRecipeTemplateProps> = ({
           <InputContainer id="recipe_name_input_container">
             <InputHeader>Recipe Name</InputHeader>
             <StyledInput
+              multiline
               type="text"
               name="recipeName"
               value={recipeName}
