@@ -1,5 +1,6 @@
 export * from "./AddCookbook";
 export * from "./Basket";
+export * from "./Check";
 export * from "./CloseOuteline";
 export * from "./Cookbook";
 export * from "./Cross";

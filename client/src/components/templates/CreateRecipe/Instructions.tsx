@@ -6,7 +6,7 @@ import {
   RecipeInstructionResponseFragment,
 } from "@generated/graphql";
 import { ONYX_20, WHITE_COLOUR } from "@styles/base/colours";
-import React, { SetStateAction, useState, useEffect, useRef } from "react";
+import React, { SetStateAction, useEffect, useRef, useState } from "react";
 import { DragDropContext, Draggable, DropResult } from "react-beautiful-dnd";
 import { StrictModeDroppable } from "./StrictModeDroppable";
 import {
@@ -310,7 +310,7 @@ const Instructions: React.FC<InstructionProps> = ({
                           }
                         />
                         <StyledButton disabled={editValue === ""} type="submit">
-                          <Icon name="Plus" color={WHITE_COLOUR} size={22} />
+                          <Icon name="Check" color={WHITE_COLOUR} size={22} />
                         </StyledButton>
                       </InputForm>
                     );

@@ -334,7 +334,7 @@ const Ingredients: React.FC<IngredientsProps> = ({
                           }}
                         />
                         <StyledButton disabled={editValue === ""} type="submit">
-                          <Icon name="Plus" color={WHITE_COLOUR} size={22} />
+                          <Icon name="Check" color={WHITE_COLOUR} size={22} />
                         </StyledButton>
                       </InputForm>
                     );

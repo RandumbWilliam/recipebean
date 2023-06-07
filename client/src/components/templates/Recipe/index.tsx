@@ -236,6 +236,22 @@ const RecipeTemplate: React.FC<RecipeTemplateProps> = ({ recipe }) => {
     );
   };
 
+  const timeText = (time: number) => {
+    const hours = Math.floor(time / 60);
+    const minutes = time % 60;
+
+    let result = [];
+    if (hours !== 0) {
+      result.push(`${hours}h`);
+    }
+
+    if (minutes !== 0) {
+      result.push(`${minutes}m`);
+    }
+
+    return result.join(" ");
+  };
+
   return (
     <RecipeContainer>
       <RecipeHeaderContainer>
@@ -250,10 +266,10 @@ const RecipeTemplate: React.FC<RecipeTemplateProps> = ({ recipe }) => {
             <Icon name="Stopwatch" color={ONYX_20} size={22} />
             <TimeTextContainer>
               <TimeText>
-                <TimeTitle>Prep:</TimeTitle> {recipe.prepTime} mins
+                <TimeTitle>Prep:</TimeTitle> {timeText(recipe.prepTime)}
               </TimeText>
               <TimeText>
-                <TimeTitle>Cook:</TimeTitle> {recipe.cookTime} mins
+                <TimeTitle>Cook:</TimeTitle> {timeText(recipe.cookTime)}
               </TimeText>
             </TimeTextContainer>
           </TimeContainer>

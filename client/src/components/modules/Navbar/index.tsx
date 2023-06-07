@@ -61,7 +61,7 @@ const Navbar: React.FC<NavbarProps> = ({ alternate }) => {
         {authenticated ? (
           <>
             <AuthenticatedContainer>
-              <Link href="/cookbooks">
+              <Link href="/cookbooks" passHref>
                 <NavLogoLink>
                   <NavLogo
                     scrolled={scrolled}
