@@ -1,4 +1,4 @@
-import { Container } from "@mui/material";
+import { Container, Modal } from "@mui/material";
 import {
   BRINK_PINK_10,
   ONYX_10,
@@ -24,6 +24,11 @@ export const RecipeHeader = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+`;
+
+export const RecipeActions = styled.div`
+  display: flex;
+  gap: 12px;
 `;
 
 export const RecipeTitle = styled.h2`
@@ -120,4 +125,58 @@ export const IngredientContainer = styled.div`
   margin: 0 12px;
   flex-grow: 1;
   overflow-y: auto;
+`;
+
+export const StyledModal = styled(Modal)`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+export const ModalContainer = styled.div`
+  width: 600px;
+  min-height: 300px;
+  height: auto;
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+`;
+
+export const ModalHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+export const ModalTitle = styled.h2`
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0;
+`;
+
+export const CloseButton = styled.button`
+  background: none;
+  color: inherit;
+  border: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  outline: inherit;
+`;
+
+export const WarningText = styled.div`
+  display: grid;
+  align-items: baseline;
+  grid-template-columns: 30px auto;
+  margin-bottom: 25px;
+`;
+
+export const ModalActions = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 8px;
+  gap: 12px;
 `;
