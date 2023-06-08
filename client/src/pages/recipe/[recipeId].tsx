@@ -1,7 +1,8 @@
 import BaseLayout from "@components/layouts/Base";
-import Load from "@components/modules/Load";
 import RecipeTemplate from "@components/templates/Recipe";
 import { useGetRecipeByIdQuery } from "@generated/graphql";
+import { createUrqlClient } from "@utils/createUrqlClient";
+import { withUrqlClient } from "next-urql";
 import { useRouter } from "next/router";
 import React from "react";
 
@@ -16,10 +17,6 @@ const Recipe = () => {
     },
   });
 
-  if (fetching) {
-    return <Load />;
-  }
-
   if (!fetching && data?.getRecipe) {
     return (
       <BaseLayout alternate>
@@ -27,6 +24,8 @@ const Recipe = () => {
       </BaseLayout>
     );
   }
+
+  return <div>Error</div>;
 };
 
-export default Recipe;
+export default withUrqlClient(createUrqlClient)(Recipe);

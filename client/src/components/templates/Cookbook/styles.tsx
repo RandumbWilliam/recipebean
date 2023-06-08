@@ -99,4 +99,5 @@ export const WarningText = styled.div`
   display: grid;
   grid-template-columns: 30px auto;
   margin-bottom: 25px;
+  align-items: baseline;
 `;

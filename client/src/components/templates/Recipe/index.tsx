@@ -1,14 +1,18 @@
 import Counter from "@components/elements/Counter";
 import Icon from "@components/elements/Icon";
+import IconButton from "@components/elements/IconButton";
+import TextButton from "@components/elements/TextButton";
 import {
   RecipeHeaderIngredientResponseFragment,
   RecipeHeaderInstructionResponseFragment,
   RecipeIngredientResponseFragment,
   RecipeInstructionResponseFragment,
   RecipeResponseFragment,
+  useDeleteRecipeMutation,
 } from "@generated/graphql";
 import { Grid } from "@mui/material";
-import { ONYX_20 } from "@styles/base/colours";
+import { ONYX_20, WHITE_COLOUR } from "@styles/base/colours";
+import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { InstructionItem } from "../CreateRecipe/styles";
 import {
@@ -17,6 +21,7 @@ import {
   UnionType,
 } from "../CreateRecipe/types";
 import {
+  CloseButton,
   CoverPhoto,
   Header,
   IngredientCard,
@@ -25,16 +30,23 @@ import {
   InstructionContainer,
   InstructionStep,
   InstructionText,
+  ModalActions,
+  ModalContainer,
+  ModalHeader,
+  ModalTitle,
+  RecipeActions,
   RecipeContainer,
   RecipeHeader,
   RecipeHeaderContainer,
   RecipeTitle,
   StepContainer,
+  StyledModal,
   SubHeader,
   TimeContainer,
   TimeText,
   TimeTextContainer,
   TimeTitle,
+  WarningText,
 } from "./styles";
 
 interface RecipeTemplateProps {
@@ -42,7 +54,18 @@ interface RecipeTemplateProps {
 }
 
 const RecipeTemplate: React.FC<RecipeTemplateProps> = ({ recipe }) => {
+  const router = useRouter();
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [servings, setServings] = useState(recipe.servings);
+  const [, deleteRecipe] = useDeleteRecipeMutation();
+
+  const handleDeleteRecipe = async () => {
+    const { data } = await deleteRecipe({ deleteRecipeId: recipe.id });
+
+    if (data?.deleteRecipe) {
+      router.push(`/cookbooks`);
+    }
+  };
 
   const renderInstructions = () => {
     let instructions: InstructionHeaderUnion[] = [];
@@ -253,40 +276,84 @@ const RecipeTemplate: React.FC<RecipeTemplateProps> = ({ recipe }) => {
   };
 
   return (
-    <RecipeContainer>
-      <RecipeHeaderContainer>
-        <RecipeHeader>
-          <RecipeTitle>{recipe.recipeName}</RecipeTitle>
-        </RecipeHeader>
-      </RecipeHeaderContainer>
-      <Grid container spacing={3} justifyContent="space-between">
-        <Grid item lg={6}>
-          <CoverPhoto />
-          <TimeContainer>
-            <Icon name="Stopwatch" color={ONYX_20} size={22} />
-            <TimeTextContainer>
-              <TimeText>
-                <TimeTitle>Prep:</TimeTitle> {timeText(recipe.prepTime)}
-              </TimeText>
-              <TimeText>
-                <TimeTitle>Cook:</TimeTitle> {timeText(recipe.cookTime)}
-              </TimeText>
-            </TimeTextContainer>
-          </TimeContainer>
-          <InstructionContainer>
-            <Header>Instructions</Header>
-            <StepContainer>{renderInstructions()}</StepContainer>
-          </InstructionContainer>
+    <>
+      <RecipeContainer>
+        <RecipeHeaderContainer>
+          <RecipeHeader>
+            <RecipeTitle>{recipe.recipeName}</RecipeTitle>
+            <RecipeActions>
+              <IconButton name="Pen" color={WHITE_COLOUR} size={24} />
+              <IconButton
+                name="Trash"
+                color={WHITE_COLOUR}
+                size={24}
+                onClick={() => setDeleteModalOpen(true)}
+              />
+            </RecipeActions>
+          </RecipeHeader>
+        </RecipeHeaderContainer>
+        <Grid container spacing={3} justifyContent="space-between">
+          <Grid item lg={6}>
+            <CoverPhoto />
+            <TimeContainer>
+              <Icon name="Stopwatch" color={ONYX_20} size={22} />
+              <TimeTextContainer>
+                <TimeText>
+                  <TimeTitle>Prep:</TimeTitle> {timeText(recipe.prepTime)}
+                </TimeText>
+                <TimeText>
+                  <TimeTitle>Cook:</TimeTitle> {timeText(recipe.cookTime)}
+                </TimeText>
+              </TimeTextContainer>
+            </TimeContainer>
+            <InstructionContainer>
+              <Header>Instructions</Header>
+              <StepContainer>{renderInstructions()}</StepContainer>
+            </InstructionContainer>
+          </Grid>
+          <Grid item lg={5}>
+            <IngredientCard>
+              <Header>Ingredients</Header>
+              <Counter
+                value={servings}
+                setValue={setServings}
+                min={1}
+                max={99}
+              />
+              <IngredientContainer>{renderIngredients()}</IngredientContainer>
+            </IngredientCard>
+          </Grid>
         </Grid>
-        <Grid item lg={5}>
-          <IngredientCard>
-            <Header>Ingredients</Header>
-            <Counter value={servings} setValue={setServings} min={1} max={99} />
-            <IngredientContainer>{renderIngredients()}</IngredientContainer>
-          </IngredientCard>
-        </Grid>
-      </Grid>
-    </RecipeContainer>
+      </RecipeContainer>
+      <StyledModal
+        open={deleteModalOpen}
+        onClose={() => setDeleteModalOpen(false)}
+      >
+        <ModalContainer>
+          <ModalHeader>
+            <ModalTitle>Delete Recipe</ModalTitle>
+            <CloseButton onClick={() => setDeleteModalOpen(false)}>
+              <Icon name="CloseOutline" size={24} color="#B9BDC3" />
+            </CloseButton>
+          </ModalHeader>
+          <p>
+            Are you sure you want to delete <b>{recipe.recipeName}</b>?
+          </p>
+          <WarningText>
+            <Icon name="Warning" size={18} color="#000" />{" "}
+            <span>
+              Deleting a recipe is a permanent action and cannot be undone.
+            </span>
+          </WarningText>
+          <ModalActions>
+            <TextButton onClick={() => setDeleteModalOpen(false)}>
+              Cancel
+            </TextButton>
+            <TextButton onClick={handleDeleteRecipe}>Delete</TextButton>
+          </ModalActions>
+        </ModalContainer>
+      </StyledModal>
+    </>
   );
 };
 

@@ -296,6 +296,13 @@ export type DeleteCookbookMutationVariables = Exact<{
 
 export type DeleteCookbookMutation = { __typename?: 'Mutation', deleteCookbook: boolean };
 
+export type DeleteRecipeMutationVariables = Exact<{
+  deleteRecipeId: Scalars['String'];
+}>;
+
+
+export type DeleteRecipeMutation = { __typename?: 'Mutation', deleteRecipe: boolean };
+
 export type ForgotPasswordMutationVariables = Exact<{
   email: Scalars['String'];
 }>;
@@ -355,7 +362,7 @@ export type GetRecipeByIdQueryVariables = Exact<{
 }>;
 
 
-export type GetRecipeByIdQuery = { __typename?: 'Query', getRecipe?: { __typename?: 'Recipe', id: string, recipeName: string, prepTime: number, cookTime: number, servings: number, recipeIngredient: Array<{ __typename?: 'RecipeIngredient', id: string, order: number, ingredient: string, quantity?: number | null, unit?: string | null }>, recipeInstruction: Array<{ __typename?: 'RecipeInstruction', id: string, order: number, instruction: string, step: number }>, recipeHeaderIngredient: Array<{ __typename?: 'RecipeHeaderIngredient', id: string, order: number, header: string }>, recipeHeaderInstruction: Array<{ __typename?: 'RecipeHeaderInstruction', id: string, order: number, header: string }> } | null };
+export type GetRecipeByIdQuery = { __typename?: 'Query', getRecipe?: { __typename?: 'Recipe', id: string, recipeName: string, prepTime: number, cookTime: number, servings: number, recipeIngredient: Array<{ __typename?: 'RecipeIngredient', order: number, ingredient: string, quantity?: number | null, unit?: string | null }>, recipeInstruction: Array<{ __typename?: 'RecipeInstruction', order: number, step: number, instruction: string }>, recipeHeaderIngredient: Array<{ __typename?: 'RecipeHeaderIngredient', order: number, header: string }>, recipeHeaderInstruction: Array<{ __typename?: 'RecipeHeaderInstruction', order: number, header: string }> } | null };
 
 export type GetRecipesQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -501,6 +508,15 @@ export const DeleteCookbookDocument = gql`
 export function useDeleteCookbookMutation() {
   return Urql.useMutation<DeleteCookbookMutation, DeleteCookbookMutationVariables>(DeleteCookbookDocument);
 };
+export const DeleteRecipeDocument = gql`
+    mutation DeleteRecipe($deleteRecipeId: String!) {
+  deleteRecipe(id: $deleteRecipeId)
+}
+    `;
+
+export function useDeleteRecipeMutation() {
+  return Urql.useMutation<DeleteRecipeMutation, DeleteRecipeMutationVariables>(DeleteRecipeDocument);
+};
 export const ForgotPasswordDocument = gql`
     mutation ForgotPassword($email: String!) {
   forgotPassword(email: $email)
@@ -591,37 +607,10 @@ export function useGetCookbooksQuery(options?: Omit<Urql.UseQueryArgs<GetCookboo
 export const GetRecipeByIdDocument = gql`
     query GetRecipeByID($getRecipeId: String!) {
   getRecipe(id: $getRecipeId) {
-    id
-    recipeName
-    prepTime
-    cookTime
-    servings
-    recipeIngredient {
-      id
-      order
-      ingredient
-      quantity
-      unit
-    }
-    recipeInstruction {
-      id
-      order
-      instruction
-      step
-    }
-    recipeHeaderIngredient {
-      id
-      order
-      header
-    }
-    recipeHeaderInstruction {
-      id
-      order
-      header
-    }
+    ...RecipeResponse
   }
 }
-    `;
+    ${RecipeResponseFragmentDoc}`;
 
 export function useGetRecipeByIdQuery(options: Omit<Urql.UseQueryArgs<GetRecipeByIdQueryVariables>, 'query'>) {
   return Urql.useQuery<GetRecipeByIdQuery, GetRecipeByIdQueryVariables>({ query: GetRecipeByIdDocument, ...options });
