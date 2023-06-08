@@ -1,20 +1,26 @@
 import Button from "@components/elements/Button";
 import Dropzone from "@components/elements/Dropzone";
 import Icon from "@components/elements/Icon";
+import TextButton from "@components/elements/TextButton";
 import {
   CookbookResponseFragment,
   RecipeHeaderIngredientResponseFragment,
   RecipeHeaderInstructionResponseFragment,
   RecipeIngredientResponseFragment,
   RecipeInstructionResponseFragment,
+  useCreateCookbookMutation,
   useCreateRecipeMutation,
+  useGetCookbooksQuery,
 } from "@generated/graphql";
-import { SelectChangeEvent } from "@mui/material";
+import { Divider, SelectChangeEvent } from "@mui/material";
+import { ONYX_20, PRIMARY_COLOUR, WHITE_COLOUR } from "@styles/base/colours";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { OperationContext } from "urql";
 import Ingredients from "./Ingredients";
 import Instructions from "./Instructions";
 import {
+  AddCookbookButton,
   CloseButton,
   ConfirmButton,
   CreateRecipeContainer,
@@ -30,6 +36,7 @@ import {
   ModalHeader,
   ModalTitle,
   SelectInput,
+  SelectItem,
   StyledFormControl,
   StyledInput,
   StyledMenuItem,
@@ -42,14 +49,10 @@ import {
   UnionType,
 } from "./types";
 
-interface CreateRecipeTemplateProps {
-  cookbooks: CookbookResponseFragment[];
-}
-
-const CreateRecipeTemplate: React.FC<CreateRecipeTemplateProps> = ({
-  cookbooks,
-}) => {
+const CreateRecipeTemplate = () => {
   const router = useRouter();
+  const [, createCookbook] = useCreateCookbookMutation();
+  const [{ data, fetching }, reexecuteQuery] = useGetCookbooksQuery();
 
   const [recipeName, setRecipeName] = useState("");
   const [servingsString, setServingsString] = useState("");
@@ -66,7 +69,14 @@ const CreateRecipeTemplate: React.FC<CreateRecipeTemplateProps> = ({
   const [, createRecipe] = useCreateRecipeMutation();
   const [cookbookIds, setCookbookIds] = useState<string[]>([]);
 
+  const [addCookbookValue, setAddCookbookValue] = useState("");
+
   const [showSaveModal, setShowSaveModal] = useState(false);
+  const [showAddCookbook, setShowAddCookbook] = useState(false);
+
+  useEffect(() => {
+    reexecuteQuery({ requestPolicy: "network-only" });
+  }, [router, reexecuteQuery]);
 
   const handleRecipeName = (e: React.ChangeEvent<HTMLInputElement>) => {
     setRecipeName(e.target.value);
@@ -105,6 +115,27 @@ const CreateRecipeTemplate: React.FC<CreateRecipeTemplateProps> = ({
       target: { value },
     } = e;
     setCookbookIds(typeof value === "string" ? value.split(",") : value);
+  };
+
+  const handleAddCookbook = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setAddCookbookValue(e.target.value);
+  };
+
+  const addCookbook = async () => {
+    const response = await createCookbook({
+      input: { cookbookName: addCookbookValue },
+    });
+    if (response.data?.createCookbook) {
+      // reexecuteFetch({ requestPolicy: "network-only" });
+      reexecuteQuery({ requestPolicy: "network-only" });
+      // console.log(response.data.createCookbook);
+    } else {
+      console.log("Error");
+    }
+    setAddCookbookValue("");
+    setShowAddCookbook(false);
   };
 
   const disableSave = () => {
@@ -166,6 +197,14 @@ const CreateRecipeTemplate: React.FC<CreateRecipeTemplateProps> = ({
     }
   };
 
+  if (fetching) {
+    return <div>Loading</div>;
+  }
+
+  if (!data?.getCookbooks) {
+    return <div>Error</div>;
+  }
+
   return (
     <>
       <CreateRecipeContainer>
@@ -174,7 +213,7 @@ const CreateRecipeTemplate: React.FC<CreateRecipeTemplateProps> = ({
             <CreateRecipeTitle>Create Recipe</CreateRecipeTitle>
             <Button
               onClick={() => setShowSaveModal(true)}
-              disabled={disableSave()}
+              disabled={!disableSave()}
             >
               Save
             </Button>
@@ -265,8 +304,34 @@ const CreateRecipeTemplate: React.FC<CreateRecipeTemplateProps> = ({
               value={cookbookIds}
               onChange={handleCookbookSelect}
               input={<SelectInput />}
+              onClose={() => {
+                setTimeout(() => {
+                  setAddCookbookValue("");
+                  setShowAddCookbook(false);
+                }, 500);
+              }}
             >
-              {cookbooks.map((item) => (
+              <SelectItem onKeyDown={(e) => e.stopPropagation()}>
+                {showAddCookbook ? (
+                  <StyledInput
+                    type="text"
+                    name="addCookbook"
+                    value={addCookbookValue}
+                    onChange={handleAddCookbook}
+                    adornment={
+                      <AddCookbookButton type="button" onClick={addCookbook}>
+                        <Icon name="Check" color={WHITE_COLOUR} size={12} />
+                      </AddCookbookButton>
+                    }
+                  />
+                ) : (
+                  <TextButton onClick={() => setShowAddCookbook(true)}>
+                    + New Cookbook
+                  </TextButton>
+                )}
+              </SelectItem>
+              <Divider />
+              {data.getCookbooks.map((item) => (
                 <StyledMenuItem value={item.id} key={item.id}>
                   {item.cookbookName}
                 </StyledMenuItem>
