@@ -160,6 +160,16 @@ export const ConfirmButton = styled(Button)`
 
 export const StyledMenuItem = styled(MenuItem)`
   font: inherit;
+  display: flex;
+  justify-content: space-between;
+
+  &:hover {
+    background: none;
+  }
+`;
+
+export const SelectItem = styled.div`
+  padding: 8px;
 `;
 
 export const SelectInput = styled(InputBase)`
@@ -182,6 +192,8 @@ export const StyledSelect = styled(({ className, ...props }) => (
 ))`
   &&& {
     margin-top: 8px;
+    padding: 0 8px;
+    max-height: 280px;
   }
 `;
 
@@ -191,4 +203,14 @@ export const StyledFormControl = styled(FormControl)`
     margin-top: 8px;
     width: 150px;
   }
+`;
+
+export const AddCookbookButton = styled.button`
+  width: 20px;
+  height: 20px;
+  border-radius: 50vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: ${PRIMARY_COLOUR};
 `;
