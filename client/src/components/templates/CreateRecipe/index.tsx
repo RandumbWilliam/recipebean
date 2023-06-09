@@ -3,7 +3,6 @@ import Dropzone from "@components/elements/Dropzone";
 import Icon from "@components/elements/Icon";
 import TextButton from "@components/elements/TextButton";
 import {
-  CookbookResponseFragment,
   RecipeHeaderIngredientResponseFragment,
   RecipeHeaderInstructionResponseFragment,
   RecipeIngredientResponseFragment,
@@ -13,10 +12,9 @@ import {
   useGetCookbooksQuery,
 } from "@generated/graphql";
 import { Divider, SelectChangeEvent } from "@mui/material";
-import { ONYX_20, PRIMARY_COLOUR, WHITE_COLOUR } from "@styles/base/colours";
+import { WHITE_COLOUR } from "@styles/base/colours";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import { OperationContext } from "urql";
 import Ingredients from "./Ingredients";
 import Instructions from "./Instructions";
 import {
@@ -213,7 +211,7 @@ const CreateRecipeTemplate = () => {
             <CreateRecipeTitle>Create Recipe</CreateRecipeTitle>
             <Button
               onClick={() => setShowSaveModal(true)}
-              disabled={!disableSave()}
+              disabled={disableSave()}
             >
               Save
             </Button>

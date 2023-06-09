@@ -3,5 +3,6 @@ mutation ParseIngredient($strIngredient: String!) {
     unit
     ingredient
     quantity
+    comments
   }
 }

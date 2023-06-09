@@ -93,6 +93,7 @@ export class RecipeResolver {
         ingredient: ingredientItem.ingredient,
         unit: ingredientItem.unit,
         quantity: ingredientItem.quantity,
+        comments: ingredientItem.comments,
       });
       ingredientEntity.recipes = recipe;
 

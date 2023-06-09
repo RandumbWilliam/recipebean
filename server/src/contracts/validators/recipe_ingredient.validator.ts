@@ -20,6 +20,11 @@ class RecipeIngredientValidator {
   @IsNumber()
   @IsOptional()
   public quantity?: number;
+
+  @Field({ nullable: true })
+  @IsNumber()
+  @IsOptional()
+  public comments?: string;
 }
 
 export default RecipeIngredientValidator;

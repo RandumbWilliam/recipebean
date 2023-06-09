@@ -12,6 +12,8 @@ import { DragDropContext, Draggable, DropResult } from "react-beautiful-dnd";
 import { StrictModeDroppable } from "./StrictModeDroppable";
 import {
   DragHandler,
+  IngredientComments,
+  IngredientItem,
   IngredientText,
   InputContainer,
   InputForm,
@@ -78,11 +80,13 @@ const Ingredients: React.FC<IngredientsProps> = ({
     const response = await parseIngredient({ strIngredient: ingredientValue });
     if (response.data?.parseIngredient) {
       let parsed = response.data.parseIngredient;
+      console.log(parsed);
       let updateVal: RecipeIngredientResponseFragment = {
         order: currentOrder,
         ingredient: parsed.ingredient,
         unit: parsed.unit,
         quantity: parsed.quantity,
+        comments: parsed.comments,
       };
 
       let ingredientItem: IngredientHeaderUnion = {
@@ -166,6 +170,7 @@ const Ingredients: React.FC<IngredientsProps> = ({
             ingredient: parsed.ingredient,
             unit: parsed.unit,
             quantity: parsed.quantity,
+            comments: parsed.comments,
           };
 
           let ingredientItem: IngredientHeaderUnion = {
@@ -193,13 +198,19 @@ const Ingredients: React.FC<IngredientsProps> = ({
     if (type === UnionType.VALUE) {
       const ingredientValue = value as RecipeIngredientResponseFragment;
       if (ingredientValue.unit === null) {
-        if (ingredientValue.quantity === 0) {
-          return `${ingredientValue.ingredient}`;
+        if (ingredientValue.quantity === null) {
+          return `${ingredientValue.ingredient}${
+            ingredientValue.comments && `, ${ingredientValue.comments}`
+          }`;
         } else {
-          return `${ingredientValue.quantity} ${ingredientValue.ingredient}`;
+          return `${ingredientValue.quantity}${ingredientValue.ingredient} ${
+            ingredientValue.comments && `, ${ingredientValue.comments}`
+          }`;
         }
       }
-      return `${ingredientValue.quantity}${ingredientValue.unit} ${ingredientValue.ingredient}`;
+      return `${ingredientValue.quantity} ${ingredientValue.unit} ${
+        ingredientValue.ingredient
+      }${ingredientValue.comments && `, ${ingredientValue.comments}`}`;
     }
 
     return "";
@@ -229,25 +240,47 @@ const Ingredients: React.FC<IngredientsProps> = ({
       case UnionType.VALUE:
         const ingredientValue = value as RecipeIngredientResponseFragment;
         if (ingredientValue.unit === null) {
-          if (ingredientValue.quantity === 0) {
+          if (ingredientValue.quantity === null) {
             return (
-              <IngredientText className="ingredientValue">
-                {ingredientValue.ingredient}
-              </IngredientText>
+              <IngredientItem>
+                <IngredientText className="ingredientValue">
+                  {ingredientValue.ingredient}
+                </IngredientText>
+                {ingredientValue.comments && (
+                  <IngredientComments>
+                    {ingredientValue.comments}
+                  </IngredientComments>
+                )}
+              </IngredientItem>
             );
           } else {
             return (
-              <IngredientText className="ingredientValue">
-                {ingredientValue.quantity} {ingredientValue.ingredient}
-              </IngredientText>
+              <IngredientItem>
+                <IngredientText className="ingredientValue">
+                  {ingredientValue.quantity} {ingredientValue.ingredient}
+                </IngredientText>
+                {ingredientValue.comments && (
+                  <IngredientComments>
+                    {ingredientValue.comments}
+                  </IngredientComments>
+                )}
+              </IngredientItem>
             );
           }
         }
+
         return (
-          <IngredientText className="ingredientValue">
-            {ingredientValue.quantity} {ingredientValue.unit}{" "}
-            {ingredientValue.ingredient}
-          </IngredientText>
+          <IngredientItem>
+            <IngredientText className="ingredientValue">
+              {ingredientValue.quantity} {ingredientValue.unit}{" "}
+              {ingredientValue.ingredient}
+            </IngredientText>
+            {ingredientValue.comments && (
+              <IngredientComments>
+                {ingredientValue.comments}
+              </IngredientComments>
+            )}
+          </IngredientItem>
         );
       default:
         return <div className="ingredientValue">None</div>;
