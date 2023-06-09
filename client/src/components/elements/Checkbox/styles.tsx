@@ -1,13 +1,12 @@
 import { ONYX_20, PRIMARY_COLOUR } from "@styles/base/colours";
 import styled from "styled-components";
+import Icon from "../Icon";
 
 interface Props {
   checked: boolean;
 }
 
-export const StyledCheckbox = styled.div``;
-
-export const StyledLabel = styled.label`
+export const StyledCheckbox = styled.label`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -15,22 +14,25 @@ export const StyledLabel = styled.label`
   cursor: pointer;
 `;
 
-export const StyledInput = styled.input<Props>`
-  /* removing default appearance */
+export const CheckmarkIcon = styled(Icon)<Props>`
+  visibility: ${(props) => (props.checked ? "visible" : "hidden")};
+`;
+
+export const StyledInput = styled.input.attrs({ type: "checkbox" })`
   -webkit-appearance: none;
   appearance: none;
-  /* creating a custom design */
+`;
+
+export const Indicator = styled.div<Props>`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 18px;
   height: 18px;
   border-radius: 4px;
-  margin-right: 0.5em;
   border: 2px solid ${PRIMARY_COLOUR};
   outline: none;
   cursor: pointer;
-
-  ${(props) =>
-    props.checked &&
-    `
-    background-color: ${PRIMARY_COLOUR};
-  `}
+  margin-right: 0.5em;
+  ${(props) => props.checked && `background-color: ${PRIMARY_COLOUR};`}
 `;

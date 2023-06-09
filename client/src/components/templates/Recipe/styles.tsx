@@ -1,15 +1,21 @@
+import Icon from "@components/elements/Icon";
 import { Container, Modal } from "@mui/material";
 import {
   BRINK_PINK_10,
   ONYX_10,
   ONYX_20,
   PRIMARY_COLOUR,
+  SECONDARY_COLOUR,
   WHITE_COLOUR,
 } from "@styles/base/colours";
 import styled from "styled-components";
 
 interface Props {
   imageUrl?: string;
+}
+
+interface CheckboxProps {
+  checked: boolean;
 }
 
 export const RecipeContainer = styled(Container)`
@@ -71,6 +77,37 @@ export const Header = styled.h5`
   margin-bottom: 24px;
 `;
 
+export const IngredientCheckbox = styled.label`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  margin-left: 12px;
+`;
+
+export const IngredientCheckmarkIcon = styled(Icon)<CheckboxProps>`
+  display: ${(props) => (props.checked ? "block" : "none")};
+`;
+
+export const IngredientInput = styled.input.attrs({ type: "checkbox" })`
+  -webkit-appearance: none;
+  appearance: none;
+`;
+
+export const IngredientIndicator = styled.div<CheckboxProps>`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50vh;
+  border: 1px solid ${(props) => (props.checked ? PRIMARY_COLOUR : ONYX_20)};
+  outline: none;
+  cursor: pointer;
+  margin-right: 0.5em;
+  ${(props) => props.checked && `background-color: ${PRIMARY_COLOUR};`}
+`;
+
 export const IngredientText = styled.p`
   margin-left: 12px;
 `;
@@ -122,6 +159,9 @@ export const IngredientCard = styled.div`
 `;
 
 export const IngredientContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
   margin: 0 12px;
   flex-grow: 1;
   overflow-y: auto;

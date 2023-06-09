@@ -105,6 +105,7 @@ const Instructions: React.FC<InstructionProps> = ({
     };
 
     setInstructions((oldInstructions) => [...oldInstructions, headerItem]);
+    setCurrentOrder(currentOrder + 1);
     setHeaderValue("");
     setShowHeader(false);
   };

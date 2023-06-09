@@ -2,6 +2,7 @@ import React from "react";
 import {
   AddCookbookIcon,
   BasketIcon,
+  CheckAltIcon,
   CheckIcon,
   CloseOutlineIcon,
   CookbookIcon,
@@ -56,6 +57,7 @@ export const Icons = {
   Plus: PlusIcon,
   Minus: MinusIcon,
   Check: CheckIcon,
+  CheckAlt: CheckAltIcon,
 };
 
 const Icon: React.FC<IconProps> = ({
