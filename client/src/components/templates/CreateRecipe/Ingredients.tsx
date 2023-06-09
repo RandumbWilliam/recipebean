@@ -115,6 +115,7 @@ const Ingredients: React.FC<IngredientsProps> = ({
     };
 
     setIngredients((oldIngredients) => [...oldIngredients, headerItem]);
+    setCurrentOrder(currentOrder + 1);
     setHeaderValue("");
     setShowHeader(false);
   };

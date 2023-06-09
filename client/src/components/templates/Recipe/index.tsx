@@ -25,7 +25,11 @@ import {
   CoverPhoto,
   Header,
   IngredientCard,
+  IngredientCheckbox,
+  IngredientCheckmarkIcon,
   IngredientContainer,
+  IngredientIndicator,
+  IngredientInput,
   IngredientText,
   InstructionContainer,
   InstructionStep,
@@ -54,7 +58,19 @@ interface RecipeTemplateProps {
 }
 
 const RecipeTemplate: React.FC<RecipeTemplateProps> = ({ recipe }) => {
+  const initialChecklist: { [key: string]: boolean } =
+    recipe.recipeIngredient.reduce(
+      (dictionary: { [key: string]: boolean }, ingredient) => {
+        dictionary[ingredient.order] = false;
+        return dictionary;
+      },
+      {}
+    );
+
   const router = useRouter();
+  const [checkList, setCheckList] = useState<{ [key: string]: boolean }>(
+    initialChecklist
+  );
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [servings, setServings] = useState(recipe.servings);
   const [, deleteRecipe] = useDeleteRecipeMutation();
@@ -227,7 +243,8 @@ const RecipeTemplate: React.FC<RecipeTemplateProps> = ({ recipe }) => {
                   ingredientValue.quantity !== undefined
                 ) {
                   const quantity =
-                    Math.round(ingredientValue.quantity * multiplier * 10) / 10;
+                    Math.round(ingredientValue.quantity * multiplier * 100) /
+                    100;
 
                   return (
                     <IngredientText>
@@ -243,12 +260,29 @@ const RecipeTemplate: React.FC<RecipeTemplateProps> = ({ recipe }) => {
               ingredientValue.quantity !== undefined
             ) {
               const quantity =
-                Math.round(ingredientValue.quantity * multiplier * 10) / 10;
+                Math.round(ingredientValue.quantity * multiplier * 100) / 100;
 
               return (
-                <IngredientText>
-                  {quantity} {ingredientValue.unit} {ingredientValue.ingredient}
-                </IngredientText>
+                <IngredientCheckbox>
+                  <IngredientInput
+                    type="checkbox"
+                    onChange={() => onCheck(ingredientValue.order)}
+                  />
+                  <IngredientIndicator
+                    checked={checkList[ingredientValue.order]}
+                  >
+                    <IngredientCheckmarkIcon
+                      name="CheckAlt"
+                      size={10}
+                      color={WHITE_COLOUR}
+                      checked={checkList[ingredientValue.order]}
+                    />
+                  </IngredientIndicator>
+                  <span>
+                    {quantity} {ingredientValue.unit}{" "}
+                    {ingredientValue.ingredient}
+                  </span>
+                </IngredientCheckbox>
               );
             }
 
@@ -273,6 +307,13 @@ const RecipeTemplate: React.FC<RecipeTemplateProps> = ({ recipe }) => {
     }
 
     return result.join(" ");
+  };
+
+  const onCheck = (order: number) => {
+    setCheckList((oldCheckList) => ({
+      ...oldCheckList,
+      [order]: !oldCheckList[order],
+    }));
   };
 
   return (
