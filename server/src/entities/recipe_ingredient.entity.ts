@@ -23,6 +23,10 @@ export class RecipeIngredient extends Base<RecipeIngredient> {
   @Property({ nullable: true })
   public quantity?: number;
 
+  @Field({ nullable: true })
+  @Property({ nullable: true })
+  public comments?: string;
+
   @Field(() => Recipe)
   @ManyToOne(() => Recipe, { onDelete: "cascade" })
   public recipes: Recipe;

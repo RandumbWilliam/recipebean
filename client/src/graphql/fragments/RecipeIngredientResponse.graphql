@@ -3,4 +3,5 @@ fragment RecipeIngredientResponse on RecipeIngredient {
   ingredient
   quantity
   unit
+  comments
 }

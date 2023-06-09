@@ -9,6 +9,7 @@ import {
   Select,
 } from "@mui/material";
 import { ONYX_10, ONYX_20, PRIMARY_COLOUR } from "@styles/base/colours";
+import { FONT_SIZE_16 } from "@styles/base/typography";
 import styled from "styled-components";
 
 export const CreateRecipeContainer = styled(Container)`
@@ -79,8 +80,18 @@ export const SubItem = styled.div`
   gap: 12px;
 `;
 
-export const IngredientText = styled.p`
+export const IngredientItem = styled.div`
   margin-left: 12px;
+  padding-bottom: 8px;
+`;
+
+export const IngredientText = styled.p``;
+
+export const IngredientComments = styled.p`
+  font-size: ${FONT_SIZE_16};
+  color: ${ONYX_20};
+  margin-left: 12px;
+  line-height: 20px;
 `;
 
 export const InstructionItem = styled.div`
