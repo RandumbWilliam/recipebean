@@ -1,4 +1,5 @@
 import BaseLayout from "@components/layouts/Base";
+import Load from "@components/modules/Load";
 import CookbookTemplate from "@components/templates/Cookbook";
 import { useGetCookbookQuery } from "@generated/graphql";
 import { createUrqlClient } from "@utils/createUrqlClient";
@@ -16,15 +17,19 @@ const Cookbook = () => {
     },
   });
 
-  if (!fetching && data?.getCookbook) {
-    return (
-      <BaseLayout>
-        <CookbookTemplate cookbook={data.getCookbook} />
-      </BaseLayout>
-    );
+  if (fetching) {
+    return <Load />;
   }
 
-  return <div>Error</div>;
+  if (!data?.getCookbook) {
+    return <div>Error</div>;
+  }
+
+  return (
+    <BaseLayout>
+      <CookbookTemplate cookbook={data.getCookbook} />
+    </BaseLayout>
+  );
 };
 
 export default withUrqlClient(createUrqlClient)(Cookbook);

@@ -1,4 +1,5 @@
 import BaseLayout from "@components/layouts/Base";
+import Load from "@components/modules/Load";
 import CookbooksTemplate from "@components/templates/Cookbooks";
 import { useGetCookbooksQuery } from "@generated/graphql";
 import { createUrqlClient } from "@utils/createUrqlClient";
@@ -14,15 +15,19 @@ const Cookbooks = () => {
     reexecuteQuery({ requestPolicy: "network-only" });
   }, [router, reexecuteQuery]);
 
-  if (!fetching && data?.getCookbooks) {
-    return (
-      <BaseLayout>
-        <CookbooksTemplate cookbooks={data.getCookbooks} />
-      </BaseLayout>
-    );
+  if (fetching) {
+    return <Load />;
   }
 
-  return <div>Error</div>;
+  if (!data?.getCookbooks) {
+    return <div>Error</div>;
+  }
+
+  return (
+    <BaseLayout>
+      <CookbooksTemplate cookbooks={data.getCookbooks} />
+    </BaseLayout>
+  );
 };
 
 export default withUrqlClient(createUrqlClient)(Cookbooks);
