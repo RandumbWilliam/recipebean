@@ -1,5 +1,6 @@
 import CookbookValidator from "contracts/validators/cookbook.validator";
 import { Cookbook } from "entities/cookbook.entity";
+import { Recipe } from "entities/recipe.entity";
 import { User } from "entities/user.entity";
 import { Arg, Ctx, Mutation, Query, Resolver } from "type-graphql";
 import { MyContext } from "utils/interfaces/context.interface";
@@ -87,9 +88,30 @@ export class CookbookResolver {
     @Ctx() { em }: MyContext
   ): Promise<boolean> {
     const cookbookRepository = em.getRepository(Cookbook);
+    const recipeRepository = em.getRepository(Recipe);
 
-    const cookbook = await cookbookRepository.findOneOrFail({ id });
+    const cookbook = await cookbookRepository.findOneOrFail(
+      { id },
+      { populate: ["recipes"] }
+    );
+    let cookbookRecipes = cookbook.recipes;
     await cookbookRepository.remove(cookbook).flush();
+
+    // Clean Up
+    // If the recipe has no more associated cookbooks, it'll delete the recipe entity itself
+    for (const recipe of cookbookRecipes) {
+      const recipeEntity = await recipeRepository.findOneOrFail(
+        { id: recipe.id },
+        { populate: ["cookbooks"] }
+      );
+
+      let cookbookIds = recipeEntity.cookbooks.getIdentifiers("id");
+      cookbookIds = cookbookIds.filter((item) => item !== id);
+
+      if (cookbookIds.length === 0) {
+        await recipeRepository.remove(recipeEntity).flush();
+      }
+    }
 
     return true;
   }
