@@ -3,6 +3,7 @@ import Dropzone from "@components/elements/Dropzone";
 import Icon from "@components/elements/Icon";
 import TextButton from "@components/elements/TextButton";
 import {
+  CookbookResponseFragment,
   RecipeHeaderIngredientResponseFragment,
   RecipeHeaderInstructionResponseFragment,
   RecipeIngredientResponseFragment,
@@ -47,10 +48,22 @@ import {
   UnionType,
 } from "./types";
 
-const CreateRecipeTemplate = () => {
+interface CreateRecipeTemplateProps {
+  cookbooks: CookbookResponseFragment[];
+}
+
+const CreateRecipeTemplate: React.FC<CreateRecipeTemplateProps> = ({
+  cookbooks,
+}) => {
+  let initialCookbooks: { id: string; cookbookName: string }[] = [];
+  if (cookbooks.length !== 0) {
+    initialCookbooks = cookbooks.map((item) => {
+      return { id: item.id, cookbookName: item.cookbookName };
+    });
+  }
+
   const router = useRouter();
   const [, createCookbook] = useCreateCookbookMutation();
-  const [{ data, fetching }, reexecuteQuery] = useGetCookbooksQuery();
 
   const [recipeName, setRecipeName] = useState("");
   const [servingsString, setServingsString] = useState("");
@@ -65,16 +78,14 @@ const CreateRecipeTemplate = () => {
   );
 
   const [, createRecipe] = useCreateRecipeMutation();
+  const [currentCookbooks, setCurrentCookbooks] =
+    useState<{ id: string; cookbookName: string }[]>(initialCookbooks);
   const [cookbookIds, setCookbookIds] = useState<string[]>([]);
 
   const [addCookbookValue, setAddCookbookValue] = useState("");
 
   const [showSaveModal, setShowSaveModal] = useState(false);
   const [showAddCookbook, setShowAddCookbook] = useState(false);
-
-  useEffect(() => {
-    reexecuteQuery({ requestPolicy: "network-only" });
-  }, [router, reexecuteQuery]);
 
   const handleRecipeName = (e: React.ChangeEvent<HTMLInputElement>) => {
     setRecipeName(e.target.value);
@@ -126,9 +137,12 @@ const CreateRecipeTemplate = () => {
       input: { cookbookName: addCookbookValue },
     });
     if (response.data?.createCookbook) {
-      // reexecuteFetch({ requestPolicy: "network-only" });
-      reexecuteQuery({ requestPolicy: "network-only" });
-      // console.log(response.data.createCookbook);
+      let { id, cookbookName } = response.data.createCookbook;
+      let cookbookItem = { id: id, cookbookName: cookbookName };
+      setCurrentCookbooks((oldCurrentCookbooks) => [
+        ...oldCurrentCookbooks,
+        cookbookItem,
+      ]);
     } else {
       console.log("Error");
     }
@@ -194,14 +208,6 @@ const CreateRecipeTemplate = () => {
       console.log("ERRORS");
     }
   };
-
-  if (fetching) {
-    return <div>Loading</div>;
-  }
-
-  if (!data?.getCookbooks) {
-    return <div>Error</div>;
-  }
 
   return (
     <>
@@ -329,7 +335,7 @@ const CreateRecipeTemplate = () => {
                 )}
               </SelectItem>
               <Divider />
-              {data.getCookbooks.map((item) => (
+              {currentCookbooks.map((item) => (
                 <StyledMenuItem value={item.id} key={item.id}>
                   {item.cookbookName}
                 </StyledMenuItem>
