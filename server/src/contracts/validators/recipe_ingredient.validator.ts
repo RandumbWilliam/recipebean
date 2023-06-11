@@ -1,5 +1,13 @@
-import { IsInt, IsNumber, IsOptional, IsString } from "class-validator";
+import {
+  IsArray,
+  IsBoolean,
+  IsInt,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from "class-validator";
 import { Field, InputType } from "type-graphql";
+import MeasurmentValidator from "./measurement.validator";
 
 @InputType()
 class RecipeIngredientValidator {
@@ -11,20 +19,27 @@ class RecipeIngredientValidator {
   @IsString()
   public ingredient: string;
 
-  @Field({ nullable: true })
+  @Field(() => [String], { nullable: true })
   @IsString()
   @IsOptional()
-  public unit?: string;
+  public alternativeIngredients?: string[];
 
-  @Field({ nullable: true })
-  @IsNumber()
-  @IsOptional()
-  public quantity?: number;
+  @Field()
+  @IsBoolean()
+  public hasAlternativeIngredients: boolean;
+
+  @Field()
+  @IsBoolean()
+  public hasAddedMeasurments: boolean;
 
   @Field({ nullable: true })
   @IsNumber()
   @IsOptional()
   public comments?: string;
+
+  @Field(() => [MeasurmentValidator], { nullable: true })
+  @IsArray()
+  public measurments?: MeasurmentValidator[];
 }
 
 export default RecipeIngredientValidator;
