@@ -1,7 +1,15 @@
-import { Entity, ManyToOne, Property } from "@mikro-orm/core";
+import {
+  Cascade,
+  Collection,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  Property,
+} from "@mikro-orm/core";
 import RecipeIngredientValidator from "contracts/validators/recipe_ingredient.validator";
 import { Field, ObjectType } from "type-graphql";
 import { Base } from "utils/entities/base.entity";
+import { Measurment } from "./measurement.entity";
 import { Recipe } from "./recipe.entity";
 
 @ObjectType()
@@ -15,17 +23,27 @@ export class RecipeIngredient extends Base<RecipeIngredient> {
   @Property()
   public ingredient: string;
 
-  @Field({ nullable: true })
+  @Field(() => [String], { nullable: true })
   @Property({ nullable: true })
-  public unit?: string;
+  public alternativeIngredients?: string[];
 
-  @Field({ nullable: true })
-  @Property({ nullable: true })
-  public quantity?: number;
+  @Field()
+  @Property()
+  public hasAlternativeIngredients: boolean;
+
+  @Field()
+  @Property()
+  public hasAddedMeasurments: boolean;
 
   @Field({ nullable: true })
   @Property({ nullable: true })
   public comments?: string;
+
+  @Field(() => [Measurment], { nullable: true })
+  @OneToMany(() => Measurment, (m: Measurment) => m.ingredients, {
+    cascade: [Cascade.ALL],
+  })
+  public measurement = new Collection<Measurment>(this);
 
   @Field(() => Recipe)
   @ManyToOne(() => Recipe, { onDelete: "cascade" })

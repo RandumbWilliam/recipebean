@@ -1,5 +1,6 @@
 import RecipeValidator from "contracts/validators/recipe.validator";
 import { Cookbook } from "entities/cookbook.entity";
+import { Measurment } from "entities/measurement.entity";
 import { Recipe } from "entities/recipe.entity";
 import { RecipeHeaderIngredient } from "entities/recipe_header_ingredient.entity";
 import { RecipeHeaderInstruction } from "entities/recipe_header_instruction.entity";
@@ -66,7 +67,8 @@ export class RecipeResolver {
     const cookbookRepository = em.getRepository(Cookbook);
 
     const creator = await userRepository.findOneOrFail({
-      id: req.session.userId,
+      // id: req.session.userId,
+      id: "7e9fc8ce-fb15-4ac9-a5ef-75d6853a0d17",
     });
 
     const recipe = em.create(Recipe, {
@@ -91,13 +93,29 @@ export class RecipeResolver {
       const ingredientEntity = em.create(RecipeIngredient, {
         order: ingredientItem.order,
         ingredient: ingredientItem.ingredient,
-        unit: ingredientItem.unit,
-        quantity: ingredientItem.quantity,
+        alternativeIngredients: ingredientItem.alternativeIngredients,
+        hasAlternativeIngredients: ingredientItem.hasAlternativeIngredients,
+        hasAddedMeasurments: ingredientItem.hasAddedMeasurments,
         comments: ingredientItem.comments,
       });
       ingredientEntity.recipes = recipe;
 
       await em.persistAndFlush(ingredientEntity);
+
+      if (ingredientItem.measurments) {
+        for (const meas of ingredientItem.measurments) {
+          const measurementEntity = em.create(Measurment, {
+            quantity: meas?.quantity,
+            quantityRange: meas?.quantityRange,
+            isRange: meas.isRange,
+            unit: meas?.unit,
+            isConverted: meas.isConverted,
+          });
+          measurementEntity.ingredients = ingredientEntity;
+
+          await em.persistAndFlush(measurementEntity);
+        }
+      }
     }
 
     for (const ingredientHeaderItem of input.ingredientHeaders) {

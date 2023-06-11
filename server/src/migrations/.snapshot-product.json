@@ -432,23 +432,32 @@
           "nullable": false,
           "mappedType": "string"
         },
-        "unit": {
-          "name": "unit",
-          "type": "varchar(255)",
+        "alternative_ingredients": {
+          "name": "alternative_ingredients",
+          "type": "text[]",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": true,
-          "mappedType": "string"
+          "mappedType": "array"
         },
-        "quantity": {
-          "name": "quantity",
-          "type": "int",
+        "has_alternative_ingredients": {
+          "name": "has_alternative_ingredients",
+          "type": "boolean",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
-          "nullable": true,
-          "mappedType": "integer"
+          "nullable": false,
+          "mappedType": "boolean"
+        },
+        "has_added_measurments": {
+          "name": "has_added_measurments",
+          "type": "boolean",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "boolean"
         },
         "comments": {
           "name": "comments",
@@ -592,6 +601,122 @@
             "id"
           ],
           "referencedTableName": "recipes.recipe",
+          "deleteRule": "cascade",
+          "updateRule": "cascade"
+        }
+      }
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "uuid"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamptz(0)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "mappedType": "datetime"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamptz(0)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "mappedType": "datetime"
+        },
+        "quantity": {
+          "name": "quantity",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "integer"
+        },
+        "quantity_range": {
+          "name": "quantity_range",
+          "type": "text[]",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "array"
+        },
+        "is_range": {
+          "name": "is_range",
+          "type": "boolean",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "boolean"
+        },
+        "unit": {
+          "name": "unit",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "string"
+        },
+        "is_converted": {
+          "name": "is_converted",
+          "type": "boolean",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "boolean"
+        },
+        "ingredients_id": {
+          "name": "ingredients_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "uuid"
+        }
+      },
+      "name": "measurment",
+      "schema": "recipes",
+      "indexes": [
+        {
+          "keyName": "measurment_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "measurment_ingredients_id_foreign": {
+          "constraintName": "measurment_ingredients_id_foreign",
+          "columnNames": [
+            "ingredients_id"
+          ],
+          "localTableName": "recipes.measurment",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "recipes.recipe_ingredient",
           "deleteRule": "cascade",
           "updateRule": "cascade"
         }

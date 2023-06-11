@@ -4,18 +4,42 @@ import { Arg, Field, Mutation, ObjectType, Resolver } from "type-graphql";
 import { unitSymbol } from "utils/units";
 
 @ObjectType()
+class ParsedMeasurment {
+  @Field({ nullable: true })
+  quantity?: number;
+
+  @Field(() => [Number], { nullable: true })
+  quantityRange?: number[];
+
+  @Field()
+  isRange: boolean;
+
+  @Field()
+  unit?: string;
+
+  @Field()
+  isConverted: boolean;
+}
+
+@ObjectType()
 class ParsedIngredient {
   @Field()
   ingredient: string;
 
-  @Field({ nullable: true })
-  unit?: string;
+  @Field(() => [String], { nullable: true })
+  alternativeIngredients?: string[];
 
-  @Field({ nullable: true })
-  quantity?: number;
+  @Field()
+  hasAlternativeIngredients: boolean;
+
+  @Field()
+  hasAddedMeasurements: boolean;
 
   @Field({ nullable: true })
   comments?: string;
+
+  @Field(() => [ParsedMeasurment], { nullable: true })
+  measurements?: ParsedMeasurment[];
 }
 
 @Resolver(() => ParsedIngredient)
@@ -28,45 +52,89 @@ export class IngredientResolver {
       name,
       measurement,
       convertedMeasurement,
-      hasAlternativeIngerdients,
+      hasAlternativeIngredients,
       hasAddedMeasurements,
       additional,
     } = parser.parse(strIngredient);
 
-    let ingredient, unit, quantity, minQty, maxQty, comments;
-
-    if (hasAlternativeIngerdients) {
-      ingredient = name[0];
-      comments = name[1];
-    } else {
-      ingredient = name;
-    }
+    let measurements;
 
     if (measurement) {
-      if (measurement.isRange) {
-        minQty = measurement.quantity[0];
-        maxQty = measurement.quantity[1];
+      let measurements = [];
+
+      if (hasAddedMeasurements) {
+        measurement.forEach((meas) => {
+          let measurementEntity = {};
+          measurementEntity["isRange"] = meas.isRange;
+          measurementEntity["unit"] = meas?.unit;
+          if (meas.isRange) {
+            measurementEntity["quantityRange"] = meas?.quantity;
+            measurementEntity["quantity"] = null;
+          } else {
+            measurementEntity["quantity"] = meas?.quantity;
+            measurementEntity["quantityRange"] = null;
+          }
+
+          measurementEntity["isConverted"] = false;
+
+          measurements.push(measurementEntity);
+        });
       } else {
-        quantity = measurement.quantity;
+        let measurementEntity = {};
+        measurementEntity["isRange"] = measurement.isRange;
+        measurementEntity["unit"] = measurement?.unit;
+        if (measurement.isRange) {
+          measurementEntity["quantityRange"] = measurement?.quantity;
+          measurementEntity["quantity"] = null;
+        } else {
+          measurementEntity["quantity"] = measurement?.quantity;
+          measurementEntity["quantityRange"] = null;
+        }
+
+        measurementEntity["isConverted"] = false;
+
+        measurements.push(measurementEntity);
       }
-      unit = unitSymbol[measurement.unit]
-        ? unitSymbol[measurement.unit]
-        : measurement.unit;
+
+      if (convertedMeasurement) {
+        let measurementEntity = {};
+        measurementEntity["isRange"] = convertedMeasurement.isRange;
+        measurementEntity["unit"] = convertedMeasurement?.unit;
+        if (convertedMeasurement.isRange) {
+          measurementEntity["quantityRange"] = convertedMeasurement?.quantity;
+          measurementEntity["quantity"] = null;
+        } else {
+          measurementEntity["quantity"] = convertedMeasurement?.quantity;
+          measurementEntity["quantityRange"] = null;
+        }
+
+        measurementEntity["isConverted"] = true;
+
+        measurements.push(measurementEntity);
+      }
+    } else {
+      measurements = null;
     }
 
-    if (additional) {
-      if (comments) {
-        comments += `, ${additional}`;
-      } else {
-        comments = additional;
-      }
+    let ingredient;
+    let alternativeIngredients;
+    if (hasAlternativeIngredients) {
+      ingredient = name[0];
+      alternativeIngredients = name.slice(1);
+    } else {
+      ingredient = name;
+      alternativeIngredients = null;
     }
+
+    let comments = additional;
 
     return {
       ingredient,
-      unit,
-      quantity,
+      alternativeIngredients,
+      hasAlternativeIngredients,
+      hasAddedMeasurements,
       comments,
+      measurements,
     };
   }
 }
