@@ -9,7 +9,7 @@ import {
 import RecipeIngredientValidator from "contracts/validators/recipe_ingredient.validator";
 import { Field, ObjectType } from "type-graphql";
 import { Base } from "utils/entities/base.entity";
-import { Measurment } from "./measurement.entity";
+import { Measurement } from "./measurement.entity";
 import { Recipe } from "./recipe.entity";
 
 @ObjectType()
@@ -33,17 +33,17 @@ export class RecipeIngredient extends Base<RecipeIngredient> {
 
   @Field()
   @Property()
-  public hasAddedMeasurments: boolean;
+  public hasAddedMeasurements: boolean;
 
   @Field({ nullable: true })
   @Property({ nullable: true })
   public comments?: string;
 
-  @Field(() => [Measurment], { nullable: true })
-  @OneToMany(() => Measurment, (m: Measurment) => m.ingredients, {
+  @Field(() => [Measurement], { nullable: true })
+  @OneToMany(() => Measurement, (m: Measurement) => m.ingredients, {
     cascade: [Cascade.ALL],
   })
-  public measurement = new Collection<Measurment>(this);
+  public measurement = new Collection<Measurement>(this);
 
   @Field(() => Recipe)
   @ManyToOne(() => Recipe, { onDelete: "cascade" })

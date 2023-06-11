@@ -1,0 +1,14 @@
+fragment ParsedIngredientResponse on ParsedIngredient {
+  ingredient
+  alternativeIngredients
+  hasAlternativeIngredients
+  hasAddedMeasurements
+  comments
+  measurements {
+    quantity
+    quantityRange
+    isRange
+    unit
+    isConverted
+  }
+}

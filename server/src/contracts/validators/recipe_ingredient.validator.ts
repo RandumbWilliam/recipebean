@@ -30,7 +30,7 @@ class RecipeIngredientValidator {
 
   @Field()
   @IsBoolean()
-  public hasAddedMeasurments: boolean;
+  public hasAddedMeasurements: boolean;
 
   @Field({ nullable: true })
   @IsNumber()
@@ -39,7 +39,7 @@ class RecipeIngredientValidator {
 
   @Field(() => [MeasurmentValidator], { nullable: true })
   @IsArray()
-  public measurments?: MeasurmentValidator[];
+  public measurements?: MeasurmentValidator[];
 }
 
 export default RecipeIngredientValidator;
