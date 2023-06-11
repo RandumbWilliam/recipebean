@@ -6,7 +6,7 @@ import { RecipeIngredient } from "./recipe_ingredient.entity";
 
 @ObjectType()
 @Entity({ schema: "recipes" })
-export class Measurment extends Base<Measurment> {
+export class Measurement extends Base<Measurement> {
   @Field({ nullable: true })
   @Property({ nullable: true })
   public quantity?: number;

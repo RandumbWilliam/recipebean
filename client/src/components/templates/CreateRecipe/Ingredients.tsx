@@ -2,11 +2,14 @@ import Icon from "@components/elements/Icon";
 import IconButton from "@components/elements/IconButton";
 import TextButton from "@components/elements/TextButton";
 import {
+  MeasurementResponseFragment,
+  ParsedIngredientResponseFragment,
   RecipeHeaderIngredientResponseFragment,
   RecipeIngredientResponseFragment,
   useParseIngredientMutation,
 } from "@generated/graphql";
 import { ONYX_20, WHITE_COLOUR } from "@styles/base/colours";
+import { formatIngredient } from "@utils/ingredient/formatIngredient";
 import React, { SetStateAction, useEffect, useRef, useState } from "react";
 import { DragDropContext, Draggable, DropResult } from "react-beautiful-dnd";
 import { StrictModeDroppable } from "./StrictModeDroppable";
@@ -27,6 +30,42 @@ import {
   SubItem,
 } from "./styles";
 import { IngredientHeaderUnion, UnionType } from "./types";
+
+const ingredientParser = (
+  parsedIngredient: ParsedIngredientResponseFragment,
+  currentOrder: number
+) => {
+  let measurements;
+
+  if (parsedIngredient.measurements) {
+    measurements = [];
+    for (const parsedMeasurment of parsedIngredient.measurements) {
+      let measurementEntity: MeasurementResponseFragment = {
+        quantity: parsedMeasurment.quantity,
+        quantityRange: parsedMeasurment.quantityRange,
+        isRange: parsedMeasurment.isRange,
+        unit: parsedMeasurment.unit,
+        isConverted: parsedMeasurment.isConverted,
+      };
+
+      measurements.push(measurementEntity);
+    }
+  } else {
+    measurements = null;
+  }
+
+  let updateVal: RecipeIngredientResponseFragment = {
+    order: currentOrder,
+    ingredient: parsedIngredient.ingredient,
+    alternativeIngredients: parsedIngredient.alternativeIngredients,
+    hasAlternativeIngredients: parsedIngredient.hasAlternativeIngredients,
+    hasAddedMeasurements: parsedIngredient.hasAddedMeasurements,
+    comments: parsedIngredient.comments,
+    measurement: measurements,
+  };
+
+  return updateVal;
+};
 
 interface IngredientsProps {
   ingredients: IngredientHeaderUnion[];
@@ -50,6 +89,8 @@ const Ingredients: React.FC<IngredientsProps> = ({
 
   const [reorder, setReorder] = useState(false);
   const [showHeader, setShowHeader] = useState(false);
+
+  const [originalString, setOriginalString] = useState<string[]>([]);
 
   useEffect(() => {
     const handleClickOutside = (event: any) => {
@@ -79,22 +120,16 @@ const Ingredients: React.FC<IngredientsProps> = ({
     e?.preventDefault();
     const response = await parseIngredient({ strIngredient: ingredientValue });
     if (response.data?.parseIngredient) {
-      let parsed = response.data.parseIngredient;
-      console.log(parsed);
-      let updateVal: RecipeIngredientResponseFragment = {
-        order: currentOrder,
-        ingredient: parsed.ingredient,
-        unit: parsed.unit,
-        quantity: parsed.quantity,
-        comments: parsed.comments,
-      };
+      let parsed = response.data
+        .parseIngredient as ParsedIngredientResponseFragment;
 
       let ingredientItem: IngredientHeaderUnion = {
         type: UnionType.VALUE,
-        value: updateVal,
+        value: ingredientParser(parsed, currentOrder),
       };
 
       setIngredients((oldIngredient) => [...oldIngredient, ingredientItem]);
+      setOriginalString((oldString) => [...oldString, ingredientValue]);
       setCurrentOrder(currentOrder + 1);
       setIngredientValue("");
     } else {
@@ -115,6 +150,7 @@ const Ingredients: React.FC<IngredientsProps> = ({
     };
 
     setIngredients((oldIngredients) => [...oldIngredients, headerItem]);
+    setOriginalString((oldString) => [...oldString, headerValue]);
     setCurrentOrder(currentOrder + 1);
     setHeaderValue("");
     setShowHeader(false);
@@ -144,6 +180,9 @@ const Ingredients: React.FC<IngredientsProps> = ({
     if (editValue !== null) {
       const { type, value } = ingredient;
       const newIngredients = [...ingredients];
+      let newStrings = [...originalString];
+      newStrings[index] = editValue;
+      setOriginalString(newStrings);
 
       if (type === UnionType.HEADER) {
         let headerInput: RecipeHeaderIngredientResponseFragment = {
@@ -165,18 +204,12 @@ const Ingredients: React.FC<IngredientsProps> = ({
           strIngredient: editValue,
         });
         if (response.data?.parseIngredient) {
-          let parsed = response.data.parseIngredient;
-          let updateVal: RecipeIngredientResponseFragment = {
-            order: value.order,
-            ingredient: parsed.ingredient,
-            unit: parsed.unit,
-            quantity: parsed.quantity,
-            comments: parsed.comments,
-          };
+          let parsed = response.data
+            .parseIngredient as ParsedIngredientResponseFragment;
 
           let ingredientItem: IngredientHeaderUnion = {
             type: UnionType.VALUE,
-            value: updateVal,
+            value: ingredientParser(parsed, value.order),
           };
 
           newIngredients[index] = ingredientItem;
@@ -189,36 +222,9 @@ const Ingredients: React.FC<IngredientsProps> = ({
     setEditValue(null);
   };
 
-  const editIngredientString = (ingredient: IngredientHeaderUnion) => {
-    const { type, value } = ingredient;
-    if (type === UnionType.HEADER) {
-      const headerValue = value as RecipeHeaderIngredientResponseFragment;
-      return headerValue.header;
-    }
-
-    if (type === UnionType.VALUE) {
-      const ingredientValue = value as RecipeIngredientResponseFragment;
-      if (ingredientValue.unit === null) {
-        if (ingredientValue.quantity === null) {
-          return `${ingredientValue.ingredient}${
-            ingredientValue.comments && `, ${ingredientValue.comments}`
-          }`;
-        } else {
-          return `${ingredientValue.quantity}${ingredientValue.ingredient} ${
-            ingredientValue.comments && `, ${ingredientValue.comments}`
-          }`;
-        }
-      }
-      return `${ingredientValue.quantity} ${ingredientValue.unit} ${
-        ingredientValue.ingredient
-      }${ingredientValue.comments && `, ${ingredientValue.comments}`}`;
-    }
-
-    return "";
-  };
-
   const deleteIngredient = (index: number) => {
     const newIngredients = ingredients.filter((_, i) => i !== index);
+    const newStrings = originalString.filter((_, i) => i !== index);
 
     for (var i = 0; i < newIngredients.length; i++) {
       newIngredients[i].value.order = i;
@@ -226,6 +232,7 @@ const Ingredients: React.FC<IngredientsProps> = ({
 
     setCurrentOrder(currentOrder - 1);
     setIngredients(newIngredients);
+    setOriginalString(newStrings);
   };
 
   const renderIngredient = (ingredient: IngredientHeaderUnion) => {
@@ -240,41 +247,10 @@ const Ingredients: React.FC<IngredientsProps> = ({
         );
       case UnionType.VALUE:
         const ingredientValue = value as RecipeIngredientResponseFragment;
-        if (ingredientValue.unit === null) {
-          if (ingredientValue.quantity === null) {
-            return (
-              <IngredientItem>
-                <IngredientText className="ingredientValue">
-                  {ingredientValue.ingredient}
-                </IngredientText>
-                {ingredientValue.comments && (
-                  <IngredientComments>
-                    {ingredientValue.comments}
-                  </IngredientComments>
-                )}
-              </IngredientItem>
-            );
-          } else {
-            return (
-              <IngredientItem>
-                <IngredientText className="ingredientValue">
-                  {ingredientValue.quantity} {ingredientValue.ingredient}
-                </IngredientText>
-                {ingredientValue.comments && (
-                  <IngredientComments>
-                    {ingredientValue.comments}
-                  </IngredientComments>
-                )}
-              </IngredientItem>
-            );
-          }
-        }
-
         return (
           <IngredientItem>
             <IngredientText className="ingredientValue">
-              {ingredientValue.quantity} {ingredientValue.unit}{" "}
-              {ingredientValue.ingredient}
+              {formatIngredient(ingredientValue)}
             </IngredientText>
             {ingredientValue.comments && (
               <IngredientComments>
@@ -293,14 +269,20 @@ const Ingredients: React.FC<IngredientsProps> = ({
     if (!destination) return;
 
     const newIngredients = Array.from(ingredients);
+    const newStrings = Array.from(originalString);
+
     const [newOrder] = newIngredients.splice(source.index, 1);
+    const [newStringOrder] = newStrings.splice(source.index, 1);
+
     newIngredients.splice(destination.index, 0, newOrder);
+    newStrings.splice(destination.index, 0, newStringOrder);
 
     for (var i = 0; i < newIngredients.length; i++) {
       newIngredients[i].value.order = i;
     }
 
     setIngredients(newIngredients);
+    setOriginalString(newStrings);
   };
 
   return (
@@ -343,7 +325,7 @@ const Ingredients: React.FC<IngredientsProps> = ({
                           value={
                             editValue !== null
                               ? editValue
-                              : editIngredientString(ingredient)
+                              : originalString[index]
                           }
                           onChange={handleEditIngredient}
                           adornment={
@@ -386,7 +368,7 @@ const Ingredients: React.FC<IngredientsProps> = ({
                             onClick={() => {
                               if (!reorder) {
                                 setEditIndex(index);
-                                setEditValue(editIngredientString(ingredient));
+                                setEditValue(originalString[index]);
                               }
                             }}
                           >

@@ -1,7 +1,11 @@
 fragment RecipeIngredientResponse on RecipeIngredient {
   order
   ingredient
-  quantity
-  unit
+  alternativeIngredients
+  hasAlternativeIngredients
+  hasAddedMeasurements
   comments
+  measurement {
+    ...MeasurementResponse
+  }
 }

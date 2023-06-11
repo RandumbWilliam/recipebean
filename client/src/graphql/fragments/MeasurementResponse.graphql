@@ -1,0 +1,7 @@
+fragment MeasurementResponse on Measurement {
+  quantity
+  quantityRange
+  isRange
+  unit
+  isConverted
+}

@@ -1,7 +1,5 @@
 import parser from "ingredientparserjs";
-import { parse } from "recipe-ingredient-parser-v3";
 import { Arg, Field, Mutation, ObjectType, Resolver } from "type-graphql";
-import { unitSymbol } from "utils/units";
 
 @ObjectType()
 class ParsedMeasurment {
@@ -14,7 +12,7 @@ class ParsedMeasurment {
   @Field()
   isRange: boolean;
 
-  @Field()
+  @Field({ nullable: true })
   unit?: string;
 
   @Field()
@@ -60,7 +58,7 @@ export class IngredientResolver {
     let measurements;
 
     if (measurement) {
-      let measurements = [];
+      measurements = [];
 
       if (hasAddedMeasurements) {
         measurement.forEach((meas) => {
