@@ -1,4 +1,4 @@
-import { Entity, ManyToOne, Property } from "@mikro-orm/core";
+import { Entity, FloatType, ManyToOne, Property } from "@mikro-orm/core";
 import MeasurementValidator from "contracts/validators/measurement.validator";
 import { Field, ObjectType } from "type-graphql";
 import { Base } from "utils/entities/base.entity";
@@ -8,7 +8,7 @@ import { RecipeIngredient } from "./recipe_ingredient.entity";
 @Entity({ schema: "recipes" })
 export class Measurement extends Base<Measurement> {
   @Field({ nullable: true })
-  @Property({ nullable: true })
+  @Property({ type: FloatType, nullable: true })
   public quantity?: number;
 
   @Field(() => [Number], { nullable: true })

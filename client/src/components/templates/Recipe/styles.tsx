@@ -173,6 +173,14 @@ export const IngredientContainer = styled.div`
   margin: 0 12px;
   flex-grow: 1;
   overflow-y: auto;
+  gap: 8px;
+`;
+
+export const CounterContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 12px;
 `;
 
 export const StyledModal = styled(Modal)`

@@ -13,6 +13,7 @@ import {
 import { Grid } from "@mui/material";
 import { ONYX_20, WHITE_COLOUR } from "@styles/base/colours";
 import { formatIngredient } from "@utils/ingredient/formatIngredient";
+import { quantityFractionMap } from "@utils/ingredient/quantityFraction";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { InstructionItem } from "../CreateRecipe/styles";
@@ -23,6 +24,7 @@ import {
 } from "../CreateRecipe/types";
 import {
   CloseButton,
+  CounterContainer,
   CoverPhoto,
   Header,
   IngredientCard,
@@ -232,8 +234,60 @@ const RecipeTemplate: React.FC<RecipeTemplateProps> = ({ recipe }) => {
               return <SubHeader>{headerValue.header}</SubHeader>;
 
             case UnionType.VALUE:
-              const ingredientValue = value as RecipeIngredientResponseFragment;
+              let originalIngredientValue =
+                value as RecipeIngredientResponseFragment;
+              let ingredientValue = {
+                ...originalIngredientValue,
+                measurements: originalIngredientValue.measurements?.map(
+                  (meas: any) => {
+                    return {
+                      ...meas,
+                      originalQuantity: meas.quantity,
+                    };
+                  }
+                ),
+              };
               const multiplier = servings / recipe.servings;
+
+              const fractionStrings = [
+                "0",
+                ...Object.keys(quantityFractionMap),
+              ];
+              const fractionNumber = fractionStrings.map(Number);
+
+              if (ingredientValue.measurements) {
+                ingredientValue.measurements.forEach((meas) => {
+                  if (meas.quantity) {
+                    let originalFraction = parseFloat(
+                      (meas.originalQuantity % 1).toFixed(3)
+                    );
+                    let multipliedValue = parseFloat(
+                      (meas.originalQuantity * multiplier).toFixed(3)
+                    );
+
+                    if (fractionNumber.includes(originalFraction)) {
+                      let multipliedFraction = parseFloat(
+                        (multipliedValue % 1).toFixed(3)
+                      );
+                      let closestMultipliedFraction = fractionNumber.reduce(
+                        function (prev, curr) {
+                          return Math.abs(curr - multipliedFraction) <
+                            Math.abs(prev - multipliedFraction)
+                            ? curr
+                            : prev;
+                        }
+                      );
+                      meas.quantity =
+                        Math.floor(multipliedValue) + closestMultipliedFraction;
+                    } else {
+                      meas.quantity = parseFloat(
+                        (meas.originalQuantity * multiplier).toFixed(3)
+                      );
+                    }
+                  }
+                });
+              }
+
               return (
                 <IngredientCheckbox>
                   <IngredientInput
@@ -330,12 +384,32 @@ const RecipeTemplate: React.FC<RecipeTemplateProps> = ({ recipe }) => {
           <Grid item lg={5}>
             <IngredientCard>
               <Header>Ingredients</Header>
-              <Counter
-                value={servings}
-                setValue={setServings}
-                min={1}
-                max={99}
-              />
+              <CounterContainer>
+                <Counter
+                  value={servings}
+                  setValue={setServings}
+                  min={1}
+                  max={99}
+                />
+                <TextButton
+                  disabled={
+                    recipe.servings < 2 ||
+                    servings == Math.floor(recipe.servings / 2)
+                  }
+                  onClick={() => setServings(Math.floor(recipe.servings / 2))}
+                >
+                  1/2
+                </TextButton>
+                <TextButton
+                  disabled={
+                    recipe.servings < 4 ||
+                    servings == Math.floor(recipe.servings / 4)
+                  }
+                  onClick={() => setServings(Math.floor(recipe.servings / 4))}
+                >
+                  1/4
+                </TextButton>
+              </CounterContainer>
               <IngredientContainer>{renderIngredients()}</IngredientContainer>
             </IngredientCard>
           </Grid>
