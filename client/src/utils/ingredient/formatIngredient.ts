@@ -40,17 +40,17 @@ export const formatIngredient = (
     alternativeIngredients,
     hasAlternativeIngredients,
     hasAddedMeasurements,
-    measurement,
+    measurements,
   } = parsedIngredient;
   if (hasAlternativeIngredients && alternativeIngredients) {
     ingredient = `${ingredient} or (${alternativeIngredients.join(", ")})`;
   }
 
-  if (measurement) {
+  if (measurements) {
     let formated: string[] = [];
     let quantityUnitString;
     if (hasAddedMeasurements) {
-      measurement.forEach((meas) => {
+      measurements.forEach((meas) => {
         if (!meas.isConverted) {
           let quantity;
           if (meas.isRange && meas.quantityRange) {
@@ -69,7 +69,7 @@ export const formatIngredient = (
       });
       quantityUnitString = formated.join(" + ");
     } else {
-      let meas = measurement[0];
+      let meas = measurements[0];
       if (!meas.isConverted) {
         let quantity;
         if (meas.isRange && meas.quantityRange) {

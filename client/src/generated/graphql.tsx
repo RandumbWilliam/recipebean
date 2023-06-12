@@ -220,7 +220,7 @@ export type RecipeIngredient = {
   hasAlternativeIngredients: Scalars['Boolean'];
   id: Scalars['ID'];
   ingredient: Scalars['String'];
-  measurement?: Maybe<Array<Measurement>>;
+  measurements?: Maybe<Array<Measurement>>;
   order: Scalars['Float'];
   recipes: Recipe;
   updatedAt: Scalars['DateTime'];
@@ -299,11 +299,11 @@ export type RecipeHeaderIngredientResponseFragment = { __typename?: 'RecipeHeade
 
 export type RecipeHeaderInstructionResponseFragment = { __typename?: 'RecipeHeaderInstruction', order: number, header: string };
 
-export type RecipeIngredientResponseFragment = { __typename?: 'RecipeIngredient', order: number, ingredient: string, alternativeIngredients?: Array<string> | null, hasAlternativeIngredients: boolean, hasAddedMeasurements: boolean, comments?: string | null, measurement?: Array<{ __typename?: 'Measurement', quantity?: number | null, quantityRange?: Array<number> | null, isRange: boolean, unit?: string | null, isConverted: boolean }> | null };
+export type RecipeIngredientResponseFragment = { __typename?: 'RecipeIngredient', order: number, ingredient: string, alternativeIngredients?: Array<string> | null, hasAlternativeIngredients: boolean, hasAddedMeasurements: boolean, comments?: string | null, measurements?: Array<{ __typename?: 'Measurement', quantity?: number | null, quantityRange?: Array<number> | null, isRange: boolean, unit?: string | null, isConverted: boolean }> | null };
 
 export type RecipeInstructionResponseFragment = { __typename?: 'RecipeInstruction', order: number, step: number, instruction: string };
 
-export type RecipeResponseFragment = { __typename?: 'Recipe', id: string, recipeName: string, prepTime: number, cookTime: number, servings: number, recipeIngredient: Array<{ __typename?: 'RecipeIngredient', order: number, ingredient: string, alternativeIngredients?: Array<string> | null, hasAlternativeIngredients: boolean, hasAddedMeasurements: boolean, comments?: string | null, measurement?: Array<{ __typename?: 'Measurement', quantity?: number | null, quantityRange?: Array<number> | null, isRange: boolean, unit?: string | null, isConverted: boolean }> | null }>, recipeInstruction: Array<{ __typename?: 'RecipeInstruction', order: number, step: number, instruction: string }>, recipeHeaderIngredient: Array<{ __typename?: 'RecipeHeaderIngredient', order: number, header: string }>, recipeHeaderInstruction: Array<{ __typename?: 'RecipeHeaderInstruction', order: number, header: string }> };
+export type RecipeResponseFragment = { __typename?: 'Recipe', id: string, recipeName: string, prepTime: number, cookTime: number, servings: number, recipeIngredient: Array<{ __typename?: 'RecipeIngredient', order: number, ingredient: string, alternativeIngredients?: Array<string> | null, hasAlternativeIngredients: boolean, hasAddedMeasurements: boolean, comments?: string | null, measurements?: Array<{ __typename?: 'Measurement', quantity?: number | null, quantityRange?: Array<number> | null, isRange: boolean, unit?: string | null, isConverted: boolean }> | null }>, recipeInstruction: Array<{ __typename?: 'RecipeInstruction', order: number, step: number, instruction: string }>, recipeHeaderIngredient: Array<{ __typename?: 'RecipeHeaderIngredient', order: number, header: string }>, recipeHeaderInstruction: Array<{ __typename?: 'RecipeHeaderInstruction', order: number, header: string }> };
 
 export type UserErrorResponseFragment = { __typename?: 'UserError', errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null, user?: { __typename?: 'User', id: string, email: string, firstName: string, lastName: string } | null };
 
@@ -405,12 +405,12 @@ export type GetRecipeByIdQueryVariables = Exact<{
 }>;
 
 
-export type GetRecipeByIdQuery = { __typename?: 'Query', getRecipe?: { __typename?: 'Recipe', id: string, recipeName: string, prepTime: number, cookTime: number, servings: number, recipeIngredient: Array<{ __typename?: 'RecipeIngredient', order: number, ingredient: string, alternativeIngredients?: Array<string> | null, hasAlternativeIngredients: boolean, hasAddedMeasurements: boolean, comments?: string | null, measurement?: Array<{ __typename?: 'Measurement', quantity?: number | null, quantityRange?: Array<number> | null, isRange: boolean, unit?: string | null, isConverted: boolean }> | null }>, recipeInstruction: Array<{ __typename?: 'RecipeInstruction', order: number, step: number, instruction: string }>, recipeHeaderIngredient: Array<{ __typename?: 'RecipeHeaderIngredient', order: number, header: string }>, recipeHeaderInstruction: Array<{ __typename?: 'RecipeHeaderInstruction', order: number, header: string }> } | null };
+export type GetRecipeByIdQuery = { __typename?: 'Query', getRecipe?: { __typename?: 'Recipe', id: string, recipeName: string, prepTime: number, cookTime: number, servings: number, recipeIngredient: Array<{ __typename?: 'RecipeIngredient', order: number, ingredient: string, alternativeIngredients?: Array<string> | null, hasAlternativeIngredients: boolean, hasAddedMeasurements: boolean, comments?: string | null, measurements?: Array<{ __typename?: 'Measurement', quantity?: number | null, quantityRange?: Array<number> | null, isRange: boolean, unit?: string | null, isConverted: boolean }> | null }>, recipeInstruction: Array<{ __typename?: 'RecipeInstruction', order: number, step: number, instruction: string }>, recipeHeaderIngredient: Array<{ __typename?: 'RecipeHeaderIngredient', order: number, header: string }>, recipeHeaderInstruction: Array<{ __typename?: 'RecipeHeaderInstruction', order: number, header: string }> } | null };
 
 export type GetRecipesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetRecipesQuery = { __typename?: 'Query', getRecipes: Array<{ __typename?: 'Recipe', id: string, recipeName: string, prepTime: number, cookTime: number, servings: number, recipeIngredient: Array<{ __typename?: 'RecipeIngredient', order: number, ingredient: string, alternativeIngredients?: Array<string> | null, hasAlternativeIngredients: boolean, hasAddedMeasurements: boolean, comments?: string | null, measurement?: Array<{ __typename?: 'Measurement', quantity?: number | null, quantityRange?: Array<number> | null, isRange: boolean, unit?: string | null, isConverted: boolean }> | null }>, recipeInstruction: Array<{ __typename?: 'RecipeInstruction', order: number, step: number, instruction: string }>, recipeHeaderIngredient: Array<{ __typename?: 'RecipeHeaderIngredient', order: number, header: string }>, recipeHeaderInstruction: Array<{ __typename?: 'RecipeHeaderInstruction', order: number, header: string }> }> };
+export type GetRecipesQuery = { __typename?: 'Query', getRecipes: Array<{ __typename?: 'Recipe', id: string, recipeName: string, prepTime: number, cookTime: number, servings: number, recipeIngredient: Array<{ __typename?: 'RecipeIngredient', order: number, ingredient: string, alternativeIngredients?: Array<string> | null, hasAlternativeIngredients: boolean, hasAddedMeasurements: boolean, comments?: string | null, measurements?: Array<{ __typename?: 'Measurement', quantity?: number | null, quantityRange?: Array<number> | null, isRange: boolean, unit?: string | null, isConverted: boolean }> | null }>, recipeInstruction: Array<{ __typename?: 'RecipeInstruction', order: number, step: number, instruction: string }>, recipeHeaderIngredient: Array<{ __typename?: 'RecipeHeaderIngredient', order: number, header: string }>, recipeHeaderInstruction: Array<{ __typename?: 'RecipeHeaderInstruction', order: number, header: string }> }> };
 
 export type MyUserQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -462,7 +462,7 @@ export const RecipeIngredientResponseFragmentDoc = gql`
   hasAlternativeIngredients
   hasAddedMeasurements
   comments
-  measurement {
+  measurements {
     ...MeasurementResponse
   }
 }

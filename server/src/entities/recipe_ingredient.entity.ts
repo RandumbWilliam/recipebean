@@ -43,7 +43,7 @@ export class RecipeIngredient extends Base<RecipeIngredient> {
   @OneToMany(() => Measurement, (m: Measurement) => m.ingredients, {
     cascade: [Cascade.ALL],
   })
-  public measurement = new Collection<Measurement>(this);
+  public measurements = new Collection<Measurement>(this);
 
   @Field(() => Recipe)
   @ManyToOne(() => Recipe, { onDelete: "cascade" })

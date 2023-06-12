@@ -12,6 +12,7 @@ import {
 } from "@generated/graphql";
 import { Grid } from "@mui/material";
 import { ONYX_20, WHITE_COLOUR } from "@styles/base/colours";
+import { formatIngredient } from "@utils/ingredient/formatIngredient";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { InstructionItem } from "../CreateRecipe/styles";
@@ -27,6 +28,7 @@ import {
   IngredientCard,
   IngredientCheckbox,
   IngredientCheckmarkIcon,
+  IngredientComments,
   IngredientContainer,
   IngredientIndicator,
   IngredientInput,
@@ -223,45 +225,15 @@ const RecipeTemplate: React.FC<RecipeTemplateProps> = ({ recipe }) => {
       <>
         {ingredients.map((ingredient, index) => {
           const { type, value } = ingredient;
-          if (type === UnionType.HEADER) {
-            const headerValue = value as RecipeHeaderIngredientResponseFragment;
-            return <SubHeader>{headerValue.header}</SubHeader>;
-          }
+          switch (type) {
+            case UnionType.HEADER:
+              const headerValue =
+                value as RecipeHeaderIngredientResponseFragment;
+              return <SubHeader>{headerValue.header}</SubHeader>;
 
-          if (type === UnionType.VALUE) {
-            const ingredientValue = value as RecipeIngredientResponseFragment;
-            const multiplier = servings / recipe.servings;
-
-            if (ingredientValue.unit === null) {
-              if (ingredientValue.quantity === 0) {
-                return (
-                  <IngredientText>{ingredientValue.ingredient}</IngredientText>
-                );
-              } else {
-                if (
-                  ingredientValue.quantity !== null &&
-                  ingredientValue.quantity !== undefined
-                ) {
-                  const quantity =
-                    Math.round(ingredientValue.quantity * multiplier * 100) /
-                    100;
-
-                  return (
-                    <IngredientText>
-                      {quantity} {ingredientValue.ingredient}
-                    </IngredientText>
-                  );
-                }
-              }
-            }
-
-            if (
-              ingredientValue.quantity !== null &&
-              ingredientValue.quantity !== undefined
-            ) {
-              const quantity =
-                Math.round(ingredientValue.quantity * multiplier * 100) / 100;
-
+            case UnionType.VALUE:
+              const ingredientValue = value as RecipeIngredientResponseFragment;
+              const multiplier = servings / recipe.servings;
               return (
                 <IngredientCheckbox>
                   <IngredientInput
@@ -279,14 +251,17 @@ const RecipeTemplate: React.FC<RecipeTemplateProps> = ({ recipe }) => {
                     />
                   </IngredientIndicator>
                   <span>
-                    {quantity} {ingredientValue.unit}{" "}
-                    {ingredientValue.ingredient}
+                    <IngredientText>
+                      {formatIngredient(ingredientValue)}
+                    </IngredientText>
+                    {ingredientValue.comments && (
+                      <IngredientComments>
+                        {ingredientValue.comments}
+                      </IngredientComments>
+                    )}
                   </span>
                 </IngredientCheckbox>
               );
-            }
-
-            return <div>Error</div>;
           }
         })}
       </>

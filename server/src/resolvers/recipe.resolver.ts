@@ -24,6 +24,7 @@ export class RecipeResolver {
       {
         populate: [
           "recipeIngredient",
+          "recipeIngredient.measurements",
           "recipeInstruction",
           "recipeHeaderIngredient",
           "recipeHeaderInstruction",
@@ -46,6 +47,7 @@ export class RecipeResolver {
       {
         populate: [
           "recipeIngredient",
+          "recipeIngredient.measurements",
           "recipeInstruction",
           "recipeHeaderIngredient",
           "recipeHeaderInstruction",
