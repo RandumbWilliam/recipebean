@@ -6,15 +6,21 @@ interface TextButtonProps
   children: React.ReactNode;
   className?: string;
   onClick?: (event: any) => void;
+  disabled?: boolean;
 }
 
 const TextButton: React.FC<TextButtonProps> = ({
   children,
   className,
   onClick,
+  disabled = false,
 }) => {
   return (
-    <StyledTextButton className={className} onClick={onClick}>
+    <StyledTextButton
+      className={className}
+      onClick={onClick}
+      disabled={disabled}
+    >
       {children}
     </StyledTextButton>
   );

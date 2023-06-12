@@ -1,4 +1,3 @@
-import { PRIMARY_COLOUR } from "@styles/base/colours";
 import styled from "styled-components";
 import Button from "../Button";
 
@@ -7,7 +6,6 @@ export const CounterContainer = styled.div`
   justify-content: space-between;
   align-items: center;
   width: 180px;
-  margin-bottom: 12px;
 `;
 
 export const CounterDisplay = styled.p`

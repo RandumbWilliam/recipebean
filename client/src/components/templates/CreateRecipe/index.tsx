@@ -202,7 +202,6 @@ const CreateRecipeTemplate: React.FC<CreateRecipeTemplateProps> = ({
     });
 
     if (response.data?.createRecipe) {
-      console.log(response.data?.createRecipe);
       router.push(`/recipe/${response.data.createRecipe.id}`);
     } else {
       console.log("ERRORS");
