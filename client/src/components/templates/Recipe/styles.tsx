@@ -8,6 +8,7 @@ import {
   SECONDARY_COLOUR,
   WHITE_COLOUR,
 } from "@styles/base/colours";
+import { FONT_SIZE_16 } from "@styles/base/typography";
 import styled from "styled-components";
 
 interface Props {
@@ -80,9 +81,8 @@ export const Header = styled.h5`
 export const IngredientCheckbox = styled.label`
   display: flex;
   justify-content: center;
-  align-items: center;
   cursor: pointer;
-  margin-left: 12px;
+  margin-left: 8px;
 `;
 
 export const IngredientCheckmarkIcon = styled(Icon)<CheckboxProps>`
@@ -105,11 +105,19 @@ export const IngredientIndicator = styled.div<CheckboxProps>`
   outline: none;
   cursor: pointer;
   margin-right: 0.5em;
+  margin-top: 8px;
   ${(props) => props.checked && `background-color: ${PRIMARY_COLOUR};`}
 `;
 
 export const IngredientText = styled.p`
-  margin-left: 12px;
+  margin-left: 8px;
+`;
+
+export const IngredientComments = styled.p`
+  font-size: ${FONT_SIZE_16};
+  color: ${ONYX_20};
+  margin-left: 8px;
+  line-height: 20px;
 `;
 
 export const InstructionContainer = styled.div``;

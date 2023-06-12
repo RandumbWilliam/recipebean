@@ -61,7 +61,7 @@ const ingredientParser = (
     hasAlternativeIngredients: parsedIngredient.hasAlternativeIngredients,
     hasAddedMeasurements: parsedIngredient.hasAddedMeasurements,
     comments: parsedIngredient.comments,
-    measurement: measurements,
+    measurements: measurements,
   };
 
   return updateVal;

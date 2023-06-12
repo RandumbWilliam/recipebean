@@ -5,7 +5,7 @@ fragment RecipeIngredientResponse on RecipeIngredient {
   hasAlternativeIngredients
   hasAddedMeasurements
   comments
-  measurement {
+  measurements {
     ...MeasurementResponse
   }
 }
