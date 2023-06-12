@@ -1,4 +1,5 @@
 import CornProfilePicture from "@assets/avatars/Corn.jpg";
+import { useLogoutMutation } from "@generated/graphql";
 import React, { useState } from "react";
 import {
   ProfileContainer,
@@ -8,6 +9,8 @@ import {
 } from "./styles";
 
 const Profile = () => {
+  const [, logout] = useLogoutMutation();
+
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -17,8 +20,8 @@ const Profile = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const handleLogout = () => {
-    console.log("Logout!");
+  const handleLogout = async () => {
+    await logout();
   };
 
   return (
