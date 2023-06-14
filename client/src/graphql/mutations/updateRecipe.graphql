@@ -1,0 +1,9 @@
+mutation UpdateRecipe(
+  $id: String!
+  $input: RecipeValidator!
+  $cookbookIds: [String!]!
+) {
+  updateRecipe(id: $id, input: $input, cookbookIds: $cookbookIds) {
+    id
+  }
+}

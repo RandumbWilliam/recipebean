@@ -16,4 +16,7 @@ fragment RecipeResponse on Recipe {
   recipeHeaderInstruction {
     ...RecipeHeaderInstructionResponse
   }
+  cookbooks {
+    id
+  }
 }

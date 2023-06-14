@@ -42,6 +42,7 @@ export class Recipe extends Base<Recipe> {
     (recipeHeaderIngredient) => recipeHeaderIngredient.recipes,
     {
       cascade: [Cascade.ALL],
+      orphanRemoval: true,
     }
   )
   public recipeHeaderIngredient = new Collection<RecipeHeaderIngredient>(this);
@@ -52,6 +53,7 @@ export class Recipe extends Base<Recipe> {
     (recipeHeaderInstruction) => recipeHeaderInstruction.recipes,
     {
       cascade: [Cascade.ALL],
+      orphanRemoval: true,
     }
   )
   public recipeHeaderInstruction = new Collection<RecipeHeaderInstruction>(
@@ -61,12 +63,14 @@ export class Recipe extends Base<Recipe> {
   @Field(() => [RecipeIngredient])
   @OneToMany(() => RecipeIngredient, (r: RecipeIngredient) => r.recipes, {
     cascade: [Cascade.ALL],
+    orphanRemoval: true,
   })
   public recipeIngredient = new Collection<RecipeIngredient>(this);
 
   @Field(() => [RecipeInstruction])
   @OneToMany(() => RecipeInstruction, (r: RecipeInstruction) => r.recipes, {
     cascade: [Cascade.ALL],
+    orphanRemoval: true,
   })
   public recipeInstruction = new Collection<RecipeInstruction>(this);
 
