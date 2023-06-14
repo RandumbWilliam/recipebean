@@ -1,3 +1,4 @@
+import { PRIMARY_COLOUR } from "@styles/base/colours";
 import React from "react";
 import { StyledTextButton } from "./styles";
 
@@ -7,6 +8,7 @@ interface TextButtonProps
   className?: string;
   onClick?: (event: any) => void;
   disabled?: boolean;
+  color?: string;
 }
 
 const TextButton: React.FC<TextButtonProps> = ({
@@ -14,12 +16,14 @@ const TextButton: React.FC<TextButtonProps> = ({
   className,
   onClick,
   disabled = false,
+  color = PRIMARY_COLOUR,
 }) => {
   return (
     <StyledTextButton
       className={className}
       onClick={onClick}
       disabled={disabled}
+      color={color}
     >
       {children}
     </StyledTextButton>

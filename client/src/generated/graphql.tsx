@@ -124,8 +124,8 @@ export type MutationRegisterArgs = {
 
 
 export type MutationUpdateCookbookArgs = {
-  cookbookName: Scalars['String'];
   id: Scalars['String'];
+  input: CookbookValidator;
 };
 
 
@@ -384,12 +384,12 @@ export type RegisterMutationVariables = Exact<{
 export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'UserError', errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null, user?: { __typename?: 'User', id: string, email: string, firstName: string, lastName: string } | null } };
 
 export type UpdateCookbookMutationVariables = Exact<{
-  cookbookName: Scalars['String'];
+  input: CookbookValidator;
   updateCookbookId: Scalars['String'];
 }>;
 
 
-export type UpdateCookbookMutation = { __typename?: 'Mutation', updateCookbook: { __typename?: 'Cookbook', cookbookName: string, id: string } };
+export type UpdateCookbookMutation = { __typename?: 'Mutation', updateCookbook: { __typename?: 'Cookbook', cookbookName: string, id: string, cookbookCoverId: string } };
 
 export type UpdateRecipeMutationVariables = Exact<{
   id: Scalars['String'];
@@ -659,10 +659,11 @@ export function useRegisterMutation() {
   return Urql.useMutation<RegisterMutation, RegisterMutationVariables>(RegisterDocument);
 };
 export const UpdateCookbookDocument = gql`
-    mutation UpdateCookbook($cookbookName: String!, $updateCookbookId: String!) {
-  updateCookbook(cookbookName: $cookbookName, id: $updateCookbookId) {
+    mutation UpdateCookbook($input: CookbookValidator!, $updateCookbookId: String!) {
+  updateCookbook(input: $input, id: $updateCookbookId) {
     cookbookName
     id
+    cookbookCoverId
   }
 }
     `;

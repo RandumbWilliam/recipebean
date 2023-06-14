@@ -70,13 +70,16 @@ export class CookbookResolver {
   @Mutation(() => Cookbook)
   public async updateCookbook(
     @Arg("id") id: string,
-    @Arg("cookbookName") cookbookName: string,
+    @Arg("input") input: CookbookValidator,
     @Ctx() { em }: MyContext
   ): Promise<Cookbook> {
     const cookbookRepository = em.getRepository(Cookbook);
 
     const cookbook = await cookbookRepository.findOneOrFail({ id });
-    cookbook.assign({ cookbookName });
+    cookbook.assign({
+      cookbookName: input.cookbookName,
+      cookbookCoverId: input.cookbookCoverId,
+    });
     await em.persistAndFlush(cookbook);
 
     return cookbook;
