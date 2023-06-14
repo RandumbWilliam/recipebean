@@ -30,16 +30,20 @@ import { InstructionHeaderUnion, UnionType } from "./types";
 interface InstructionProps {
   instructions: InstructionHeaderUnion[];
   setInstructions: React.Dispatch<SetStateAction<InstructionHeaderUnion[]>>;
+  initialOrder?: number;
+  initialStep?: number;
 }
 
 const Instructions: React.FC<InstructionProps> = ({
   instructions,
   setInstructions,
+  initialOrder = 0,
+  initialStep = 1,
 }) => {
   const editInputRef = useRef<HTMLFormElement>(null);
 
-  const [currentOrder, setCurrentOrder] = useState(0);
-  const [step, setStep] = useState(1);
+  const [currentOrder, setCurrentOrder] = useState(initialOrder);
+  const [step, setStep] = useState(initialStep);
   const [instructionValue, setInstructionValue] = useState("");
   const [headerValue, setHeaderValue] = useState("");
 

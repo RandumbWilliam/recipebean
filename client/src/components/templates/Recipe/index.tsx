@@ -14,14 +14,15 @@ import { Grid } from "@mui/material";
 import { ONYX_20, WHITE_COLOUR } from "@styles/base/colours";
 import { formatIngredient } from "@utils/ingredient/formatIngredient";
 import { quantityFractionMap } from "@utils/ingredient/quantityFraction";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
-import { InstructionItem } from "../CreateRecipe/styles";
 import {
-  IngredientHeaderUnion,
-  InstructionHeaderUnion,
-  UnionType,
-} from "../CreateRecipe/types";
+  IngredientHeaderSort,
+  InstructionHeaderSort,
+} from "../CreateRecipe/sorts";
+import { InstructionItem } from "../CreateRecipe/styles";
+import { UnionType } from "../CreateRecipe/types";
 import {
   CloseButton,
   CounterContainer,
@@ -88,59 +89,10 @@ const RecipeTemplate: React.FC<RecipeTemplateProps> = ({ recipe }) => {
   };
 
   const renderInstructions = () => {
-    let instructions: InstructionHeaderUnion[] = [];
-
-    let instructionIndex = 0;
-    let headerIndex = 0;
-
-    let sortedInstructionValues = recipe.recipeInstruction.sort((a, b) =>
-      a.order < b.order ? -1 : 1
+    let instructions = InstructionHeaderSort(
+      recipe.recipeInstruction,
+      recipe.recipeHeaderInstruction
     );
-    let sortedInstructionHeaders = recipe.recipeHeaderInstruction.sort((a, b) =>
-      a.order < b.order ? -1 : 1
-    );
-
-    while (
-      instructionIndex < sortedInstructionValues.length &&
-      headerIndex < sortedInstructionHeaders.length
-    ) {
-      if (
-        sortedInstructionValues[instructionIndex].order <
-        sortedInstructionHeaders[headerIndex].order
-      ) {
-        let instructionItem: InstructionHeaderUnion = {
-          type: UnionType.VALUE,
-          value: sortedInstructionValues[instructionIndex],
-        };
-        instructions.push(instructionItem);
-        instructionIndex += 1;
-      } else {
-        let headerItem: InstructionHeaderUnion = {
-          type: UnionType.HEADER,
-          value: sortedInstructionHeaders[headerIndex],
-        };
-        instructions.push(headerItem);
-        headerIndex += 1;
-      }
-    }
-
-    while (instructionIndex < sortedInstructionValues.length) {
-      let instructionItem: InstructionHeaderUnion = {
-        type: UnionType.VALUE,
-        value: sortedInstructionValues[instructionIndex],
-      };
-      instructions.push(instructionItem);
-      instructionIndex += 1;
-    }
-
-    while (headerIndex < sortedInstructionHeaders.length) {
-      let headerItem: InstructionHeaderUnion = {
-        type: UnionType.HEADER,
-        value: sortedInstructionHeaders[headerIndex],
-      };
-      instructions.push(headerItem);
-      headerIndex += 1;
-    }
 
     return (
       <>
@@ -169,59 +121,10 @@ const RecipeTemplate: React.FC<RecipeTemplateProps> = ({ recipe }) => {
   };
 
   const renderIngredients = () => {
-    let ingredients: IngredientHeaderUnion[] = [];
-
-    let ingredientIndex = 0;
-    let headerIndex = 0;
-
-    let sortedIngredientValues = recipe.recipeIngredient.sort((a, b) =>
-      a.order < b.order ? -1 : 1
+    let ingredients = IngredientHeaderSort(
+      recipe.recipeIngredient,
+      recipe.recipeHeaderIngredient
     );
-    let sortedIngredientHeaders = recipe.recipeHeaderIngredient.sort((a, b) =>
-      a.order < b.order ? -1 : 1
-    );
-
-    while (
-      ingredientIndex < sortedIngredientValues.length &&
-      headerIndex < sortedIngredientHeaders.length
-    ) {
-      if (
-        sortedIngredientValues[ingredientIndex].order <
-        sortedIngredientHeaders[headerIndex].order
-      ) {
-        let ingredientItem: IngredientHeaderUnion = {
-          type: UnionType.VALUE,
-          value: sortedIngredientValues[ingredientIndex],
-        };
-        ingredients.push(ingredientItem);
-        ingredientIndex += 1;
-      } else {
-        let headerItem: IngredientHeaderUnion = {
-          type: UnionType.HEADER,
-          value: sortedIngredientHeaders[headerIndex],
-        };
-        ingredients.push(headerItem);
-        headerIndex += 1;
-      }
-    }
-
-    while (ingredientIndex < sortedIngredientValues.length) {
-      let ingredientItem: IngredientHeaderUnion = {
-        type: UnionType.VALUE,
-        value: sortedIngredientValues[ingredientIndex],
-      };
-      ingredients.push(ingredientItem);
-      ingredientIndex += 1;
-    }
-
-    while (headerIndex < sortedIngredientHeaders.length) {
-      let headerItem: IngredientHeaderUnion = {
-        type: UnionType.HEADER,
-        value: sortedIngredientHeaders[headerIndex],
-      };
-      ingredients.push(headerItem);
-      headerIndex += 1;
-    }
 
     return (
       <>
@@ -352,7 +255,11 @@ const RecipeTemplate: React.FC<RecipeTemplateProps> = ({ recipe }) => {
           <RecipeHeader>
             <RecipeTitle>{recipe.recipeName}</RecipeTitle>
             <RecipeActions>
-              <IconButton name="Pen" color={WHITE_COLOUR} size={24} />
+              <Link href={`/recipe/${recipe.id}/edit`}>
+                <a style={{ display: "flex" }}>
+                  <IconButton name="Pen" color={WHITE_COLOUR} size={24} />
+                </a>
+              </Link>
               <IconButton
                 name="Trash"
                 color={WHITE_COLOUR}

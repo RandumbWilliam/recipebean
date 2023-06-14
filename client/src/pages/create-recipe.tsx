@@ -1,6 +1,6 @@
 import BaseLayout from "@components/layouts/Base";
 import Load from "@components/modules/Load";
-import CreateRecipeTemplate from "@components/templates/CreateRecipe";
+import { CreateRecipeTemplate } from "@components/templates/CreateRecipe";
 import { useGetCookbooksQuery } from "@generated/graphql";
 import { createUrqlClient } from "@utils/createUrqlClient";
 import { withUrqlClient } from "next-urql";

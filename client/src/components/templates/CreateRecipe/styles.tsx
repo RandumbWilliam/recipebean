@@ -8,7 +8,7 @@ import {
   Modal,
   Select,
 } from "@mui/material";
-import { ONYX_10, ONYX_20, PRIMARY_COLOUR } from "@styles/base/colours";
+import { ONYX_20, PRIMARY_COLOUR } from "@styles/base/colours";
 import { FONT_SIZE_16 } from "@styles/base/typography";
 import styled from "styled-components";
 
@@ -28,6 +28,11 @@ export const CreateRecipeHeader = styled.div`
 `;
 
 export const CreateRecipeTitle = styled.h2``;
+
+export const CreateRecipeActions = styled.div`
+  display: flex;
+  gap: 12px;
+`;
 
 export const FormContainer = styled.div`
   display: flex;

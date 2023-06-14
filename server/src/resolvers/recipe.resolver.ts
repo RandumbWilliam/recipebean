@@ -51,6 +51,7 @@ export class RecipeResolver {
           "recipeInstruction",
           "recipeHeaderIngredient",
           "recipeHeaderInstruction",
+          "cookbooks",
         ],
       }
     );
@@ -157,14 +158,124 @@ export class RecipeResolver {
   @Mutation(() => Recipe)
   public async updateRecipe(
     @Arg("input") input: RecipeValidator,
+    @Arg("cookbookIds", (type) => [String]) cookbookIds: string[],
     @Arg("id") id: string,
     @Ctx() { em }: MyContext
   ): Promise<Recipe> {
     const recipeRepository = em.getRepository(Recipe);
+    const cookbookRepository = em.getRepository(Cookbook);
 
-    const recipe = await recipeRepository.findOneOrFail({ id });
-    recipe.assign(input);
+    const recipe = await recipeRepository.findOneOrFail(
+      { id },
+      {
+        populate: [
+          "recipeIngredient",
+          "recipeInstruction",
+          "recipeHeaderIngredient",
+          "recipeHeaderInstruction",
+          "cookbooks",
+        ],
+      }
+    );
+
+    // Remove current ingredients, insturctions, and headers
+    recipe.recipeIngredient.removeAll();
+    recipe.recipeInstruction.removeAll();
+    recipe.recipeHeaderIngredient.removeAll();
+    recipe.recipeHeaderInstruction.removeAll();
+
+    // Update recipe properties
+    recipe.assign({
+      recipeName: input.recipeName,
+      servings: input.servings,
+      prepTime: input.prepTime,
+      cookTime: input.cookTime,
+    });
+
+    // Remove all current cookbooks associated with Recipe
+    const currentCookbookIds = recipe.cookbooks.getIdentifiers("id");
+    for (const id of currentCookbookIds) {
+      const cookbook = await cookbookRepository.findOneOrFail(
+        {
+          id,
+        },
+        { populate: ["recipes"] }
+      );
+
+      recipe.cookbooks.remove(cookbook);
+    }
+
+    // Add new cookbooks to recipe
+    for (const id of cookbookIds) {
+      const cookbook = await cookbookRepository.findOneOrFail({
+        id,
+      });
+
+      recipe.cookbooks.add(cookbook);
+    }
+
     await em.persistAndFlush(recipe);
+
+    // Add new ingredients, instructions, and headers
+    for (const ingredientItem of input.ingredientValues) {
+      const ingredientEntity = em.create(RecipeIngredient, {
+        order: ingredientItem.order,
+        ingredient: ingredientItem.ingredient,
+        alternativeIngredients: ingredientItem.alternativeIngredients,
+        hasAlternativeIngredients: ingredientItem.hasAlternativeIngredients,
+        hasAddedMeasurements: ingredientItem.hasAddedMeasurements,
+        comments: ingredientItem.comments,
+      });
+      ingredientEntity.recipes = recipe;
+
+      await em.persistAndFlush(ingredientEntity);
+
+      if (ingredientItem.measurements) {
+        for (const meas of ingredientItem.measurements) {
+          const measurementEntity = em.create(Measurement, {
+            quantity: meas?.quantity,
+            quantityRange: meas?.quantityRange,
+            isRange: meas.isRange,
+            unit: meas?.unit,
+            isConverted: meas.isConverted,
+          });
+          measurementEntity.ingredients = ingredientEntity;
+
+          await em.persistAndFlush(measurementEntity);
+        }
+      }
+    }
+
+    for (const ingredientHeaderItem of input.ingredientHeaders) {
+      const ingredientHeaderEntity = em.create(RecipeHeaderIngredient, {
+        order: ingredientHeaderItem.order,
+        header: ingredientHeaderItem.header,
+      });
+      ingredientHeaderEntity.recipes = recipe;
+
+      await em.persistAndFlush(ingredientHeaderEntity);
+    }
+
+    for (const instructionItem of input.instructionValues) {
+      const instructionEntity = em.create(RecipeInstruction, {
+        order: instructionItem.order,
+        instruction: instructionItem.instruction,
+        step: instructionItem.step,
+      });
+      instructionEntity.recipes = recipe;
+
+      await em.persistAndFlush(instructionEntity);
+    }
+
+    for (const instructionHeaderItem of input.instructionHeaders) {
+      const instructionHeaderEntity = em.create(RecipeHeaderInstruction, {
+        order: instructionHeaderItem.order,
+        header: instructionHeaderItem.header,
+      });
+      instructionHeaderEntity.recipes = recipe;
+
+      await em.persistAndFlush(instructionHeaderEntity);
+    }
 
     return recipe;
   }

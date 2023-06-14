@@ -70,17 +70,21 @@ const ingredientParser = (
 interface IngredientsProps {
   ingredients: IngredientHeaderUnion[];
   setIngredients: React.Dispatch<SetStateAction<IngredientHeaderUnion[]>>;
+  initialOrder?: number;
+  initialOriginalString?: string[];
 }
 
 const Ingredients: React.FC<IngredientsProps> = ({
   ingredients,
   setIngredients,
+  initialOrder = 0,
+  initialOriginalString = [],
 }) => {
   const editInputRef = useRef<HTMLFormElement>(null);
 
   const [, parseIngredient] = useParseIngredientMutation();
 
-  const [currentOrder, setCurrentOrder] = useState(0);
+  const [currentOrder, setCurrentOrder] = useState(initialOrder);
   const [ingredientValue, setIngredientValue] = useState("");
   const [headerValue, setHeaderValue] = useState("");
 
@@ -90,7 +94,9 @@ const Ingredients: React.FC<IngredientsProps> = ({
   const [reorder, setReorder] = useState(false);
   const [showHeader, setShowHeader] = useState(false);
 
-  const [originalString, setOriginalString] = useState<string[]>([]);
+  const [originalString, setOriginalString] = useState<string[]>(
+    initialOriginalString
+  );
 
   useEffect(() => {
     const handleClickOutside = (event: any) => {

@@ -46,7 +46,7 @@ export const formatIngredient = (
     ingredient = `${ingredient} or (${alternativeIngredients.join(", ")})`;
   }
 
-  if (measurements) {
+  if (measurements && measurements.length !== 0) {
     let formated: string[] = [];
     let quantityUnitString;
     if (hasAddedMeasurements) {
