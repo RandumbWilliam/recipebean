@@ -1,6 +1,7 @@
 fragment CookbookResponse on Cookbook {
   id
   cookbookName
+  cookbookCoverId
   recipes {
     id
     recipeName

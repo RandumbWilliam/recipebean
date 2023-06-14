@@ -5,7 +5,7 @@ import { useMyUserQuery } from "../generated/graphql";
 const unprotectRoutes = ["/login", "/", "/register"];
 
 export const withAuth = (Component: any) => {
-  return (props: any) => {
+  const Auth = (props: any) => {
     const router = useRouter();
     const [{ data, fetching }] = useMyUserQuery();
 
@@ -28,4 +28,6 @@ export const withAuth = (Component: any) => {
 
     return <Component {...props} />;
   };
+
+  return Auth;
 };

@@ -2,7 +2,6 @@ import React from "react";
 // eslint-disable-next-line @next/next/no-document-import-in-page
 import Document, { Head, Html, Main, NextScript } from "next/document";
 import { ServerStyleSheet } from "styled-components";
-import theme from "../styles/theme";
 
 // https://material-ui.com/styles/advanced/#next-js
 export default class MyDocument extends Document {
@@ -10,7 +9,7 @@ export default class MyDocument extends Document {
     return (
       <Html lang="en">
         <Head>
-          <meta content={theme.palette.primary.main} name="theme-color" />
+          <meta />
           <link
             rel="stylesheet"
             href="https://fonts.googleapis.com/icon?family=Material+Icons"

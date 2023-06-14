@@ -6,6 +6,10 @@ class CookbookValidator {
   @Field()
   @IsString()
   cookbookName: string;
+
+  @Field()
+  @IsString()
+  cookbookCoverId: string;
 }
 
 export default CookbookValidator;
