@@ -57,6 +57,7 @@ export class CookbookResolver {
 
     const cookbook = em.create(Cookbook, {
       cookbookName: input.cookbookName,
+      cookbookCoverId: input.cookbookCoverId,
     });
     cookbook.creator = creator;
 

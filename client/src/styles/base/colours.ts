@@ -20,6 +20,7 @@ export const ONYX_90 = "#050505";
 
 export const PRIMARY_COLOUR = BRINK_PINK_50;
 export const SECONDARY_COLOUR = ONYX_50;
+export const TERTIARY_COLOR = "#F7FAFD";
 export const WHITE_COLOUR = "#FFFFFF";
 export const ERROR_COLOUR = "#ED4337";
 export const DISABLED_COLOUR = "#D3D3D3";

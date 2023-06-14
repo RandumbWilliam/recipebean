@@ -1,4 +1,4 @@
-import BreakfastImage from "@assets/cookbooks/Breakfast.png";
+import { CookbookCoverId } from "@utils/cookbooks/cookbookImage";
 import React from "react";
 import {
   CookbookCardContainer,
@@ -8,15 +8,17 @@ import {
 
 interface CookbookCardProps {
   cookbookName: string;
+  cookbookCoverId: string;
   recipeText: string;
 }
 
 const CookbookCard: React.FC<CookbookCardProps> = ({
   cookbookName,
+  cookbookCoverId,
   recipeText,
 }) => {
   return (
-    <CookbookCardContainer imageUrl={BreakfastImage.src}>
+    <CookbookCardContainer imageUrl={CookbookCoverId[cookbookCoverId]}>
       <CookbookCardTitle>{cookbookName}</CookbookCardTitle>
       <CookbookCardRecipeText>{recipeText}</CookbookCardRecipeText>
     </CookbookCardContainer>

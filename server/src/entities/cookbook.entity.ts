@@ -18,6 +18,10 @@ export class Cookbook extends Base<Cookbook> {
   @Property()
   public cookbookName!: string;
 
+  @Field()
+  @Property()
+  public cookbookCoverId: string;
+
   @Field(() => [Recipe])
   @ManyToMany(() => Recipe)
   public recipes = new Collection<Recipe>(this);

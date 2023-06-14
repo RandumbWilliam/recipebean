@@ -18,6 +18,7 @@ export type Scalars = {
 
 export type Cookbook = {
   __typename?: 'Cookbook';
+  cookbookCoverId: Scalars['String'];
   cookbookName: Scalars['String'];
   createdAt: Scalars['DateTime'];
   id: Scalars['ID'];
@@ -26,6 +27,7 @@ export type Cookbook = {
 };
 
 export type CookbookValidator = {
+  cookbookCoverId: Scalars['String'];
   cookbookName: Scalars['String'];
 };
 
@@ -288,7 +290,7 @@ export type UserValidator = {
   password: Scalars['String'];
 };
 
-export type CookbookResponseFragment = { __typename?: 'Cookbook', id: string, cookbookName: string, recipes: Array<{ __typename?: 'Recipe', id: string, recipeName: string, prepTime: number, cookTime: number }> };
+export type CookbookResponseFragment = { __typename?: 'Cookbook', id: string, cookbookName: string, cookbookCoverId: string, recipes: Array<{ __typename?: 'Recipe', id: string, recipeName: string, prepTime: number, cookTime: number }> };
 
 export type ErrorResponseFragment = { __typename?: 'FieldError', field: string, message: string };
 
@@ -323,7 +325,7 @@ export type CreateCookbookMutationVariables = Exact<{
 }>;
 
 
-export type CreateCookbookMutation = { __typename?: 'Mutation', createCookbook: { __typename?: 'Cookbook', id: string, cookbookName: string } };
+export type CreateCookbookMutation = { __typename?: 'Mutation', createCookbook: { __typename?: 'Cookbook', id: string, cookbookName: string, cookbookCoverId: string } };
 
 export type CreateRecipeMutationVariables = Exact<{
   cookbookId: Array<Scalars['String']> | Scalars['String'];
@@ -403,12 +405,12 @@ export type GetCookbookQueryVariables = Exact<{
 }>;
 
 
-export type GetCookbookQuery = { __typename?: 'Query', getCookbook: { __typename?: 'Cookbook', id: string, cookbookName: string, recipes: Array<{ __typename?: 'Recipe', id: string, recipeName: string, prepTime: number, cookTime: number }> } };
+export type GetCookbookQuery = { __typename?: 'Query', getCookbook: { __typename?: 'Cookbook', id: string, cookbookName: string, cookbookCoverId: string, recipes: Array<{ __typename?: 'Recipe', id: string, recipeName: string, prepTime: number, cookTime: number }> } };
 
 export type GetCookbooksQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetCookbooksQuery = { __typename?: 'Query', getCookbooks: Array<{ __typename?: 'Cookbook', id: string, cookbookName: string, recipes: Array<{ __typename?: 'Recipe', id: string, recipeName: string, prepTime: number, cookTime: number }> }> };
+export type GetCookbooksQuery = { __typename?: 'Query', getCookbooks: Array<{ __typename?: 'Cookbook', id: string, cookbookName: string, cookbookCoverId: string, recipes: Array<{ __typename?: 'Recipe', id: string, recipeName: string, prepTime: number, cookTime: number }> }> };
 
 export type GetRecipeByIdQueryVariables = Exact<{
   getRecipeId: Scalars['String'];
@@ -431,6 +433,7 @@ export const CookbookResponseFragmentDoc = gql`
     fragment CookbookResponse on Cookbook {
   id
   cookbookName
+  cookbookCoverId
   recipes {
     id
     recipeName
@@ -567,6 +570,7 @@ export const CreateCookbookDocument = gql`
   createCookbook(input: $input) {
     id
     cookbookName
+    cookbookCoverId
   }
 }
     `;
