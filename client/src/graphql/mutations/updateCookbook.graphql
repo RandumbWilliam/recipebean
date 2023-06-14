@@ -1,6 +1,10 @@
-mutation UpdateCookbook($cookbookName: String!, $updateCookbookId: String!) {
-  updateCookbook(cookbookName: $cookbookName, id: $updateCookbookId) {
+mutation UpdateCookbook(
+  $input: CookbookValidator!
+  $updateCookbookId: String!
+) {
+  updateCookbook(input: $input, id: $updateCookbookId) {
     cookbookName
     id
+    cookbookCoverId
   }
 }
