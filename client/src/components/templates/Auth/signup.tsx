@@ -4,7 +4,7 @@ import Icon from "@components/elements/Icon";
 import Input from "@components/elements/Input";
 import TextButton from "@components/elements/TextButton";
 import { FieldError, useRegisterMutation } from "@generated/graphql";
-import { Grid } from "@mui/material";
+import { Avatars } from "@utils/avatars/avatars";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -28,8 +28,8 @@ import {
 const initialForm = {
   email: "",
   password: "",
-  firstName: "",
-  lastName: "",
+  fullName: "",
+  avatarId: "",
 };
 
 const SignupTemplate: React.FC<{}> = ({}) => {
@@ -46,8 +46,9 @@ const SignupTemplate: React.FC<{}> = ({}) => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const response = await register({ input: formData });
-    console.log(response);
+    const random = Math.floor(Math.random() * Avatars.length);
+    let updatedFormData = { ...formData, avatarId: Avatars[random].id };
+    const response = await register({ input: updatedFormData });
     if (response.data?.register.errors) {
       setErrors(response.data.register.errors);
     } else if (response.data?.register.user) {
@@ -74,52 +75,29 @@ const SignupTemplate: React.FC<{}> = ({}) => {
             <AuthTitle>Create Account</AuthTitle>
             <AuthText>
               Already have an account?{" "}
-              <Link href="/register">
+              <Link href="/login">
                 <a>
-                  <TextButton>Sign up here</TextButton>
+                  <TextButton>Log In</TextButton>
                 </a>
               </Link>
             </AuthText>
           </AuthHeader>
           <AuthForm noValidate onSubmit={handleSubmit}>
-            <Grid container direction="row" columnSpacing={2}>
-              <Grid item md={6}>
-                <Input
-                  type="text"
-                  name="firstName"
-                  label="First Name"
-                  placeholder="First Name"
-                  error={errors.some((error) => error.field === "firstName")}
-                  onChange={handleChange}
-                />
-                {errors.some((error) => error.field === "firstName") && (
-                  <ErrorMessage
-                    message={
-                      errors.find((error) => error.field === "firstName")
-                        ?.message
-                    }
-                  />
-                )}
-              </Grid>
-              <Grid item md={6}>
-                <Input
-                  type="text"
-                  name="lastName"
-                  label="Last Name"
-                  placeholder="Last Name"
-                  error={errors.some((error) => error.field === "lastName")}
-                  onChange={handleChange}
-                />
-                {errors.some((error) => error.field === "lastName") && (
-                  <ErrorMessage
-                    message={
-                      errors.find((error) => error.field === "lastName")
-                        ?.message
-                    }
-                  />
-                )}
-              </Grid>
-            </Grid>
+            <Input
+              type="text"
+              name="fullName"
+              label="Full Name"
+              placeholder="Full Name"
+              error={errors.some((error) => error.field === "fullName")}
+              onChange={handleChange}
+            />
+            {errors.some((error) => error.field === "fullName") && (
+              <ErrorMessage
+                message={
+                  errors.find((error) => error.field === "fullName")?.message
+                }
+              />
+            )}
             <Input
               type="email"
               name="email"

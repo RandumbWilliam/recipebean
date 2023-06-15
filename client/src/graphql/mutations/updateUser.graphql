@@ -1,0 +1,5 @@
+mutation UpdateUser($fullName: String!, $email: String!) {
+  updateUser(fullName: $fullName, email: $email) {
+    ...UserErrorResponse
+  }
+}

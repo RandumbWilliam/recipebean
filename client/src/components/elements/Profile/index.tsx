@@ -1,20 +1,26 @@
-import CornProfilePicture from "@assets/avatars/Corn.jpg";
-import { useLogoutMutation } from "@generated/graphql";
+import { UserResponseFragment, useLogoutMutation } from "@generated/graphql";
+import { AvatarsId } from "@utils/avatars/avatars";
+import Link from "next/link";
 import React, { useState } from "react";
 import {
+  PDP,
+  PDPSkeleton,
   ProfileContainer,
-  StyledImage,
   StyledMenu,
   StyledMenuItem,
 } from "./styles";
 
-const Profile = () => {
+interface ProfileProps {
+  user: UserResponseFragment | undefined | null;
+  fetching: boolean;
+}
+
+const Profile: React.FC<ProfileProps> = ({ user, fetching }) => {
   const [, logout] = useLogoutMutation();
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-    console.log(event.currentTarget);
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
@@ -24,11 +30,17 @@ const Profile = () => {
     await logout();
   };
 
+  const renderPDP = () => {
+    if (fetching || !user) {
+      return <PDPSkeleton />;
+    }
+
+    return <PDP imageUrl={AvatarsId[user.avatarId]} />;
+  };
+
   return (
     <>
-      <ProfileContainer onClick={handleClick}>
-        <StyledImage src={CornProfilePicture} alt="profile picture" />
-      </ProfileContainer>
+      <ProfileContainer onClick={handleClick}>{renderPDP()}</ProfileContainer>
       <StyledMenu
         anchorEl={anchorEl}
         id="account-menu"
@@ -38,7 +50,11 @@ const Profile = () => {
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
-        <StyledMenuItem onClick={handleClose}>My Account</StyledMenuItem>
+        <StyledMenuItem onClick={handleClose}>
+          <Link href="/account">
+            <a>My Account</a>
+          </Link>
+        </StyledMenuItem>
         <StyledMenuItem onClick={handleLogout}>Logout</StyledMenuItem>
       </StyledMenu>
     </>

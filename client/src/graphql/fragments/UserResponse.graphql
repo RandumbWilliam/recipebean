@@ -1,6 +1,6 @@
 fragment UserResponse on User {
   id
   email
-  firstName
-  lastName
+  fullName
+  avatarId
 }

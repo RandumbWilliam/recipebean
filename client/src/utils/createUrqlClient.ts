@@ -1,6 +1,7 @@
 import { cacheExchange } from "@urql/exchange-graphcache";
 import { dedupExchange, fetchExchange } from "urql";
 import {
+  DeleteUserMutation,
   LoginMutation,
   LogoutMutation,
   MyUserDocument,
@@ -19,6 +20,20 @@ export const createUrqlClient = (ssrExchange: any) => ({
     cacheExchange({
       updates: {
         Mutation: {
+          deleteUser: (_result, args, cache, info) => {
+            betterUpdateQuery<DeleteUserMutation, MyUserQuery>(
+              cache,
+              { query: MyUserDocument },
+              _result,
+              (result, query) => {
+                if (result.deleteUser.errors || !result.deleteUser.boolean) {
+                  return query;
+                } else {
+                  return { myUser: null };
+                }
+              }
+            );
+          },
           logout: (_result, args, cache, info) => {
             betterUpdateQuery<LogoutMutation, MyUserQuery>(
               cache,

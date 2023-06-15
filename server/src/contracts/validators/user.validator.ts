@@ -13,11 +13,11 @@ class UserValidator {
 
   @Field()
   @IsString()
-  public firstName: string;
+  public fullName: string;
 
   @Field()
   @IsString()
-  public lastName: string;
+  public avatarId: string;
 }
 
 export default UserValidator;

@@ -16,6 +16,12 @@ export type Scalars = {
   DateTime: any;
 };
 
+export type BooleanError = {
+  __typename?: 'BooleanError';
+  boolean: Scalars['Boolean'];
+  errors?: Maybe<Array<FieldError>>;
+};
+
 export type Cookbook = {
   __typename?: 'Cookbook';
   cookbookCoverId: Scalars['String'];
@@ -65,13 +71,17 @@ export type Mutation = {
   createRecipe: Recipe;
   deleteCookbook: Scalars['Boolean'];
   deleteRecipe: Scalars['Boolean'];
+  deleteUser: BooleanError;
   forgotPassword: Scalars['Boolean'];
   login: UserError;
   logout: Scalars['Boolean'];
   parseIngredient: ParsedIngredient;
   register: UserError;
   updateCookbook: Cookbook;
+  updatePDP: UserError;
+  updatePassword: UserError;
   updateRecipe: Recipe;
+  updateUser: UserError;
 };
 
 
@@ -102,6 +112,11 @@ export type MutationDeleteRecipeArgs = {
 };
 
 
+export type MutationDeleteUserArgs = {
+  password: Scalars['String'];
+};
+
+
 export type MutationForgotPasswordArgs = {
   email: Scalars['String'];
 };
@@ -129,10 +144,28 @@ export type MutationUpdateCookbookArgs = {
 };
 
 
+export type MutationUpdatePdpArgs = {
+  avatarId: Scalars['String'];
+};
+
+
+export type MutationUpdatePasswordArgs = {
+  confirmPassword: Scalars['String'];
+  newPassword: Scalars['String'];
+  oldPassword: Scalars['String'];
+};
+
+
 export type MutationUpdateRecipeArgs = {
   cookbookIds: Array<Scalars['String']>;
   id: Scalars['String'];
   input: RecipeValidator;
+};
+
+
+export type MutationUpdateUserArgs = {
+  email: Scalars['String'];
+  fullName: Scalars['String'];
 };
 
 export type ParsedIngredient = {
@@ -269,11 +302,11 @@ export type RecipeValidator = {
 
 export type User = {
   __typename?: 'User';
+  avatarId: Scalars['String'];
   createdAt: Scalars['DateTime'];
   email: Scalars['String'];
-  firstName: Scalars['String'];
+  fullName: Scalars['String'];
   id: Scalars['ID'];
-  lastName: Scalars['String'];
   updatedAt: Scalars['DateTime'];
 };
 
@@ -284,9 +317,9 @@ export type UserError = {
 };
 
 export type UserValidator = {
+  avatarId: Scalars['String'];
   email: Scalars['String'];
-  firstName: Scalars['String'];
-  lastName: Scalars['String'];
+  fullName: Scalars['String'];
   password: Scalars['String'];
 };
 
@@ -308,9 +341,9 @@ export type RecipeInstructionResponseFragment = { __typename?: 'RecipeInstructio
 
 export type RecipeResponseFragment = { __typename?: 'Recipe', id: string, recipeName: string, prepTime: number, cookTime: number, servings: number, recipeIngredient: Array<{ __typename?: 'RecipeIngredient', order: number, ingredient: string, alternativeIngredients?: Array<string> | null, hasAlternativeIngredients: boolean, hasAddedMeasurements: boolean, comments?: string | null, measurements?: Array<{ __typename?: 'Measurement', quantity?: number | null, quantityRange?: Array<number> | null, isRange: boolean, unit?: string | null, isConverted: boolean }> | null }>, recipeInstruction: Array<{ __typename?: 'RecipeInstruction', order: number, step: number, instruction: string }>, recipeHeaderIngredient: Array<{ __typename?: 'RecipeHeaderIngredient', order: number, header: string }>, recipeHeaderInstruction: Array<{ __typename?: 'RecipeHeaderInstruction', order: number, header: string }>, cookbooks: Array<{ __typename?: 'Cookbook', id: string }> };
 
-export type UserErrorResponseFragment = { __typename?: 'UserError', errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null, user?: { __typename?: 'User', id: string, email: string, firstName: string, lastName: string } | null };
+export type UserErrorResponseFragment = { __typename?: 'UserError', errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null, user?: { __typename?: 'User', id: string, email: string, fullName: string, avatarId: string } | null };
 
-export type UserResponseFragment = { __typename?: 'User', id: string, email: string, firstName: string, lastName: string };
+export type UserResponseFragment = { __typename?: 'User', id: string, email: string, fullName: string, avatarId: string };
 
 export type ChangePasswordMutationVariables = Exact<{
   newPassword: Scalars['String'];
@@ -318,7 +351,7 @@ export type ChangePasswordMutationVariables = Exact<{
 }>;
 
 
-export type ChangePasswordMutation = { __typename?: 'Mutation', changePassword: { __typename?: 'User', id: string, email: string, firstName: string, lastName: string } };
+export type ChangePasswordMutation = { __typename?: 'Mutation', changePassword: { __typename?: 'User', id: string, email: string, fullName: string } };
 
 export type CreateCookbookMutationVariables = Exact<{
   input: CookbookValidator;
@@ -349,6 +382,13 @@ export type DeleteRecipeMutationVariables = Exact<{
 
 export type DeleteRecipeMutation = { __typename?: 'Mutation', deleteRecipe: boolean };
 
+export type DeleteUserMutationVariables = Exact<{
+  password: Scalars['String'];
+}>;
+
+
+export type DeleteUserMutation = { __typename?: 'Mutation', deleteUser: { __typename?: 'BooleanError', boolean: boolean, errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null } };
+
 export type ForgotPasswordMutationVariables = Exact<{
   email: Scalars['String'];
 }>;
@@ -362,7 +402,7 @@ export type LoginMutationVariables = Exact<{
 }>;
 
 
-export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'UserError', errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null, user?: { __typename?: 'User', id: string, email: string, firstName: string, lastName: string } | null } };
+export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'UserError', errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null, user?: { __typename?: 'User', id: string, email: string, fullName: string, avatarId: string } | null } };
 
 export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
 
@@ -381,7 +421,7 @@ export type RegisterMutationVariables = Exact<{
 }>;
 
 
-export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'UserError', errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null, user?: { __typename?: 'User', id: string, email: string, firstName: string, lastName: string } | null } };
+export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'UserError', errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null, user?: { __typename?: 'User', id: string, email: string, fullName: string, avatarId: string } | null } };
 
 export type UpdateCookbookMutationVariables = Exact<{
   input: CookbookValidator;
@@ -391,6 +431,22 @@ export type UpdateCookbookMutationVariables = Exact<{
 
 export type UpdateCookbookMutation = { __typename?: 'Mutation', updateCookbook: { __typename?: 'Cookbook', cookbookName: string, id: string, cookbookCoverId: string } };
 
+export type UpdatePdpMutationVariables = Exact<{
+  avatarId: Scalars['String'];
+}>;
+
+
+export type UpdatePdpMutation = { __typename?: 'Mutation', updatePDP: { __typename?: 'UserError', errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null, user?: { __typename?: 'User', id: string, email: string, fullName: string, avatarId: string } | null } };
+
+export type UpdatePasswordMutationVariables = Exact<{
+  oldPassword: Scalars['String'];
+  newPassword: Scalars['String'];
+  confirmPassword: Scalars['String'];
+}>;
+
+
+export type UpdatePasswordMutation = { __typename?: 'Mutation', updatePassword: { __typename?: 'UserError', errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null, user?: { __typename?: 'User', id: string, email: string, fullName: string, avatarId: string } | null } };
+
 export type UpdateRecipeMutationVariables = Exact<{
   id: Scalars['String'];
   input: RecipeValidator;
@@ -399,6 +455,14 @@ export type UpdateRecipeMutationVariables = Exact<{
 
 
 export type UpdateRecipeMutation = { __typename?: 'Mutation', updateRecipe: { __typename?: 'Recipe', id: string } };
+
+export type UpdateUserMutationVariables = Exact<{
+  fullName: Scalars['String'];
+  email: Scalars['String'];
+}>;
+
+
+export type UpdateUserMutation = { __typename?: 'Mutation', updateUser: { __typename?: 'UserError', errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null, user?: { __typename?: 'User', id: string, email: string, fullName: string, avatarId: string } | null } };
 
 export type GetCookbookQueryVariables = Exact<{
   getCookbookId: Scalars['String'];
@@ -427,7 +491,7 @@ export type GetRecipesQuery = { __typename?: 'Query', getRecipes: Array<{ __type
 export type MyUserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MyUserQuery = { __typename?: 'Query', myUser?: { __typename?: 'User', id: string, email: string, firstName: string, lastName: string } | null };
+export type MyUserQuery = { __typename?: 'Query', myUser?: { __typename?: 'User', id: string, email: string, fullName: string, avatarId: string } | null };
 
 export const CookbookResponseFragmentDoc = gql`
     fragment CookbookResponse on Cookbook {
@@ -536,8 +600,8 @@ export const UserResponseFragmentDoc = gql`
     fragment UserResponse on User {
   id
   email
-  firstName
-  lastName
+  fullName
+  avatarId
 }
     `;
 export const UserErrorResponseFragmentDoc = gql`
@@ -556,8 +620,7 @@ export const ChangePasswordDocument = gql`
   changePassword(newPassword: $newPassword, token: $token) {
     id
     email
-    firstName
-    lastName
+    fullName
   }
 }
     `;
@@ -606,6 +669,20 @@ export const DeleteRecipeDocument = gql`
 
 export function useDeleteRecipeMutation() {
   return Urql.useMutation<DeleteRecipeMutation, DeleteRecipeMutationVariables>(DeleteRecipeDocument);
+};
+export const DeleteUserDocument = gql`
+    mutation DeleteUser($password: String!) {
+  deleteUser(password: $password) {
+    errors {
+      ...ErrorResponse
+    }
+    boolean
+  }
+}
+    ${ErrorResponseFragmentDoc}`;
+
+export function useDeleteUserMutation() {
+  return Urql.useMutation<DeleteUserMutation, DeleteUserMutationVariables>(DeleteUserDocument);
 };
 export const ForgotPasswordDocument = gql`
     mutation ForgotPassword($email: String!) {
@@ -671,6 +748,32 @@ export const UpdateCookbookDocument = gql`
 export function useUpdateCookbookMutation() {
   return Urql.useMutation<UpdateCookbookMutation, UpdateCookbookMutationVariables>(UpdateCookbookDocument);
 };
+export const UpdatePdpDocument = gql`
+    mutation UpdatePDP($avatarId: String!) {
+  updatePDP(avatarId: $avatarId) {
+    ...UserErrorResponse
+  }
+}
+    ${UserErrorResponseFragmentDoc}`;
+
+export function useUpdatePdpMutation() {
+  return Urql.useMutation<UpdatePdpMutation, UpdatePdpMutationVariables>(UpdatePdpDocument);
+};
+export const UpdatePasswordDocument = gql`
+    mutation UpdatePassword($oldPassword: String!, $newPassword: String!, $confirmPassword: String!) {
+  updatePassword(
+    oldPassword: $oldPassword
+    newPassword: $newPassword
+    confirmPassword: $confirmPassword
+  ) {
+    ...UserErrorResponse
+  }
+}
+    ${UserErrorResponseFragmentDoc}`;
+
+export function useUpdatePasswordMutation() {
+  return Urql.useMutation<UpdatePasswordMutation, UpdatePasswordMutationVariables>(UpdatePasswordDocument);
+};
 export const UpdateRecipeDocument = gql`
     mutation UpdateRecipe($id: String!, $input: RecipeValidator!, $cookbookIds: [String!]!) {
   updateRecipe(id: $id, input: $input, cookbookIds: $cookbookIds) {
@@ -681,6 +784,17 @@ export const UpdateRecipeDocument = gql`
 
 export function useUpdateRecipeMutation() {
   return Urql.useMutation<UpdateRecipeMutation, UpdateRecipeMutationVariables>(UpdateRecipeDocument);
+};
+export const UpdateUserDocument = gql`
+    mutation UpdateUser($fullName: String!, $email: String!) {
+  updateUser(fullName: $fullName, email: $email) {
+    ...UserErrorResponse
+  }
+}
+    ${UserErrorResponseFragmentDoc}`;
+
+export function useUpdateUserMutation() {
+  return Urql.useMutation<UpdateUserMutation, UpdateUserMutationVariables>(UpdateUserDocument);
 };
 export const GetCookbookDocument = gql`
     query GetCookbook($getCookbookId: String!) {
