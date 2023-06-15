@@ -14,6 +14,7 @@ const SearchField: React.FC<SearchFieldProps> = ({ className, alternate }) => {
   return (
     <FormControl className={className}>
       <StyledInputBase
+        type="text"
         alternate={alternate}
         placeholder="Search"
         startAdornment={

@@ -14,6 +14,7 @@ export * from "./HorizontalKebab";
 export * from "./Ingredient";
 export * from "./Minus";
 export * from "./Pen";
+export * from "./PenOutline";
 export * from "./Photo";
 export * from "./Plus";
 export * from "./Search";

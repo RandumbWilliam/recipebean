@@ -25,11 +25,11 @@ export class User extends Base<User> {
 
   @Field()
   @Property()
-  public firstName: string;
+  public fullName: string;
 
   @Field()
   @Property()
-  public lastName: string;
+  public avatarId: string;
 
   @OneToMany(() => Recipe, (recipe: Recipe) => recipe.creator, {
     cascade: [Cascade.ALL],

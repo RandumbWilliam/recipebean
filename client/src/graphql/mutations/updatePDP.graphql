@@ -1,0 +1,5 @@
+mutation UpdatePDP($avatarId: String!) {
+  updatePDP(avatarId: $avatarId) {
+    ...UserErrorResponse
+  }
+}

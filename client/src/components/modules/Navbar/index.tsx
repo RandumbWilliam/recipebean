@@ -85,7 +85,7 @@ const Navbar: React.FC<NavbarProps> = ({ alternate }) => {
               <SearchContainer>
                 <SearchField alternate={alternate && !scrolled} />
               </SearchContainer>
-              <Profile />
+              <Profile user={data.myUser} fetching={fetching} />
             </AuthenticatedContainer>
           </>
         ) : (

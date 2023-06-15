@@ -47,7 +47,6 @@ const LoginTemplate: React.FC<{}> = ({}) => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(formData);
     const response = await login(formData);
     if (response.data?.login.errors) {
       setErrors(response.data.login.errors);

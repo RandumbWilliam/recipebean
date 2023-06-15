@@ -1,21 +1,20 @@
+import argon2 from "argon2";
 import UserValidator from "contracts/validators/user.validator";
 import { User } from "entities/user.entity";
 import {
   Arg,
   Ctx,
-  Query,
-  Mutation,
-  Resolver,
-  ObjectType,
   Field,
+  Mutation,
+  ObjectType,
+  Query,
+  Resolver,
 } from "type-graphql";
 import { MyContext } from "utils/interfaces/context.interface";
-import argon2 from "argon2";
-import { v4 } from "uuid";
 import { sendEmail } from "utils/sendEmails";
-import { COOKIE_NAME, FORGET_PASSWORD_PREFIX } from "../constants";
-import { RequiredEntityData } from "@mikro-orm/core";
 import { validateRegister } from "utils/validateRegister";
+import { v4 } from "uuid";
+import { COOKIE_NAME, FORGET_PASSWORD_PREFIX } from "../constants";
 
 @ObjectType()
 class FieldError {
@@ -32,6 +31,15 @@ class UserError {
 
   @Field(() => User, { nullable: true })
   user?: User | null;
+}
+
+@ObjectType()
+class BooleanError {
+  @Field(() => [FieldError], { nullable: true })
+  errors?: FieldError[];
+
+  @Field({ nullable: true })
+  boolean?: boolean | null;
 }
 
 @Resolver(() => User)
@@ -63,10 +71,10 @@ export class UserResolver {
     const hashedPassword = await argon2.hash(input.password);
 
     const user = em.create(User, {
-      firstName: input.firstName,
-      lastName: input.lastName,
+      fullName: input.fullName,
       email: input.email,
       password: hashedPassword,
+      avatarId: input.avatarId,
     });
     await em.persistAndFlush(user);
 
@@ -129,6 +137,89 @@ export class UserResolver {
     });
   }
 
+  // Update PDP
+  @Mutation(() => UserError)
+  public async updatePDP(
+    @Arg("avatarId") avatarId: string,
+    @Ctx() { em, req }: MyContext
+  ): Promise<UserError> {
+    const userRepository = em.getRepository(User);
+
+    const user = await userRepository.findOneOrFail({
+      id: req.session.userId,
+    });
+
+    user.assign({
+      avatarId,
+    });
+    await em.persistAndFlush(user);
+
+    return { user };
+  }
+
+  // Update Personal Information
+  @Mutation(() => UserError)
+  public async updateUser(
+    @Arg("fullName") fullName: string,
+    @Arg("email") email: string,
+    @Ctx() { em, req }: MyContext
+  ): Promise<UserError> {
+    const userRepository = em.getRepository(User);
+
+    const user = await userRepository.findOneOrFail({
+      id: req.session.userId,
+    });
+
+    user.assign({
+      fullName,
+      email,
+    });
+    await em.persistAndFlush(user);
+
+    return { user };
+  }
+
+  // Update Password
+  @Mutation(() => UserError)
+  public async updatePassword(
+    @Arg("oldPassword") oldPassword: string,
+    @Arg("newPassword") newPassword: string,
+    @Arg("confirmPassword") confirmPassword: string,
+    @Ctx() { em, req }: MyContext
+  ): Promise<UserError> {
+    let errors = [];
+
+    const userRepository = em.getRepository(User);
+
+    const user = await userRepository.findOneOrFail({
+      id: req.session.userId,
+    });
+
+    const valid = await argon2.verify(user.password, oldPassword);
+    if (!valid) {
+      errors.push({
+        field: "oldPassword",
+        message: "Old password incorrect",
+      });
+      return { errors };
+    }
+
+    if (newPassword !== confirmPassword) {
+      errors.push({
+        field: "confirmPassword",
+        message: "Password does not match",
+      });
+      return { errors };
+    }
+
+    user.password = await argon2.hash(newPassword);
+    await em.persistAndFlush(user);
+
+    req.session.userId = user.id;
+
+    return { user };
+  }
+
   // Forgot Password
   @Mutation(() => Boolean)
   public async forgotPassword(
@@ -185,5 +276,39 @@ export class UserResolver {
     req.session.userId = user.id;
 
     return user;
+  }
+
+  // Delete User
+  @Mutation(() => BooleanError)
+  public async deleteUser(
+    @Arg("password") password: string,
+    @Ctx() { em, req, res }: MyContext
+  ): Promise<BooleanError> {
+    let errors = [];
+
+    const userRepository = em.getRepository(User);
+
+    const user = await userRepository.findOneOrFail({
+      id: req.session.userId,
+    });
+
+    const valid = await argon2.verify(user.password, password);
+    if (!valid) {
+      errors.push({
+        field: "oldPassword",
+        message: "Old password incorrect",
+      });
+      return { errors };
+    }
+
+    req.session.destroy((err: any) => {
+      res.clearCookie(COOKIE_NAME);
+      if (err) {
+        return { boolean: false };
+      }
+    });
+
+    await userRepository.remove(user).flush();
+    return { boolean: true };
   }
 }

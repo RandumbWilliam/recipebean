@@ -16,6 +16,7 @@ import {
   IngredientIcon,
   MinusIcon,
   PenIcon,
+  PenOutlineIcon,
   PhotoIcon,
   PlusIcon,
   SearchIcon,
@@ -58,6 +59,7 @@ export const Icons = {
   Minus: MinusIcon,
   Check: CheckIcon,
   CheckAlt: CheckAltIcon,
+  PenOutline: PenOutlineIcon,
 };
 
 const Icon: React.FC<IconProps> = ({
