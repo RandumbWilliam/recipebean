@@ -13,8 +13,9 @@ import {
 } from "@generated/graphql";
 import { Divider, SelectChangeEvent } from "@mui/material";
 import { WHITE_COLOUR } from "@styles/base/colours";
+import { CookbookCover } from "@utils/cookbooks/cookbookImage";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import Ingredients from "./Ingredients";
 import Instructions from "./Instructions";
 import {
@@ -33,6 +34,9 @@ import {
   ModalContainer,
   ModalHeader,
   ModalTitle,
+  PreviewImage,
+  PreviewImageChangeButton,
+  PreviewImageDeleteButton,
   SelectInput,
   SelectItem,
   StyledFormControl,
@@ -62,6 +66,7 @@ const CreateRecipeTemplate: React.FC<CreateRecipeTemplateProps> = ({
   }
 
   const router = useRouter();
+  const changeImageRef = useRef<HTMLInputElement>(null);
   const [, createCookbook] = useCreateCookbookMutation();
 
   const [recipeName, setRecipeName] = useState("");
@@ -69,7 +74,7 @@ const CreateRecipeTemplate: React.FC<CreateRecipeTemplateProps> = ({
   const [prepTimeString, setPrepTimeString] = useState("");
   const [cookTimeString, setCookTimeString] = useState("");
 
-  const [coverImage, setCoverImage] = useState<File | null>(null);
+  const [coverImage, setCoverImage] = useState("");
 
   const [ingredients, setIngredients] = useState<IngredientHeaderUnion[]>([]);
   const [instructions, setInstructions] = useState<InstructionHeaderUnion[]>(
@@ -91,7 +96,16 @@ const CreateRecipeTemplate: React.FC<CreateRecipeTemplateProps> = ({
   };
 
   const handleCoverImage = (file: File) => {
-    setCoverImage(file);
+    const reader = (readFile: File) =>
+      new Promise<string>((resolve, reject) => {
+        const fileReader = new FileReader();
+        fileReader.onload = () => resolve(fileReader.result as string);
+        fileReader.readAsDataURL(readFile);
+      });
+
+    reader(file).then((result: string) => setCoverImage(result));
+    // setCoverImage(URL.createObjectURL(file));
+    // URL.revokeObjectURL(coverImage);
   };
 
   const handleServings = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -132,8 +146,13 @@ const CreateRecipeTemplate: React.FC<CreateRecipeTemplateProps> = ({
   };
 
   const addCookbook = async () => {
+    const random = Math.floor(Math.random() * CookbookCover.length);
+    const randomCookbookCoverId = CookbookCover[random].id;
     const response = await createCookbook({
-      input: { cookbookName: addCookbookValue },
+      input: {
+        cookbookName: addCookbookValue,
+        cookbookCoverId: randomCookbookCoverId,
+      },
     });
     if (response.data?.createCookbook) {
       let { id, cookbookName } = response.data.createCookbook;
@@ -149,8 +168,30 @@ const CreateRecipeTemplate: React.FC<CreateRecipeTemplateProps> = ({
     setShowAddCookbook(false);
   };
 
+  const deleteImage = () => {
+    setCoverImage("");
+  };
+
+  const openChangeImage = () => {
+    if (changeImageRef.current) {
+      changeImageRef.current.click();
+    }
+  };
+
+  const handleChangeImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.stopPropagation();
+    e.preventDefault();
+    if (e.target.files) {
+      var file = e.target.files[0];
+      setCoverImage(URL.createObjectURL(file));
+      URL.revokeObjectURL(coverImage);
+    }
+  };
+
   const disableSave = () => {
     if (recipeName === "") return true;
+
+    if (coverImage === "") return true;
 
     if (ingredients.length === 0) return true;
 
@@ -186,6 +227,7 @@ const CreateRecipeTemplate: React.FC<CreateRecipeTemplateProps> = ({
 
     const createRecipeForm = {
       recipeName,
+      coverImage,
       servings,
       prepTime,
       cookTime,
@@ -235,7 +277,27 @@ const CreateRecipeTemplate: React.FC<CreateRecipeTemplateProps> = ({
           </InputContainer>
           <InputContainer id="cover_photo_input_container">
             <InputHeader>Cover Photo</InputHeader>
-            <Dropzone fileCallback={handleCoverImage} />
+            {coverImage !== "" ? (
+              <>
+                <input
+                  type="file"
+                  accept="image/*"
+                  ref={changeImageRef}
+                  style={{ display: "none" }}
+                  onChange={handleChangeImage}
+                />
+                <PreviewImage imageUrl={coverImage}>
+                  <PreviewImageDeleteButton onClick={deleteImage}>
+                    <Icon name="TrashAlt" size={18} />
+                  </PreviewImageDeleteButton>
+                  <PreviewImageChangeButton onClick={openChangeImage}>
+                    Change Image
+                  </PreviewImageChangeButton>
+                </PreviewImage>
+              </>
+            ) : (
+              <Dropzone fileCallback={handleCoverImage} />
+            )}
           </InputContainer>
           <Ingredients
             ingredients={ingredients}

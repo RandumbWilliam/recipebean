@@ -20,6 +20,7 @@ export * from "./Plus";
 export * from "./Search";
 export * from "./Stopwatch";
 export * from "./Trash";
+export * from "./TrashAlt";
 export * from "./Utensils";
 export * from "./VerticalKebab";
 export * from "./Warning";

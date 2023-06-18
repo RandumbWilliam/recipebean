@@ -1,4 +1,6 @@
+import { v2 as cloudinary } from "cloudinary";
 import RecipeValidator from "contracts/validators/recipe.validator";
+import "dotenv-safe/config";
 import { Cookbook } from "entities/cookbook.entity";
 import { Measurement } from "entities/measurement.entity";
 import { Recipe } from "entities/recipe.entity";
@@ -9,6 +11,12 @@ import { RecipeInstruction } from "entities/recipe_instruction.entity";
 import { User } from "entities/user.entity";
 import { Arg, Ctx, Mutation, Query, Resolver } from "type-graphql";
 import { MyContext } from "utils/interfaces/context.interface";
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUNDINARY_API_SECRET,
+});
 
 @Resolver(() => Recipe)
 export class RecipeResolver {
@@ -73,11 +81,16 @@ export class RecipeResolver {
       id: req.session.userId,
     });
 
+    const coverImageUrl = await cloudinary.uploader.upload(input.coverImage, {
+      folder: process.env.CLOUDINARY_FOLDER,
+    });
+
     const recipe = em.create(Recipe, {
       recipeName: input.recipeName,
       servings: input.servings,
       prepTime: input.prepTime,
       cookTime: input.cookTime,
+      coverImage: coverImageUrl.url,
     });
     recipe.creator = creator;
 

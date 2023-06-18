@@ -22,6 +22,10 @@ class RecipeValidator {
   @IsInt()
   public cookTime: number;
 
+  @Field()
+  @IsString()
+  public coverImage: string;
+
   @Field(() => [RecipeIngredientValidator])
   @IsArray()
   public ingredientValues: RecipeIngredientValidator[];

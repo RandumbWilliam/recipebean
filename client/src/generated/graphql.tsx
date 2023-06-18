@@ -18,7 +18,7 @@ export type Scalars = {
 
 export type BooleanError = {
   __typename?: 'BooleanError';
-  boolean: Scalars['Boolean'];
+  boolean?: Maybe<Scalars['Boolean']>;
   errors?: Maybe<Array<FieldError>>;
 };
 
@@ -210,6 +210,7 @@ export type Recipe = {
   __typename?: 'Recipe';
   cookTime: Scalars['Float'];
   cookbooks: Array<Cookbook>;
+  coverImage: Scalars['String'];
   createdAt: Scalars['DateTime'];
   id: Scalars['ID'];
   prepTime: Scalars['Float'];
@@ -291,6 +292,7 @@ export type RecipeInstructionValidator = {
 
 export type RecipeValidator = {
   cookTime: Scalars['Float'];
+  coverImage: Scalars['String'];
   ingredientHeaders: Array<RecipeHeaderValidator>;
   ingredientValues: Array<RecipeIngredientValidator>;
   instructionHeaders: Array<RecipeHeaderValidator>;
@@ -323,7 +325,7 @@ export type UserValidator = {
   password: Scalars['String'];
 };
 
-export type CookbookResponseFragment = { __typename?: 'Cookbook', id: string, cookbookName: string, cookbookCoverId: string, recipes: Array<{ __typename?: 'Recipe', id: string, recipeName: string, prepTime: number, cookTime: number }> };
+export type CookbookResponseFragment = { __typename?: 'Cookbook', id: string, cookbookName: string, cookbookCoverId: string, recipes: Array<{ __typename?: 'Recipe', id: string, recipeName: string, prepTime: number, cookTime: number, coverImage: string }> };
 
 export type ErrorResponseFragment = { __typename?: 'FieldError', field: string, message: string };
 
@@ -339,7 +341,7 @@ export type RecipeIngredientResponseFragment = { __typename?: 'RecipeIngredient'
 
 export type RecipeInstructionResponseFragment = { __typename?: 'RecipeInstruction', order: number, step: number, instruction: string };
 
-export type RecipeResponseFragment = { __typename?: 'Recipe', id: string, recipeName: string, prepTime: number, cookTime: number, servings: number, recipeIngredient: Array<{ __typename?: 'RecipeIngredient', order: number, ingredient: string, alternativeIngredients?: Array<string> | null, hasAlternativeIngredients: boolean, hasAddedMeasurements: boolean, comments?: string | null, measurements?: Array<{ __typename?: 'Measurement', quantity?: number | null, quantityRange?: Array<number> | null, isRange: boolean, unit?: string | null, isConverted: boolean }> | null }>, recipeInstruction: Array<{ __typename?: 'RecipeInstruction', order: number, step: number, instruction: string }>, recipeHeaderIngredient: Array<{ __typename?: 'RecipeHeaderIngredient', order: number, header: string }>, recipeHeaderInstruction: Array<{ __typename?: 'RecipeHeaderInstruction', order: number, header: string }>, cookbooks: Array<{ __typename?: 'Cookbook', id: string }> };
+export type RecipeResponseFragment = { __typename?: 'Recipe', id: string, recipeName: string, prepTime: number, cookTime: number, servings: number, coverImage: string, recipeIngredient: Array<{ __typename?: 'RecipeIngredient', order: number, ingredient: string, alternativeIngredients?: Array<string> | null, hasAlternativeIngredients: boolean, hasAddedMeasurements: boolean, comments?: string | null, measurements?: Array<{ __typename?: 'Measurement', quantity?: number | null, quantityRange?: Array<number> | null, isRange: boolean, unit?: string | null, isConverted: boolean }> | null }>, recipeInstruction: Array<{ __typename?: 'RecipeInstruction', order: number, step: number, instruction: string }>, recipeHeaderIngredient: Array<{ __typename?: 'RecipeHeaderIngredient', order: number, header: string }>, recipeHeaderInstruction: Array<{ __typename?: 'RecipeHeaderInstruction', order: number, header: string }>, cookbooks: Array<{ __typename?: 'Cookbook', id: string }> };
 
 export type UserErrorResponseFragment = { __typename?: 'UserError', errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null, user?: { __typename?: 'User', id: string, email: string, fullName: string, avatarId: string } | null };
 
@@ -387,7 +389,7 @@ export type DeleteUserMutationVariables = Exact<{
 }>;
 
 
-export type DeleteUserMutation = { __typename?: 'Mutation', deleteUser: { __typename?: 'BooleanError', boolean: boolean, errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null } };
+export type DeleteUserMutation = { __typename?: 'Mutation', deleteUser: { __typename?: 'BooleanError', boolean?: boolean | null, errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null } };
 
 export type ForgotPasswordMutationVariables = Exact<{
   email: Scalars['String'];
@@ -469,24 +471,24 @@ export type GetCookbookQueryVariables = Exact<{
 }>;
 
 
-export type GetCookbookQuery = { __typename?: 'Query', getCookbook: { __typename?: 'Cookbook', id: string, cookbookName: string, cookbookCoverId: string, recipes: Array<{ __typename?: 'Recipe', id: string, recipeName: string, prepTime: number, cookTime: number }> } };
+export type GetCookbookQuery = { __typename?: 'Query', getCookbook: { __typename?: 'Cookbook', id: string, cookbookName: string, cookbookCoverId: string, recipes: Array<{ __typename?: 'Recipe', id: string, recipeName: string, prepTime: number, cookTime: number, coverImage: string }> } };
 
 export type GetCookbooksQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetCookbooksQuery = { __typename?: 'Query', getCookbooks: Array<{ __typename?: 'Cookbook', id: string, cookbookName: string, cookbookCoverId: string, recipes: Array<{ __typename?: 'Recipe', id: string, recipeName: string, prepTime: number, cookTime: number }> }> };
+export type GetCookbooksQuery = { __typename?: 'Query', getCookbooks: Array<{ __typename?: 'Cookbook', id: string, cookbookName: string, cookbookCoverId: string, recipes: Array<{ __typename?: 'Recipe', id: string, recipeName: string, prepTime: number, cookTime: number, coverImage: string }> }> };
 
 export type GetRecipeByIdQueryVariables = Exact<{
   getRecipeId: Scalars['String'];
 }>;
 
 
-export type GetRecipeByIdQuery = { __typename?: 'Query', getRecipe?: { __typename?: 'Recipe', id: string, recipeName: string, prepTime: number, cookTime: number, servings: number, recipeIngredient: Array<{ __typename?: 'RecipeIngredient', order: number, ingredient: string, alternativeIngredients?: Array<string> | null, hasAlternativeIngredients: boolean, hasAddedMeasurements: boolean, comments?: string | null, measurements?: Array<{ __typename?: 'Measurement', quantity?: number | null, quantityRange?: Array<number> | null, isRange: boolean, unit?: string | null, isConverted: boolean }> | null }>, recipeInstruction: Array<{ __typename?: 'RecipeInstruction', order: number, step: number, instruction: string }>, recipeHeaderIngredient: Array<{ __typename?: 'RecipeHeaderIngredient', order: number, header: string }>, recipeHeaderInstruction: Array<{ __typename?: 'RecipeHeaderInstruction', order: number, header: string }>, cookbooks: Array<{ __typename?: 'Cookbook', id: string }> } | null };
+export type GetRecipeByIdQuery = { __typename?: 'Query', getRecipe?: { __typename?: 'Recipe', id: string, recipeName: string, prepTime: number, cookTime: number, servings: number, coverImage: string, recipeIngredient: Array<{ __typename?: 'RecipeIngredient', order: number, ingredient: string, alternativeIngredients?: Array<string> | null, hasAlternativeIngredients: boolean, hasAddedMeasurements: boolean, comments?: string | null, measurements?: Array<{ __typename?: 'Measurement', quantity?: number | null, quantityRange?: Array<number> | null, isRange: boolean, unit?: string | null, isConverted: boolean }> | null }>, recipeInstruction: Array<{ __typename?: 'RecipeInstruction', order: number, step: number, instruction: string }>, recipeHeaderIngredient: Array<{ __typename?: 'RecipeHeaderIngredient', order: number, header: string }>, recipeHeaderInstruction: Array<{ __typename?: 'RecipeHeaderInstruction', order: number, header: string }>, cookbooks: Array<{ __typename?: 'Cookbook', id: string }> } | null };
 
 export type GetRecipesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetRecipesQuery = { __typename?: 'Query', getRecipes: Array<{ __typename?: 'Recipe', id: string, recipeName: string, prepTime: number, cookTime: number, servings: number, recipeIngredient: Array<{ __typename?: 'RecipeIngredient', order: number, ingredient: string, alternativeIngredients?: Array<string> | null, hasAlternativeIngredients: boolean, hasAddedMeasurements: boolean, comments?: string | null, measurements?: Array<{ __typename?: 'Measurement', quantity?: number | null, quantityRange?: Array<number> | null, isRange: boolean, unit?: string | null, isConverted: boolean }> | null }>, recipeInstruction: Array<{ __typename?: 'RecipeInstruction', order: number, step: number, instruction: string }>, recipeHeaderIngredient: Array<{ __typename?: 'RecipeHeaderIngredient', order: number, header: string }>, recipeHeaderInstruction: Array<{ __typename?: 'RecipeHeaderInstruction', order: number, header: string }>, cookbooks: Array<{ __typename?: 'Cookbook', id: string }> }> };
+export type GetRecipesQuery = { __typename?: 'Query', getRecipes: Array<{ __typename?: 'Recipe', id: string, recipeName: string, prepTime: number, cookTime: number, servings: number, coverImage: string, recipeIngredient: Array<{ __typename?: 'RecipeIngredient', order: number, ingredient: string, alternativeIngredients?: Array<string> | null, hasAlternativeIngredients: boolean, hasAddedMeasurements: boolean, comments?: string | null, measurements?: Array<{ __typename?: 'Measurement', quantity?: number | null, quantityRange?: Array<number> | null, isRange: boolean, unit?: string | null, isConverted: boolean }> | null }>, recipeInstruction: Array<{ __typename?: 'RecipeInstruction', order: number, step: number, instruction: string }>, recipeHeaderIngredient: Array<{ __typename?: 'RecipeHeaderIngredient', order: number, header: string }>, recipeHeaderInstruction: Array<{ __typename?: 'RecipeHeaderInstruction', order: number, header: string }>, cookbooks: Array<{ __typename?: 'Cookbook', id: string }> }> };
 
 export type MyUserQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -503,6 +505,7 @@ export const CookbookResponseFragmentDoc = gql`
     recipeName
     prepTime
     cookTime
+    coverImage
   }
 }
     `;
@@ -570,6 +573,7 @@ export const RecipeResponseFragmentDoc = gql`
   prepTime
   cookTime
   servings
+  coverImage
   recipeIngredient {
     ...RecipeIngredientResponse
   }

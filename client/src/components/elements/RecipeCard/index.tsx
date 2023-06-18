@@ -1,4 +1,3 @@
-import BreakfastImage from "@assets/cookbooks/Breakfast.png";
 import { ONYX_20 } from "@styles/base/colours";
 import React from "react";
 import Icon from "../Icon";
@@ -13,12 +12,17 @@ import {
 interface RecipeCardProps {
   reicpeName: string;
   time: string;
+  imageUrl: string;
 }
 
-const RecipeCard: React.FC<RecipeCardProps> = ({ reicpeName, time }) => {
+const RecipeCard: React.FC<RecipeCardProps> = ({
+  reicpeName,
+  time,
+  imageUrl,
+}) => {
   return (
     <RecipeCardContainer>
-      <RecipeCardBanner />
+      <RecipeCardBanner imageUrl={imageUrl} />
       <RecipeCardTitle>{reicpeName}</RecipeCardTitle>
       <RecipeCardTimeContainer>
         <Icon name="Stopwatch" size={22} color={ONYX_20} />

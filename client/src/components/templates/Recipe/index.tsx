@@ -271,7 +271,7 @@ const RecipeTemplate: React.FC<RecipeTemplateProps> = ({ recipe }) => {
         </RecipeHeaderContainer>
         <Grid container spacing={3} justifyContent="space-between">
           <Grid item lg={6}>
-            <CoverPhoto />
+            <CoverPhoto imageUrl={recipe.coverImage} />
             <TimeContainer>
               <Icon name="Stopwatch" color={ONYX_20} size={22} />
               <TimeTextContainer>
