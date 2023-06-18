@@ -2,6 +2,7 @@ import { MikroORM } from "@mikro-orm/core";
 import { ApolloServerPluginLandingPageLocalDefault } from "apollo-server-core";
 import { ApolloServer } from "apollo-server-express";
 import connectRedis from "connect-redis";
+import "dotenv-safe/config";
 import express from "express";
 import session from "express-session";
 import Redis from "ioredis";
@@ -29,6 +30,12 @@ const main = async () => {
   let redis = new Redis();
 
   app.use(
+    express.json({
+      limit: "50mb",
+    })
+  );
+
+  app.use(
     session({
       name: COOKIE_NAME,
       store: new RedisStore({ client: redis, disableTouch: true }),
@@ -39,7 +46,7 @@ const main = async () => {
         // sameSite: "none",
       },
       saveUninitialized: false,
-      secret: "keyboard cat",
+      secret: process.env.SESSION_SECRET,
       resave: false,
     })
   );
@@ -62,10 +69,10 @@ const main = async () => {
 
   apolloServer.applyMiddleware({
     app,
-    cors: { credentials: true, origin: "http://localhost:3000" },
+    cors: { credentials: true, origin: process.env.CORS_ORIGIN },
   });
 
-  app.listen(4000, () => {
+  app.listen(process.env.SERVER_PORT, () => {
     console.log("server started on localhost:4000");
   });
 };

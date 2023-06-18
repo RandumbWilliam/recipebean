@@ -129,6 +129,7 @@ const CookbookTemplate: React.FC<CookbookTemplateProps> = ({ cookbook }) => {
                     key={recipe.id}
                     reicpeName={recipe.recipeName}
                     time={timeString(recipe.prepTime + recipe.cookTime)}
+                    imageUrl={recipe.coverImage}
                   />
                 </a>
               </Link>

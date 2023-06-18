@@ -4,6 +4,7 @@ fragment RecipeResponse on Recipe {
   prepTime
   cookTime
   servings
+  coverImage
   recipeIngredient {
     ...RecipeIngredientResponse
   }

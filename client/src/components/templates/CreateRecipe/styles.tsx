@@ -8,7 +8,7 @@ import {
   Modal,
   Select,
 } from "@mui/material";
-import { ONYX_20, PRIMARY_COLOUR } from "@styles/base/colours";
+import { ONYX_20, PRIMARY_COLOUR, WHITE_COLOUR } from "@styles/base/colours";
 import { FONT_SIZE_16 } from "@styles/base/typography";
 import styled from "styled-components";
 
@@ -229,4 +229,35 @@ export const AddCookbookButton = styled.button`
   align-items: center;
   justify-content: center;
   background: ${PRIMARY_COLOUR};
+`;
+
+interface PreviewImageProps {
+  imageUrl: string;
+}
+
+export const PreviewImage = styled.div<PreviewImageProps>`
+  width: 100%;
+  height: 352px;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-image: url(${(props) => props.imageUrl});
+  border-radius: 16px;
+  padding: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+`;
+
+export const PreviewImageDeleteButton = styled.button`
+  width: 38px;
+  height: 38px;
+  border-radius: 8px;
+  background-color: ${WHITE_COLOUR};
+`;
+
+export const PreviewImageChangeButton = styled.button`
+  width: 160px;
+  height: 38px;
+  border-radius: 8px;
+  background-color: ${WHITE_COLOUR};
 `;

@@ -67,6 +67,7 @@ const Dropzone: React.FC<DropzoneProps> = ({ fileCallback }) => {
       <DropzoneMessage>
         <DropzoneInput
           type="file"
+          accept="image/*"
           ref={fileInputRef}
           onChange={filesSelected}
         />

@@ -21,6 +21,7 @@ import {
   PlusIcon,
   SearchIcon,
   StopwatchIcon,
+  TrashAltIcon,
   TrashIcon,
   UtensilsIcon,
   VerticalKebabIcon,
@@ -60,6 +61,7 @@ export const Icons = {
   Check: CheckIcon,
   CheckAlt: CheckAltIcon,
   PenOutline: PenOutlineIcon,
+  TrashAlt: TrashAltIcon,
 };
 
 const Icon: React.FC<IconProps> = ({
