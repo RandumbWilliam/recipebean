@@ -1,0 +1,5 @@
+mutation SearchRecipes($query: String!) {
+  searchRecipes(query: $query) {
+    ...RecipeCardResponse
+  }
+}

@@ -77,6 +77,7 @@ export type Mutation = {
   logout: Scalars['Boolean'];
   parseIngredient: ParsedIngredient;
   register: UserError;
+  searchRecipes: Array<Recipe>;
   updateCookbook: Cookbook;
   updatePDP: UserError;
   updatePassword: UserError;
@@ -135,6 +136,11 @@ export type MutationParseIngredientArgs = {
 
 export type MutationRegisterArgs = {
   input: UserValidator;
+};
+
+
+export type MutationSearchRecipesArgs = {
+  query: Scalars['String'];
 };
 
 
@@ -333,6 +339,8 @@ export type MeasurementResponseFragment = { __typename?: 'Measurement', quantity
 
 export type ParsedIngredientResponseFragment = { __typename?: 'ParsedIngredient', ingredient: string, alternativeIngredients?: Array<string> | null, hasAlternativeIngredients: boolean, hasAddedMeasurements: boolean, comments?: string | null, measurements?: Array<{ __typename?: 'ParsedMeasurment', quantity?: number | null, quantityRange?: Array<number> | null, isRange: boolean, unit?: string | null, isConverted: boolean }> | null };
 
+export type RecipeCardResponseFragment = { __typename?: 'Recipe', id: string, recipeName: string, prepTime: number, cookTime: number, coverImage: string };
+
 export type RecipeHeaderIngredientResponseFragment = { __typename?: 'RecipeHeaderIngredient', order: number, header: string };
 
 export type RecipeHeaderInstructionResponseFragment = { __typename?: 'RecipeHeaderInstruction', order: number, header: string };
@@ -424,6 +432,13 @@ export type RegisterMutationVariables = Exact<{
 
 
 export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'UserError', errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null, user?: { __typename?: 'User', id: string, email: string, fullName: string, avatarId: string } | null } };
+
+export type SearchRecipesMutationVariables = Exact<{
+  query: Scalars['String'];
+}>;
+
+
+export type SearchRecipesMutation = { __typename?: 'Mutation', searchRecipes: Array<{ __typename?: 'Recipe', id: string, recipeName: string, prepTime: number, cookTime: number, coverImage: string }> };
 
 export type UpdateCookbookMutationVariables = Exact<{
   input: CookbookValidator;
@@ -523,6 +538,15 @@ export const ParsedIngredientResponseFragmentDoc = gql`
     unit
     isConverted
   }
+}
+    `;
+export const RecipeCardResponseFragmentDoc = gql`
+    fragment RecipeCardResponse on Recipe {
+  id
+  recipeName
+  prepTime
+  cookTime
+  coverImage
 }
     `;
 export const MeasurementResponseFragmentDoc = gql`
@@ -738,6 +762,17 @@ export const RegisterDocument = gql`
 
 export function useRegisterMutation() {
   return Urql.useMutation<RegisterMutation, RegisterMutationVariables>(RegisterDocument);
+};
+export const SearchRecipesDocument = gql`
+    mutation SearchRecipes($query: String!) {
+  searchRecipes(query: $query) {
+    ...RecipeCardResponse
+  }
+}
+    ${RecipeCardResponseFragmentDoc}`;
+
+export function useSearchRecipesMutation() {
+  return Urql.useMutation<SearchRecipesMutation, SearchRecipesMutationVariables>(SearchRecipesDocument);
 };
 export const UpdateCookbookDocument = gql`
     mutation UpdateCookbook($input: CookbookValidator!, $updateCookbookId: String!) {

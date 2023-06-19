@@ -38,8 +38,22 @@ const AuthenticatedLinks = [
 const Navbar: React.FC<NavbarProps> = ({ alternate }) => {
   const router = useRouter();
   const [scrolled, setScrolled] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
   const [{ data, fetching }] = useMyUserQuery();
   const authenticated = data?.myUser;
+
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    setSearchValue(e.target.value);
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (searchValue !== "") {
+      router.push(`/search?query=${searchValue}`);
+      setSearchValue("");
+    }
+  };
 
   useEffect(() => {
     const onScroll = () => {
@@ -83,7 +97,13 @@ const Navbar: React.FC<NavbarProps> = ({ alternate }) => {
             </AuthenticatedContainer>
             <AuthenticatedContainer>
               <SearchContainer>
-                <SearchField alternate={alternate && !scrolled} />
+                <form onSubmit={handleSubmit}>
+                  <SearchField
+                    alternate={alternate && !scrolled}
+                    value={searchValue}
+                    onChange={handleSearch}
+                  />
+                </form>
               </SearchContainer>
               <Profile user={data.myUser} fetching={fetching} />
             </AuthenticatedContainer>

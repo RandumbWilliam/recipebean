@@ -2,6 +2,7 @@ import {
   Cascade,
   Collection,
   Entity,
+  Index,
   ManyToMany,
   ManyToOne,
   OneToMany,
@@ -21,6 +22,7 @@ import { RecipeInstruction } from "./recipe_instruction.entity";
 @Entity({ schema: "recipes" })
 export class Recipe extends Base<Recipe> {
   @Field()
+  @Index({ type: "fulltext" })
   @Property()
   public recipeName!: string;
 
