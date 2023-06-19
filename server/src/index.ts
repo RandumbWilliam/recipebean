@@ -10,6 +10,7 @@ import "reflect-metadata";
 import { CookbookResolver } from "resolvers/cookbook.resolver";
 import { IngredientResolver } from "resolvers/ingredient.resolver";
 import { RecipeResolver } from "resolvers/recipe.resolver";
+import { SearchResolver } from "resolvers/search.resolver";
 import { UserResolver } from "resolvers/user.resolver";
 import { buildSchema, registerEnumType } from "type-graphql";
 import { COOKIE_NAME, __prod__ } from "./constants";
@@ -58,6 +59,7 @@ const main = async () => {
         UserResolver,
         CookbookResolver,
         IngredientResolver,
+        SearchResolver,
       ],
       validate: false,
     }),

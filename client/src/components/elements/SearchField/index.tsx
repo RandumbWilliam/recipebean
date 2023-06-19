@@ -5,17 +5,24 @@ import React from "react";
 import Icon from "../Icon";
 import { StyledInputBase } from "./styles";
 
-interface SearchFieldProps {
+interface SearchFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
   className?: string;
   alternate?: boolean;
 }
 
-const SearchField: React.FC<SearchFieldProps> = ({ className, alternate }) => {
+const SearchField: React.FC<SearchFieldProps> = ({
+  className,
+  alternate,
+  value,
+  onChange,
+}) => {
   return (
     <FormControl className={className}>
       <StyledInputBase
         type="text"
         alternate={alternate}
+        value={value}
+        onChange={onChange}
         placeholder="Search"
         startAdornment={
           <InputAdornment position="start">

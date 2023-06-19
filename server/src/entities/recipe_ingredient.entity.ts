@@ -2,6 +2,7 @@ import {
   Cascade,
   Collection,
   Entity,
+  Index,
   ManyToOne,
   OneToMany,
   Property,
@@ -20,6 +21,7 @@ export class RecipeIngredient extends Base<RecipeIngredient> {
   public order: number;
 
   @Field()
+  @Index({ type: "fulltext" })
   @Property()
   public ingredient: string;
 

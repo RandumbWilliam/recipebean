@@ -1,0 +1,7 @@
+fragment RecipeCardResponse on Recipe {
+  id
+  recipeName
+  prepTime
+  cookTime
+  coverImage
+}
