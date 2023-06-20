@@ -1,6 +1,9 @@
+import UserValidator from "@contracts/validators/user.validator";
+import { User } from "@entities/user.entity";
+import { MyContext } from "@utils/interfaces/context.interface";
+import { sendEmail } from "@utils/sendEmails";
+import { validateRegister } from "@utils/validateRegister";
 import argon2 from "argon2";
-import UserValidator from "contracts/validators/user.validator";
-import { User } from "entities/user.entity";
 import {
   Arg,
   Ctx,
@@ -10,9 +13,6 @@ import {
   Query,
   Resolver,
 } from "type-graphql";
-import { MyContext } from "utils/interfaces/context.interface";
-import { sendEmail } from "utils/sendEmails";
-import { validateRegister } from "utils/validateRegister";
 import { v4 } from "uuid";
 import { COOKIE_NAME, FORGET_PASSWORD_PREFIX } from "../constants";
 
@@ -38,7 +38,7 @@ class BooleanError {
   @Field(() => [FieldError], { nullable: true })
   errors?: FieldError[];
 
-  @Field({ nullable: true })
+  @Field(() => Boolean, { nullable: true })
   boolean?: boolean | null;
 }
 
@@ -75,6 +75,8 @@ export class UserResolver {
       email: input.email,
       password: hashedPassword,
       avatarId: input.avatarId,
+      createdAt: new Date(),
+      updatedAt: new Date(),
     });
     await em.persistAndFlush(user);
 
@@ -301,6 +303,7 @@ export class UserResolver {
       return { errors };
     }
 
+    // @ts-ignore
     req.session.destroy((err: any) => {
       res.clearCookie(COOKIE_NAME);
       if (err) {

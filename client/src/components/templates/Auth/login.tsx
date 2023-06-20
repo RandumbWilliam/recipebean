@@ -98,11 +98,7 @@ const LoginTemplate: React.FC<{}> = ({}) => {
                   onChange={() => setRememberPassword(!rememberPassword)}
                   label="Remember Me"
                 />
-                <Link href="/">
-                  <a>
-                    <TextButton>Forgot Password?</TextButton>
-                  </a>
-                </Link>
+                <TextButton type="button">Forgot Password?</TextButton>
               </LoginActions>
             </LoginPasswordContainer>
             <AuthButtons>

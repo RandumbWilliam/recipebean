@@ -1,9 +1,17 @@
-import CookbookValidator from "contracts/validators/cookbook.validator";
-import { Cookbook } from "entities/cookbook.entity";
-import { Recipe } from "entities/recipe.entity";
-import { User } from "entities/user.entity";
-import { Arg, Ctx, Mutation, Query, Resolver } from "type-graphql";
-import { MyContext } from "utils/interfaces/context.interface";
+import CookbookValidator from "@contracts/validators/cookbook.validator";
+import { Cookbook } from "@entities/cookbook.entity";
+import { Recipe } from "@entities/recipe.entity";
+import { User } from "@entities/user.entity";
+import { isAuth } from "@middleware/isAuth";
+import { MyContext } from "@utils/interfaces/context.interface";
+import {
+  Arg,
+  Ctx,
+  Mutation,
+  Query,
+  Resolver,
+  UseMiddleware,
+} from "type-graphql";
 
 @Resolver(() => Cookbook)
 export class CookbookResolver {
@@ -45,6 +53,7 @@ export class CookbookResolver {
 
   // Create Cookbook
   @Mutation(() => Cookbook)
+  @UseMiddleware(isAuth)
   public async createCookbook(
     @Arg("input") input: CookbookValidator,
     @Ctx() { em, req }: MyContext
@@ -58,8 +67,11 @@ export class CookbookResolver {
     const cookbook = em.create(Cookbook, {
       cookbookName: input.cookbookName,
       cookbookCoverId: input.cookbookCoverId,
+      creator: creator,
+      createdAt: new Date(),
+      updatedAt: new Date(),
     });
-    cookbook.creator = creator;
+    // cookbook.creator = creator;
 
     await em.persistAndFlush(cookbook);
 

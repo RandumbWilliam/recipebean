@@ -1,4 +1,9 @@
 import { MikroORM } from "@mikro-orm/core";
+import { CookbookResolver } from "@resolvers/cookbook.resolver";
+import { IngredientResolver } from "@resolvers/ingredient.resolver";
+import { RecipeResolver } from "@resolvers/recipe.resolver";
+import { SearchResolver } from "@resolvers/search.resolver";
+import { UserResolver } from "@resolvers/user.resolver";
 import { ApolloServerPluginLandingPageLocalDefault } from "apollo-server-core";
 import { ApolloServer } from "apollo-server-express";
 import connectRedis from "connect-redis";
@@ -7,13 +12,8 @@ import express from "express";
 import session from "express-session";
 import Redis from "ioredis";
 import "reflect-metadata";
-import { CookbookResolver } from "resolvers/cookbook.resolver";
-import { IngredientResolver } from "resolvers/ingredient.resolver";
-import { RecipeResolver } from "resolvers/recipe.resolver";
-import { SearchResolver } from "resolvers/search.resolver";
-import { UserResolver } from "resolvers/user.resolver";
-import { buildSchema, registerEnumType } from "type-graphql";
-import { COOKIE_NAME, __prod__ } from "./constants";
+import { buildSchema } from "type-graphql";
+import { COOKIE_NAME, SESSION_SECRET, __prod__ } from "./constants";
 import microConfig from "./orm.config";
 
 // registerEnumType(HeaderValue, {
@@ -47,7 +47,7 @@ const main = async () => {
         // sameSite: "none",
       },
       saveUninitialized: false,
-      secret: process.env.SESSION_SECRET,
+      secret: SESSION_SECRET,
       resave: false,
     })
   );

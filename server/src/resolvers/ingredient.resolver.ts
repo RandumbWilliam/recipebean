@@ -1,3 +1,4 @@
+// @ts-nocheck
 import parser from "ingredientparserjs";
 import { Arg, Field, Mutation, ObjectType, Resolver } from "type-graphql";
 

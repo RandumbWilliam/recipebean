@@ -1,16 +1,16 @@
+import RecipeValidator from "@contracts/validators/recipe.validator";
+import { Cookbook } from "@entities/cookbook.entity";
+import { Measurement } from "@entities/measurement.entity";
+import { Recipe } from "@entities/recipe.entity";
+import { RecipeHeaderIngredient } from "@entities/recipe_header_ingredient.entity";
+import { RecipeHeaderInstruction } from "@entities/recipe_header_instruction.entity";
+import { RecipeIngredient } from "@entities/recipe_ingredient.entity";
+import { RecipeInstruction } from "@entities/recipe_instruction.entity";
+import { User } from "@entities/user.entity";
+import { MyContext } from "@utils/interfaces/context.interface";
 import { v2 as cloudinary } from "cloudinary";
-import RecipeValidator from "contracts/validators/recipe.validator";
 import "dotenv-safe/config";
-import { Cookbook } from "entities/cookbook.entity";
-import { Measurement } from "entities/measurement.entity";
-import { Recipe } from "entities/recipe.entity";
-import { RecipeHeaderIngredient } from "entities/recipe_header_ingredient.entity";
-import { RecipeHeaderInstruction } from "entities/recipe_header_instruction.entity";
-import { RecipeIngredient } from "entities/recipe_ingredient.entity";
-import { RecipeInstruction } from "entities/recipe_instruction.entity";
-import { User } from "entities/user.entity";
 import { Arg, Ctx, Mutation, Query, Resolver } from "type-graphql";
-import { MyContext } from "utils/interfaces/context.interface";
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -71,7 +71,7 @@ export class RecipeResolver {
   @Mutation(() => Recipe)
   public async createRecipe(
     @Arg("input") input: RecipeValidator,
-    @Arg("cookbookId", (type) => [String]) cookbookId: string[],
+    @Arg("cookbookId", () => [String]) cookbookId: string[],
     @Ctx() { em, req }: MyContext
   ): Promise<Recipe> {
     const userRepository = em.getRepository(User);
@@ -91,8 +91,11 @@ export class RecipeResolver {
       prepTime: input.prepTime,
       cookTime: input.cookTime,
       coverImage: coverImageUrl.url,
+      creator: creator,
+      createdAt: new Date(),
+      updatedAt: new Date(),
     });
-    recipe.creator = creator;
+    // recipe.creator = creator;
 
     for (const id of cookbookId) {
       const cookbook = await cookbookRepository.findOneOrFail({
@@ -112,8 +115,11 @@ export class RecipeResolver {
         hasAlternativeIngredients: ingredientItem.hasAlternativeIngredients,
         hasAddedMeasurements: ingredientItem.hasAddedMeasurements,
         comments: ingredientItem.comments,
+        recipes: recipe,
+        createdAt: new Date(),
+        updatedAt: new Date(),
       });
-      ingredientEntity.recipes = recipe;
+      // ingredientEntity.recipes = recipe;
 
       await em.persistAndFlush(ingredientEntity);
 
@@ -125,8 +131,11 @@ export class RecipeResolver {
             isRange: meas.isRange,
             unit: meas?.unit,
             isConverted: meas.isConverted,
+            ingredients: ingredientEntity,
+            createdAt: new Date(),
+            updatedAt: new Date(),
           });
-          measurementEntity.ingredients = ingredientEntity;
+          // measurementEntity.ingredients = ingredientEntity;
 
           await em.persistAndFlush(measurementEntity);
         }
@@ -137,8 +146,11 @@ export class RecipeResolver {
       const ingredientHeaderEntity = em.create(RecipeHeaderIngredient, {
         order: ingredientHeaderItem.order,
         header: ingredientHeaderItem.header,
+        recipes: recipe,
+        createdAt: new Date(),
+        updatedAt: new Date(),
       });
-      ingredientHeaderEntity.recipes = recipe;
+      // ingredientHeaderEntity.recipes = recipe;
 
       await em.persistAndFlush(ingredientHeaderEntity);
     }
@@ -148,8 +160,11 @@ export class RecipeResolver {
         order: instructionItem.order,
         instruction: instructionItem.instruction,
         step: instructionItem.step,
+        recipes: recipe,
+        createdAt: new Date(),
+        updatedAt: new Date(),
       });
-      instructionEntity.recipes = recipe;
+      // instructionEntity.recipes = recipe;
 
       await em.persistAndFlush(instructionEntity);
     }
@@ -158,8 +173,11 @@ export class RecipeResolver {
       const instructionHeaderEntity = em.create(RecipeHeaderInstruction, {
         order: instructionHeaderItem.order,
         header: instructionHeaderItem.header,
+        recipes: recipe,
+        createdAt: new Date(),
+        updatedAt: new Date(),
       });
-      instructionHeaderEntity.recipes = recipe;
+      // instructionHeaderEntity.recipes = recipe;
 
       await em.persistAndFlush(instructionHeaderEntity);
     }
@@ -171,7 +189,7 @@ export class RecipeResolver {
   @Mutation(() => Recipe)
   public async updateRecipe(
     @Arg("input") input: RecipeValidator,
-    @Arg("cookbookIds", (type) => [String]) cookbookIds: string[],
+    @Arg("cookbookIds", () => [String]) cookbookIds: string[],
     @Arg("id") id: string,
     @Ctx() { em }: MyContext
   ): Promise<Recipe> {
@@ -238,8 +256,11 @@ export class RecipeResolver {
         hasAlternativeIngredients: ingredientItem.hasAlternativeIngredients,
         hasAddedMeasurements: ingredientItem.hasAddedMeasurements,
         comments: ingredientItem.comments,
+        recipes: recipe,
+        createdAt: new Date(),
+        updatedAt: new Date(),
       });
-      ingredientEntity.recipes = recipe;
+      // ingredientEntity.recipes = recipe;
 
       await em.persistAndFlush(ingredientEntity);
 
@@ -251,6 +272,9 @@ export class RecipeResolver {
             isRange: meas.isRange,
             unit: meas?.unit,
             isConverted: meas.isConverted,
+            ingredients: ingredientEntity,
+            createdAt: new Date(),
+            updatedAt: new Date(),
           });
           measurementEntity.ingredients = ingredientEntity;
 
@@ -263,8 +287,11 @@ export class RecipeResolver {
       const ingredientHeaderEntity = em.create(RecipeHeaderIngredient, {
         order: ingredientHeaderItem.order,
         header: ingredientHeaderItem.header,
+        recipes: recipe,
+        createdAt: new Date(),
+        updatedAt: new Date(),
       });
-      ingredientHeaderEntity.recipes = recipe;
+      // ingredientHeaderEntity.recipes = recipe;
 
       await em.persistAndFlush(ingredientHeaderEntity);
     }
@@ -274,8 +301,11 @@ export class RecipeResolver {
         order: instructionItem.order,
         instruction: instructionItem.instruction,
         step: instructionItem.step,
+        recipes: recipe,
+        createdAt: new Date(),
+        updatedAt: new Date(),
       });
-      instructionEntity.recipes = recipe;
+      // instructionEntity.recipes = recipe;
 
       await em.persistAndFlush(instructionEntity);
     }
@@ -284,8 +314,11 @@ export class RecipeResolver {
       const instructionHeaderEntity = em.create(RecipeHeaderInstruction, {
         order: instructionHeaderItem.order,
         header: instructionHeaderItem.header,
+        recipes: recipe,
+        createdAt: new Date(),
+        updatedAt: new Date(),
       });
-      instructionHeaderEntity.recipes = recipe;
+      // instructionHeaderEntity.recipes = recipe;
 
       await em.persistAndFlush(instructionHeaderEntity);
     }
