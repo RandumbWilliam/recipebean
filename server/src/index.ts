@@ -63,6 +63,7 @@ const main = async () => {
       ],
       validate: false,
     }),
+    introspection: process.env.NODE_ENV !== "production",
     cache: "bounded",
     plugins: [ApolloServerPluginLandingPageLocalDefault({ embed: true })],
     context: ({ req, res }) => ({ em: orm.em.fork(), req, res, redis }),
@@ -75,8 +76,8 @@ const main = async () => {
     cors: { credentials: true, origin: process.env.CORS_ORIGIN },
   });
 
-  app.listen(process.env.SERVER_PORT, () => {
-    console.log("server started on localhost:4000");
+  app.listen({ port: process.env.PORT || 4000 }, () => {
+    console.log(`Server started`);
   });
 };
 
