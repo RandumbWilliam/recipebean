@@ -5,9 +5,8 @@ import "dotenv-safe/config";
 export default {
   driver: PostgreSqlDriver,
   migrations: {
-    path: "./src/migrations",
-    tableName: "migrations",
-    transactional: true,
+    pathTs: "src/migrations",
+    path: "dist/migrations",
   },
   tsNode: process.env.NODE_DEV === "true" ? true : false,
   user: process.env.POSTGRES_USER,
