@@ -29,7 +29,7 @@ const main = async () => {
   const app = express();
 
   let RedisStore = connectRedis(session);
-  let redis = new Redis();
+  let redis = new Redis(process.env.REDIS_URL);
 
   app.set("proxy", 1);
 
