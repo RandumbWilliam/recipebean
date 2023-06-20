@@ -46,9 +46,8 @@ const main = async () => {
       cookie: {
         maxAge: 1000 * 60 * 60 * 24 * 365 * 10, // 10 years
         httpOnly: true,
-        secure: false,
-        sameSite: "lax",
         secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
         domain:
           process.env.NODE_ENV === "production"
             ? ".randumb-recipebean.netlify.app"
