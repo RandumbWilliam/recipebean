@@ -65,8 +65,7 @@ const SignupTemplate: React.FC<{}> = ({}) => {
       <AuthImageContainer>
         <Image src={SignUpImage} alt="Sign Up Image" />
         <AuthImageText>
-          Sign up to save your recipes, <br />
-          ingredients, and many more!
+          Sign up to save your recipes, ingredients, and many more!
         </AuthImageText>
       </AuthImageContainer>
       <AuthContentContainer>

@@ -144,6 +144,10 @@ export const SubHeader = styled.p`
   font-weight: 600;
 `;
 
+export const MobileIngredientContainer = styled.div`
+  margin-bottom: 32px;
+`;
+
 export const IngredientCard = styled.div`
   display: flex;
   flex-direction: column;

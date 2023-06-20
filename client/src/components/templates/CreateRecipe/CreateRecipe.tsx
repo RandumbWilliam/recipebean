@@ -354,14 +354,12 @@ const CreateRecipeTemplate: React.FC<CreateRecipeTemplateProps> = ({
           </InputContainer>
         </FormContainer>
       </CreateRecipeContainer>
-      <StyledModal open={showSaveModal} onClose={() => setShowSaveModal(false)}>
+      <StyledModal
+        open={showSaveModal}
+        onClose={() => setShowSaveModal(false)}
+        title="Add Cookbook"
+      >
         <ModalContainer>
-          <ModalHeader>
-            <ModalTitle>Add Cookbook</ModalTitle>
-            <CloseButton onClick={() => setShowSaveModal(false)}>
-              <Icon name="CloseOutline" size={24} color="#B9BDC3" />
-            </CloseButton>
-          </ModalHeader>
           <StyledFormControl>
             <StyledSelect
               multiple

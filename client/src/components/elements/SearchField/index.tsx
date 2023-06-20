@@ -1,9 +1,8 @@
-import FormControl from "@mui/material/FormControl";
 import InputAdornment from "@mui/material/InputAdornment";
 import { PRIMARY_COLOUR, WHITE_COLOUR } from "@styles/base/colours";
 import React from "react";
 import Icon from "../Icon";
-import { StyledInputBase } from "./styles";
+import { StyledFormContol, StyledInputBase } from "./styles";
 
 interface SearchFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
   className?: string;
@@ -17,7 +16,7 @@ const SearchField: React.FC<SearchFieldProps> = ({
   onChange,
 }) => {
   return (
-    <FormControl className={className}>
+    <StyledFormContol className={className}>
       <StyledInputBase
         type="text"
         alternate={alternate}
@@ -33,7 +32,7 @@ const SearchField: React.FC<SearchFieldProps> = ({
           </InputAdornment>
         }
       />
-    </FormControl>
+    </StyledFormContol>
   );
 };
 
