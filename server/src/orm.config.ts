@@ -1,7 +1,9 @@
 import { MikroORM } from "@mikro-orm/core";
+import { PostgreSqlDriver } from "@mikro-orm/postgresql";
 import "dotenv-safe/config";
 
 export default {
+  driver: PostgreSqlDriver,
   migrations: {
     path: "./src/migrations",
     tableName: "migrations",
