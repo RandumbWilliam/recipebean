@@ -63,6 +63,7 @@ const main = async () => {
       ],
       validate: false,
     }),
+    cache: "bounded",
     plugins: [ApolloServerPluginLandingPageLocalDefault({ embed: true })],
     context: ({ req, res }) => ({ em: orm.em.fork(), req, res, redis }),
   });
