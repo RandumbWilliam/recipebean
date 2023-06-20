@@ -63,7 +63,6 @@ const main = async () => {
       ],
       validate: false,
     }),
-    introspection: process.env.NODE_ENV !== "production",
     cache: "bounded",
     plugins: [ApolloServerPluginLandingPageLocalDefault({ embed: true })],
     context: ({ req, res }) => ({ em: orm.em.fork(), req, res, redis }),
