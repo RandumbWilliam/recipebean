@@ -150,28 +150,6 @@ export const ModalContainer = styled.div`
   }
 `;
 
-export const ModalHeader = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-export const ModalTitle = styled.h2`
-  font-size: 24px;
-  font-weight: 700;
-  margin: 0;
-`;
-
-export const CloseButton = styled.button`
-  background: none;
-  color: inherit;
-  border: none;
-  padding: 0;
-  font: inherit;
-  cursor: pointer;
-  outline: inherit;
-`;
-
 export const ConfirmButton = styled(Button)`
   &&& {
     align-self: flex-end;

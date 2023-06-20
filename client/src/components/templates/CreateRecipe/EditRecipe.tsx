@@ -24,7 +24,6 @@ import Instructions from "./Instructions";
 import { IngredientHeaderSort, InstructionHeaderSort } from "./sorts";
 import {
   AddCookbookButton,
-  CloseButton,
   ConfirmButton,
   CreateRecipeActions,
   CreateRecipeContainer,
@@ -37,8 +36,6 @@ import {
   InputHeader,
   InputHeaderDescriptionContainer,
   ModalContainer,
-  ModalHeader,
-  ModalTitle,
   PreviewImage,
   PreviewImageChangeButton,
   PreviewImageDeleteButton,
@@ -424,14 +421,12 @@ const EditRecipeTemplate: React.FC<EditRecipeTemplateProps> = ({
           </InputContainer>
         </FormContainer>
       </CreateRecipeContainer>
-      <StyledModal open={showSaveModal} onClose={() => setShowSaveModal(false)}>
+      <StyledModal
+        open={showSaveModal}
+        onClose={() => setShowSaveModal(false)}
+        title="Add Cookbook"
+      >
         <ModalContainer>
-          <ModalHeader>
-            <ModalTitle>Add Cookbook</ModalTitle>
-            <CloseButton onClick={() => setShowSaveModal(false)}>
-              <Icon name="CloseOutline" size={24} color="#B9BDC3" />
-            </CloseButton>
-          </ModalHeader>
           <StyledFormControl>
             <StyledSelect
               multiple

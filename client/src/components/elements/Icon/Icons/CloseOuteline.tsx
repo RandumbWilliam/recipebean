@@ -31,8 +31,8 @@ export const CloseOutlineIcon: React.FC<Props> = ({
             id="path1307"
             transform="translate(0 0)"
             fill="none"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           >
             <path
               d="M54,28A26,26,0,1,1,28,2,26,26,0,0,1,54,28Z"
@@ -50,8 +50,8 @@ export const CloseOutlineIcon: React.FC<Props> = ({
             transform="translate(2.586 2.586)"
             fill="none"
             stroke={color}
-            stroke-linecap="round"
-            stroke-width="6"
+            strokeLinecap="round"
+            strokeWidth="6"
             fillRule="evenodd"
           />
           <path
@@ -60,9 +60,9 @@ export const CloseOutlineIcon: React.FC<Props> = ({
             transform="translate(2.586 2.586)"
             fill="none"
             stroke={color}
-            stroke-linecap="round"
-            stroke-width="6"
-            fill-rule="evenodd"
+            strokeLinecap="round"
+            strokeWidth="6"
+            fillRule="evenodd"
           />
         </g>
       </g>

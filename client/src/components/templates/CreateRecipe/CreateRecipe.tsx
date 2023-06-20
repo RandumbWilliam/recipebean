@@ -20,7 +20,6 @@ import Ingredients from "./Ingredients";
 import Instructions from "./Instructions";
 import {
   AddCookbookButton,
-  CloseButton,
   ConfirmButton,
   CreateRecipeContainer,
   CreateRecipeHeader,
@@ -32,8 +31,6 @@ import {
   InputHeader,
   InputHeaderDescriptionContainer,
   ModalContainer,
-  ModalHeader,
-  ModalTitle,
   PreviewImage,
   PreviewImageChangeButton,
   PreviewImageDeleteButton,

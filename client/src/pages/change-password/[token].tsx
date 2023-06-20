@@ -1,8 +1,8 @@
-import { useState } from "react";
 import { NextPage } from "next";
-import { useChangePasswordMutation } from "../../generated/graphql";
-import { useRouter } from "next/router";
 import { withUrqlClient } from "next-urql";
+import { useRouter } from "next/router";
+import { useState } from "react";
+import { useChangePasswordMutation } from "../../generated/graphql";
 import { createUrqlClient } from "../../utils/createUrqlClient";
 
 const initialForm = {
@@ -22,16 +22,17 @@ const ChangePassword: NextPage<{ token: string }> = () => {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    const response = await changePassword({
-      newPassword: formData.newPassword,
-      token: typeof router.query.token === "string" ? router.query.token : "",
-    });
-    if (response.data?.changePassword.errors) {
-      console.log(response.data.changePassword.errors);
-      setErrors(response.data.changePassword.errors[0].message);
-    } else if (response.data?.changePassword.user) {
-      router.push("/");
-    }
+    console.log("Change Password");
+    // const response = await changePassword({
+    //   newPassword: formData.newPassword,
+    //   token: typeof router.query.token === "string" ? router.query.token : "",
+    // });
+    // if (response.data?.changePassword.errors) {
+    //   console.log(response.data.changePassword.errors);
+    //   setErrors(response.data.changePassword.errors[0].message);
+    // } else if (response.data?.changePassword.user) {
+    //   router.push("/");
+    // }
   };
 
   return (
