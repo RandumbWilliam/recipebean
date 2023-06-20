@@ -111,7 +111,6 @@ export class CookbookResolver {
       { populate: ["recipes"] }
     );
     let cookbookRecipes = cookbook.recipes;
-    await cookbookRepository.remove(cookbook).flush();
 
     // Clean Up
     // If the recipe has no more associated cookbooks, it'll delete the recipe entity itself
@@ -125,9 +124,12 @@ export class CookbookResolver {
       cookbookIds = cookbookIds.filter((item) => item !== id);
 
       if (cookbookIds.length === 0) {
-        await recipeRepository.remove(recipeEntity).flush();
+        await recipeRepository.nativeDelete(recipeEntity);
       }
     }
+
+    await recipeRepository.flush();
+    await cookbookRepository.remove(cookbook).flush();
 
     return true;
   }

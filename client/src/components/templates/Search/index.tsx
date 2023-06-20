@@ -33,15 +33,6 @@ const SearchTemplate = () => {
     setSearchValue(e.target.value);
   };
 
-  const handleSearch = async () => {
-    const response = await searchRecipes({ query });
-    if (response.data?.searchRecipes) {
-      setRecipes(response.data.searchRecipes);
-    } else {
-      console.log("No results");
-    }
-  };
-
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (searchValue !== "") {
@@ -50,9 +41,18 @@ const SearchTemplate = () => {
   };
 
   useEffect(() => {
+    const handleSearch = async () => {
+      const response = await searchRecipes({ query });
+      if (response.data?.searchRecipes) {
+        setRecipes(response.data.searchRecipes);
+      } else {
+        console.log("No results");
+      }
+    };
+
     handleSearch();
     setSearchValue(query);
-  }, [query]);
+  }, [query, searchRecipes]);
 
   const recipeCountText = (recipeCount: number) => {
     if (recipeCount > 1) {
