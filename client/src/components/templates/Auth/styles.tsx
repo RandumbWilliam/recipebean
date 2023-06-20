@@ -1,4 +1,5 @@
 import Button from "@components/elements/Button";
+import { BREAKPOINT_LAPTOP } from "@styles/base/breakpoints";
 import { BRINK_PINK_20, ONYX_20, WHITE_COLOUR } from "@styles/base/colours";
 import styled from "styled-components";
 
@@ -7,28 +8,38 @@ export const AuthImageContainer = styled.div`
   height: 100%;
   max-width: 720px;
   padding: 24px;
-  display: flex;
+  display: none;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+
+  @media (min-width: ${BREAKPOINT_LAPTOP}) {
+    display: flex;
+  }
 `;
 
 export const AuthContentContainer = styled.div`
   width: 100%;
-  min-width: 600px;
   padding: 24px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+
+  @media (min-width: ${BREAKPOINT_LAPTOP}) {
+    min-width: 600px;
+  }
 `;
 
 export const AuthImageText = styled.h3`
   color: ${WHITE_COLOUR};
+  text-align: center;
+  max-width: 600px;
 `;
 
 export const AuthCard = styled.div`
-  width: 368px;
+  width: 100%;
+  max-width: 368px;
   display: flex;
   flex-direction: column;
   gap: 32px;

@@ -1,13 +1,20 @@
 import {
+  FONT_SIZE_16,
   FONT_SIZE_18,
   FONT_SIZE_24,
   FONT_SIZE_30,
   FONT_SIZE_36,
   FONT_SIZE_48,
+  FONT_SIZE_60,
   FONT_SIZE_72,
 } from "@styles/base/typography";
 import { createGlobalStyle } from "styled-components";
-import { SECONDARY_COLOUR } from "./colours";
+import {
+  BREAKPOINT_DESKTOP,
+  BREAKPOINT_LAPTOP,
+  BREAKPOINT_TABLET,
+} from "./base/breakpoints";
+import { SECONDARY_COLOUR } from "./base/colours";
 
 export const GlobalStyles = createGlobalStyle`
     *,
@@ -25,14 +32,20 @@ export const GlobalStyles = createGlobalStyle`
     body {
         box-sizing: border-box;
         font-family: 'Outfit', sans-serif;
-        font-size: ${FONT_SIZE_18};
-        line-height: 32px;
+        font-size: ${FONT_SIZE_16};
+        line-height: 28px;
         color: ${SECONDARY_COLOUR};
+
+        @media (min-width: ${BREAKPOINT_TABLET}) {
+            font-size: ${FONT_SIZE_18};
+            line-height: 32px;
+        }
     }
 
     a {
         text-decoration: none;
         color: inherit;
+        line-height: normal;
     }
 
     button, input[type="submit"], input[type="reset"] {
@@ -47,19 +60,35 @@ export const GlobalStyles = createGlobalStyle`
     }
 
     h1 {
-        font-size: ${FONT_SIZE_72};
+        font-size: ${FONT_SIZE_36};
         font-weight: 600;
         line-height: 100%;
+
+        @media (min-width: ${BREAKPOINT_TABLET}) {
+            font-size: ${FONT_SIZE_48};
+        }
+
+        @media (min-width: ${BREAKPOINT_LAPTOP}) {
+            font-size: ${FONT_SIZE_60};
+        }
+
+        @media (min-width: ${BREAKPOINT_DESKTOP}) {
+            font-size: ${FONT_SIZE_72};
+        }
     }
 
     h2 {
-        font-size: ${FONT_SIZE_48};
+        font-size: ${FONT_SIZE_36};
         font-weight: 600;
         line-height: 100%;
+
+        @media (min-width: ${BREAKPOINT_TABLET}) {
+            font-size: ${FONT_SIZE_48};
+        }
     }
 
     h3 {
-        font-size: ${FONT_SIZE_36};
+        font-size: ${FONT_SIZE_30};
         font-weight: 600;
         line-height: 130%;
     }

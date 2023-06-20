@@ -14,13 +14,14 @@ interface IconButtonProps
 
 const IconButton: React.FC<IconButtonProps> = ({
   className,
+  type = "button",
   onClick,
   name,
   size,
   color = PRIMARY_COLOUR,
 }) => {
   return (
-    <StyledIconButton className={className} onClick={onClick}>
+    <StyledIconButton className={className} onClick={onClick} type={type}>
       <Icon name={name} size={size} color={color} />
     </StyledIconButton>
   );

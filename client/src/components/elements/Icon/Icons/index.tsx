@@ -2,6 +2,8 @@ export * from "./AddCookbook";
 export * from "./Basket";
 export * from "./Check";
 export * from "./CheckAlt";
+export * from "./ChevronLeft";
+export * from "./ChevronRight";
 export * from "./CloseOuteline";
 export * from "./Cookbook";
 export * from "./Cross";

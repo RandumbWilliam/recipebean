@@ -1,54 +1,71 @@
 import Logo from "@components/elements/Logo";
 import { Container } from "@mui/material";
+import { BREAKPOINT_MOBILE, BREAKPOINT_TABLET } from "@styles/base/breakpoints";
 import {
   PRIMARY_COLOUR,
   SECONDARY_COLOUR,
   WHITE_COLOUR,
 } from "@styles/base/colours";
-import Image from "next/image";
 import styled from "styled-components";
 
-interface Props {
-  scrolled?: boolean;
+interface NavProps {
   alternate?: boolean;
+  scrolled?: boolean;
 }
 
 interface NavLinkProps {
   pathName: string;
 }
 
-export const Nav = styled.nav<Props>`
+interface MobileProps {
+  open: boolean;
+}
+
+export const Nav = styled.nav<NavProps>`
   position: fixed;
   top: 0;
   width: 100%;
   display: flex;
   align-items: center;
-  height: ${(props) => (props.scrolled ? "80px" : "130px")};
   background: ${(props) =>
     props.scrolled ? "rgba(255,254,253,.98)" : "transparent"};
-  transition: 0.3s;
   z-index: 1000;
 `;
 
-export const NavbarContainer = styled(Container)`
-  &&& {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
+export const NavbarContainer = styled(Container)<NavProps>`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 80px;
+
+  @media (min-width: ${BREAKPOINT_TABLET}) {
+    height: ${(props) => (props.scrolled ? "80px" : "130px")};
+    transition: 0.3s;
   }
 `;
 
-export const NavLogoLink = styled.a``;
+export const AuthNavContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 24px;
+`;
 
-export const NavLogo = styled(Logo)<Props>`
-  height: ${(props) => (props.scrolled ? "45px" : "60px")};
+export const NavLogoLink = styled.a`
+  z-index: 1;
+`;
+
+export const NavLogo = styled(Logo)<NavProps>`
+  height: 35px;
   width: auto;
   transition: 0.3s;
   cursor: pointer;
+
+  @media (min-width: ${BREAKPOINT_TABLET}) {
+    height: ${(props) => (props.scrolled ? "45px" : "55px")};
+  }
 `;
 
-export const NavMenu = styled.ul<Props>`
+export const NavMenu = styled.ul<NavProps>`
   display: flex;
   align-items: center;
   margin: 0 auto;
@@ -108,6 +125,14 @@ export const NavButtons = styled.div`
   button {
     margin: 0 5px;
   }
+
+  @media (min-width: ${BREAKPOINT_MOBILE}) {
+    display: none;
+  }
+
+  @media (min-width: ${BREAKPOINT_TABLET}) {
+    display: block;
+  }
 `;
 
 export const AuthenticatedContainer = styled.div`
@@ -117,5 +142,36 @@ export const AuthenticatedContainer = styled.div`
 `;
 
 export const SearchContainer = styled.div`
-  width: 250px;
+  width: 100%;
+  padding: 0 24px;
+
+  @media (min-width: ${BREAKPOINT_TABLET}) {
+    width: 250px;
+    padding: 0;
+  }
+`;
+
+export const MobileButton = styled.div`
+  z-index: 1;
+
+  @media (min-width: ${BREAKPOINT_TABLET}) {
+    display: none;
+  }
+`;
+
+export const MobileMenu = styled.div<MobileProps>`
+  z-index: 1;
+  background-color: ${WHITE_COLOUR};
+  display: ${(props) => (props.open ? "flex" : "none")};
+  gap: 12px;
+  flex-direction: column;
+  align-items: center;
+  position: fixed;
+  height: 100vh;
+  width: 100%;
+  padding-top: 120px;
+
+  @media (min-width: ${BREAKPOINT_TABLET}) {
+    display: none;
+  }
 `;

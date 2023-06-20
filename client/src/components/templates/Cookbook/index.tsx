@@ -10,12 +10,18 @@ import {
   useUpdateCookbookMutation,
 } from "@generated/graphql";
 import { Grid } from "@mui/material";
+import { BREAKPOINT_TABLET } from "@styles/base/breakpoints";
 import { ONYX_20, WHITE_COLOUR } from "@styles/base/colours";
 import { CookbookCover } from "@utils/cookbooks/cookbookImage";
+import useEmblaCarousel, { EmblaCarouselType } from "embla-carousel-react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
+import { useMediaQuery } from "usehooks-ts";
 import {
+  CarouselContainer,
+  CarouselDot,
+  CarouselDots,
   CookbookContainer,
   CookbookHeader,
   CookbookHeaderContainer,
@@ -23,6 +29,8 @@ import {
   CookbookText,
   CookbookTitle,
   DeleteModal,
+  Embla,
+  EmblaContainer,
   EmptyContainer,
   EmptyText,
   ModalButtons,
@@ -39,15 +47,61 @@ interface CookbookTemplateProps {
 
 const CookbookTemplate: React.FC<CookbookTemplateProps> = ({ cookbook }) => {
   const router = useRouter();
+  const isMobile = useMediaQuery(`(min-width: ${BREAKPOINT_TABLET})`);
+
+  const startIndex = CookbookCover.findIndex((item) => {
+    return item.id === cookbook.cookbookCoverId;
+  });
+
+  const [emblaRef, emblaApi] = useEmblaCarousel({
+    loop: true,
+    startIndex: startIndex,
+  });
+  const [selectedIndex, setSelectedIndex] = useState(startIndex);
+  const [scrollSnaps, setScrollSnaps] = useState<number[]>([]);
+
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
-  // const [title, setTitle] = useState(cookbook.cookbookName);
   const [cookbookName, setCookbookName] = useState(cookbook.cookbookName);
   const [cookbookCoverId, setCookbookCoverId] = useState(
     cookbook.cookbookCoverId
   );
   const [, updateCookbook] = useUpdateCookbookMutation();
   const [, deleteCookbook] = useDeleteCookbookMutation();
+
+  const scrollPrev = useCallback(
+    () => emblaApi && emblaApi.scrollPrev(),
+    [emblaApi]
+  );
+
+  const scrollNext = useCallback(
+    () => emblaApi && emblaApi.scrollNext(),
+    [emblaApi]
+  );
+
+  const scrollTo = useCallback(
+    (index: number) => emblaApi && emblaApi.scrollTo(index),
+    [emblaApi]
+  );
+
+  const onInit = useCallback((emblaApi: EmblaCarouselType) => {
+    setScrollSnaps(emblaApi.scrollSnapList());
+  }, []);
+
+  const onSelect = useCallback((emblaApi: EmblaCarouselType) => {
+    setSelectedIndex(emblaApi.selectedScrollSnap());
+    setCookbookCoverId(CookbookCover[emblaApi.selectedScrollSnap()].id);
+  }, []);
+
+  useEffect(() => {
+    if (!emblaApi) return;
+
+    onInit(emblaApi);
+    onSelect(emblaApi);
+    emblaApi.on("reInit", onInit);
+    emblaApi.on("reInit", onSelect);
+    emblaApi.on("select", onSelect);
+  }, [emblaApi, onInit, onSelect]);
 
   const handleDeleteOpenModal = () => {
     setDeleteModalOpen(!deleteModalOpen);
@@ -92,7 +146,7 @@ const CookbookTemplate: React.FC<CookbookTemplateProps> = ({ cookbook }) => {
 
   if (cookbook.recipes?.length === 0) {
     body = (
-      <Grid item lg={12}>
+      <Grid item xs={12}>
         <EmptyContainer>
           <Icon name="Cookbook" size={102} color="#B9BDC3" />
           <EmptyText>Create a recipe</EmptyText>
@@ -204,23 +258,58 @@ const CookbookTemplate: React.FC<CookbookTemplateProps> = ({ cookbook }) => {
             placeholder="Cookbook Name"
             onChange={handleCookbookName}
           />
-          <Grid container columnSpacing={2} rowSpacing={2}>
-            {CookbookCover.map((cover) => (
-              <Grid key={cover.id} item lg={4}>
-                <ModalCard
-                  imageUrl={cover.src}
-                  selected={cover.id === cookbookCoverId}
-                  onClick={() => setCookbookCoverId(cover.id)}
-                >
-                  {cover.id === cookbookCoverId && (
-                    <ModalCheckmark>
-                      <Icon name="CheckAlt" size={12} color={WHITE_COLOUR} />
-                    </ModalCheckmark>
-                  )}
-                </ModalCard>
-              </Grid>
-            ))}
-          </Grid>
+          {isMobile ? (
+            <Grid container columnSpacing={2} rowSpacing={2}>
+              {CookbookCover.map((cover) => (
+                <Grid key={cover.id} item lg={4}>
+                  <ModalCard
+                    imageUrl={cover.src}
+                    selected={cover.id === cookbookCoverId}
+                    onClick={() => setCookbookCoverId(cover.id)}
+                  >
+                    {cover.id === cookbookCoverId && (
+                      <ModalCheckmark>
+                        <Icon name="CheckAlt" size={12} color={WHITE_COLOUR} />
+                      </ModalCheckmark>
+                    )}
+                  </ModalCard>
+                </Grid>
+              ))}
+            </Grid>
+          ) : (
+            <>
+              <CarouselContainer>
+                <IconButton
+                  type="button"
+                  name="ChevronLeft"
+                  size={42}
+                  onClick={scrollPrev}
+                />
+                <Embla ref={emblaRef}>
+                  <EmblaContainer>
+                    {CookbookCover.map((cover) => (
+                      <ModalCard key={cover.id} imageUrl={cover.src} />
+                    ))}
+                  </EmblaContainer>
+                </Embla>
+                <IconButton
+                  type="button"
+                  name="ChevronRight"
+                  size={42}
+                  onClick={scrollNext}
+                />
+              </CarouselContainer>
+              <CarouselDots>
+                {scrollSnaps.map((_, index) => (
+                  <CarouselDot
+                    key={index}
+                    selected={index === selectedIndex}
+                    onClick={() => scrollTo(index)}
+                  />
+                ))}
+              </CarouselDots>
+            </>
+          )}
           <ModalButtons>
             <Button
               type="button"

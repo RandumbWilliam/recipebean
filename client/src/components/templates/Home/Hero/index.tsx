@@ -17,23 +17,22 @@ interface HeroProps {}
 const Hero: React.FC<HeroProps> = ({}) => {
   return (
     <HeroContainer>
-      <Grid container spacing={12}>
+      <Grid container spacing={{ xs: 6, sm: 2, md: 6, lg: 12 }}>
         <Grid
           item
           display="flex"
           direction="column"
           justifyContent="center"
-          lg={5}
+          sx={{
+            alignItems: { xs: "center", sm: "flex-start" },
+            textAlign: { xs: "center", sm: "left" },
+          }}
+          sm={5}
         >
-          <HeroTitle>
-            The Ultimate
-            <br />
-            Cooking App
-          </HeroTitle>
+          <HeroTitle>The Ultimate Cooking App</HeroTitle>
           <HeroParagraph>
-            Meet the all-in-one cookbook app for recipe saving,
-            <br />
-            meal planning, grocery shopping, and dietary details.
+            Meet the all-in-one cookbook app for recipe saving, meal planning,
+            grocery shopping, and dietary details.
           </HeroParagraph>
           <Link href="/register">
             <a>
@@ -45,7 +44,13 @@ const Hero: React.FC<HeroProps> = ({}) => {
             </a>
           </Link>
         </Grid>
-        <Grid item lg={7}>
+        <Grid
+          item
+          display="flex"
+          direction="column"
+          justifyContent="center"
+          sm={7}
+        >
           <Image src={HeroImage} alt="Hero Image" />
         </Grid>
       </Grid>

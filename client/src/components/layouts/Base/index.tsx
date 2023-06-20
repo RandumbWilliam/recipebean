@@ -1,6 +1,6 @@
+import Navbar from "@components/modules/Navbar";
 import Head from "next/head";
 import React from "react";
-import Navbar from "../../modules/Navbar";
 import { AlternateBackground, Section } from "./styles";
 
 interface BaseLayoutProps {

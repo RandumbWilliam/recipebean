@@ -1,5 +1,5 @@
 import Logo from "@components/elements/Logo";
-import { BRINK_PINK_20 } from "@styles/base/colours";
+import { BREAKPOINT_TABLET } from "@styles/base/breakpoints";
 import styled from "styled-components";
 
 export const AuthSection = styled.section`
@@ -11,7 +11,12 @@ export const AuthSection = styled.section`
 export const NavLogoContainer = styled.div`
   position: absolute;
   top: 40px;
-  left: 80px;
+  left: 20px;
+
+  @media (min-width: ${BREAKPOINT_TABLET}) {
+    top: 40px;
+    left: 80px;
+  }
 `;
 
 export const NavLogoLink = styled.a`

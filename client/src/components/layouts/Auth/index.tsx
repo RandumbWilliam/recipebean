@@ -1,7 +1,9 @@
-import { WHITE_COLOUR } from "@styles/base/colours";
+import { BREAKPOINT_LAPTOP } from "@styles/base/breakpoints";
+import { PRIMARY_COLOUR, WHITE_COLOUR } from "@styles/base/colours";
 import Head from "next/head";
 import Link from "next/link";
 import React from "react";
+import { useMediaQuery } from "usehooks-ts";
 import { AuthSection, NavLogo, NavLogoContainer, NavLogoLink } from "./styles";
 
 interface AuthLayoutProps {
@@ -9,6 +11,8 @@ interface AuthLayoutProps {
 }
 
 const AuthLayout: React.FC<AuthLayoutProps> = ({ children }) => {
+  const isMobile = useMediaQuery(`(min-width: ${BREAKPOINT_LAPTOP})`);
+
   return (
     <>
       <Head>
@@ -17,7 +21,7 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ children }) => {
       <NavLogoContainer>
         <Link href="/">
           <NavLogoLink>
-            <NavLogo color={WHITE_COLOUR} />
+            <NavLogo color={isMobile ? WHITE_COLOUR : PRIMARY_COLOUR} />
           </NavLogoLink>
         </Link>
       </NavLogoContainer>

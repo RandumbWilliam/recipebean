@@ -1,13 +1,14 @@
 import Button from "@components/elements/Button";
 import Input from "@components/elements/Input";
+import Modal from "@components/elements/Modal";
 import {
   Container,
   FormControl,
   InputBase,
   MenuItem,
-  Modal,
   Select,
 } from "@mui/material";
+import { BREAKPOINT_TABLET } from "@styles/base/breakpoints";
 import { ONYX_20, PRIMARY_COLOUR, WHITE_COLOUR } from "@styles/base/colours";
 import { FONT_SIZE_16 } from "@styles/base/typography";
 import styled from "styled-components";
@@ -128,22 +129,25 @@ export const StyledButton = styled(Button)`
 `;
 
 export const StyledModal = styled(Modal)`
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 100%;
+
+  @media (min-width: ${BREAKPOINT_TABLET}) {
+    max-width: 564px;
+  }
 `;
 
 export const ModalContainer = styled.div`
-  width: 564px;
-  min-height: 200px;
-  height: auto;
+  height: 500px;
   background-color: #fff;
   border-radius: 12px;
-  padding: 24px;
   display: flex;
   gap: 24px;
   flex-direction: column;
   justify-content: space-between;
+
+  @media (min-width: ${BREAKPOINT_TABLET}) {
+    height: auto;
+  }
 `;
 
 export const ModalHeader = styled.div`

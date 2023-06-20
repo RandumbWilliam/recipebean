@@ -11,12 +11,14 @@ import {
   useDeleteRecipeMutation,
 } from "@generated/graphql";
 import { Grid } from "@mui/material";
+import { BREAKPOINT_LAPTOP } from "@styles/base/breakpoints";
 import { ONYX_20, WHITE_COLOUR } from "@styles/base/colours";
 import { formatIngredient } from "@utils/ingredient/formatIngredient";
 import { quantityFractionMap } from "@utils/ingredient/quantityFraction";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
+import { useMediaQuery } from "usehooks-ts";
 import {
   IngredientHeaderSort,
   InstructionHeaderSort,
@@ -39,6 +41,7 @@ import {
   InstructionContainer,
   InstructionStep,
   InstructionText,
+  MobileIngredientContainer,
   ModalActions,
   ModalContainer,
   ModalHeader,
@@ -73,6 +76,8 @@ const RecipeTemplate: React.FC<RecipeTemplateProps> = ({ recipe }) => {
     );
 
   const router = useRouter();
+  const isMobile = useMediaQuery(`(min-width: ${BREAKPOINT_LAPTOP})`);
+
   const [checkList, setCheckList] = useState<{ [key: string]: boolean }>(
     initialChecklist
   );
@@ -269,8 +274,12 @@ const RecipeTemplate: React.FC<RecipeTemplateProps> = ({ recipe }) => {
             </RecipeActions>
           </RecipeHeader>
         </RecipeHeaderContainer>
-        <Grid container spacing={3} justifyContent="space-between">
-          <Grid item lg={6}>
+        <Grid
+          container
+          spacing={{ xs: 3, md: 3, lg: 3 }}
+          justifyContent="space-between"
+        >
+          <Grid item sm={12} md={6} lg={6}>
             <CoverPhoto imageUrl={recipe.coverImage} />
             <TimeContainer>
               <Icon name="Stopwatch" color={ONYX_20} size={22} />
@@ -283,43 +292,58 @@ const RecipeTemplate: React.FC<RecipeTemplateProps> = ({ recipe }) => {
                 </TimeText>
               </TimeTextContainer>
             </TimeContainer>
+            {!isMobile && (
+              <MobileIngredientContainer>
+                <Header>Ingredients</Header>
+                <IngredientContainer>{renderIngredients()}</IngredientContainer>
+              </MobileIngredientContainer>
+            )}
             <InstructionContainer>
               <Header>Instructions</Header>
               <StepContainer>{renderInstructions()}</StepContainer>
             </InstructionContainer>
           </Grid>
-          <Grid item lg={5}>
-            <IngredientCard>
-              <Header>Ingredients</Header>
-              <CounterContainer>
-                <Counter
-                  value={servings}
-                  setValue={setServings}
-                  min={1}
-                  max={99}
-                />
-                <TextButton
-                  disabled={
-                    recipe.servings < 2 ||
-                    servings == Math.floor(recipe.servings / 2)
-                  }
-                  onClick={() => setServings(Math.floor(recipe.servings / 2))}
-                >
-                  1/2
-                </TextButton>
-                <TextButton
-                  disabled={
-                    recipe.servings < 4 ||
-                    servings == Math.floor(recipe.servings / 4)
-                  }
-                  onClick={() => setServings(Math.floor(recipe.servings / 4))}
-                >
-                  1/4
-                </TextButton>
-              </CounterContainer>
-              <IngredientContainer>{renderIngredients()}</IngredientContainer>
-            </IngredientCard>
-          </Grid>
+          {isMobile && (
+            <Grid
+              display="flex"
+              justifyContent="flex-end"
+              item
+              xs={5}
+              md={6}
+              lg={5}
+            >
+              <IngredientCard>
+                <Header>Ingredients</Header>
+                <CounterContainer>
+                  <Counter
+                    value={servings}
+                    setValue={setServings}
+                    min={1}
+                    max={99}
+                  />
+                  <TextButton
+                    disabled={
+                      recipe.servings < 2 ||
+                      servings == Math.floor(recipe.servings / 2)
+                    }
+                    onClick={() => setServings(Math.floor(recipe.servings / 2))}
+                  >
+                    1/2
+                  </TextButton>
+                  <TextButton
+                    disabled={
+                      recipe.servings < 4 ||
+                      servings == Math.floor(recipe.servings / 4)
+                    }
+                    onClick={() => setServings(Math.floor(recipe.servings / 4))}
+                  >
+                    1/4
+                  </TextButton>
+                </CounterContainer>
+                <IngredientContainer>{renderIngredients()}</IngredientContainer>
+              </IngredientCard>
+            </Grid>
+          )}
         </Grid>
       </RecipeContainer>
       <StyledModal

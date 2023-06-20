@@ -1,4 +1,6 @@
-import { GlobalStyles } from "@styles/base/base";
+import { ThemeProvider } from "@mui/material/styles";
+import { GlobalStyles } from "@styles/global";
+import { theme } from "@styles/theme";
 import { withUrqlClient } from "next-urql";
 import type { AppProps } from "next/app";
 import Head from "next/head";
@@ -20,7 +22,9 @@ const App = (props: AppProps) => {
           name="viewport"
         />
       </Head>
-      <Component {...pageProps} />
+      <ThemeProvider theme={theme}>
+        <Component {...pageProps} />
+      </ThemeProvider>
     </React.Fragment>
   );
 };

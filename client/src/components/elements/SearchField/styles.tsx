@@ -1,10 +1,16 @@
+import FormControl from "@mui/material/FormControl";
 import InputBase from "@mui/material/InputBase";
+
 import { ONYX_10, WHITE_COLOUR } from "@styles/base/colours";
 import styled from "styled-components";
 
 interface Props {
   alternate?: boolean;
 }
+
+export const StyledFormContol = styled(FormControl)`
+  width: 100%;
+`;
 
 export const StyledInputBase = styled(InputBase)<Props>`
   font: inherit;

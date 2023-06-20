@@ -4,6 +4,8 @@ import {
   BasketIcon,
   CheckAltIcon,
   CheckIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
   CloseOutlineIcon,
   CookbookIcon,
   CrossIcon,
@@ -62,6 +64,8 @@ export const Icons = {
   CheckAlt: CheckAltIcon,
   PenOutline: PenOutlineIcon,
   TrashAlt: TrashAltIcon,
+  ChevronLeft: ChevronLeftIcon,
+  ChevronRight: ChevronRightIcon,
 };
 
 const Icon: React.FC<IconProps> = ({
