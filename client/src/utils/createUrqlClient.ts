@@ -10,8 +10,11 @@ import {
 } from "../generated/graphql";
 import { betterUpdateQuery } from "./betterUpdateQuery";
 
+const API_URL =
+  process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000/graphql";
+
 export const createUrqlClient = (ssrExchange: any) => ({
-  url: "http://localhost:4000/graphql",
+  url: API_URL,
   fetchOptions: {
     credentials: "include" as const,
   },
