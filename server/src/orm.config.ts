@@ -7,6 +7,7 @@ export default {
   migrations: {
     pathTs: "src/migrations",
     path: "dist/migrations",
+    disableForeignKeys: false,
   },
   tsNode: process.env.NODE_DEV === "true" ? true : false,
   user: process.env.POSTGRES_USER,
