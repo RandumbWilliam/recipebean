@@ -176,7 +176,7 @@ const CookbookTemplate: React.FC<CookbookTemplateProps> = ({ cookbook }) => {
             return result.join(" ");
           };
           return (
-            <Grid key={cookbook.id} item lg={4}>
+            <Grid key={cookbook.id} item xs={12} sm={6} md={4}>
               <Link href={`/recipe/${recipe.id}`}>
                 <a>
                   <RecipeCard
