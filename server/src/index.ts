@@ -25,6 +25,9 @@ const main = async () => {
   const orm = await MikroORM.init(microConfig);
   await orm.getMigrator().up();
 
+  const generator = orm.getSchemaGenerator();
+  await generator.updateSchema();
+
   const app = express();
 
   let RedisStore = connectRedis(session);
