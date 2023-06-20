@@ -20,18 +20,18 @@ import microConfig from "./orm.config";
 //   name: "HeaderValue",
 //   description: "Either it is a header or value (ingredient or instructions)",
 // });
+// let redis = new Redis(process.env.REDIS_URL);
 
 const main = async () => {
   const orm = await MikroORM.init(microConfig);
   await orm.getMigrator().up();
 
-  const generator = orm.getSchemaGenerator();
-  await generator.updateSchema();
-
   const app = express();
 
   let RedisStore = connectRedis(session);
-  let redis = new Redis(process.env.REDIS_URL);
+  let redis = new Redis();
+
+  app.set("proxy", 1);
 
   app.use(
     express.json({

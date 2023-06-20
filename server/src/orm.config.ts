@@ -14,7 +14,7 @@ export default {
   dbName: process.env.POSTGRES_DB_NAME,
   host: process.env.POSTGRES_HOST,
   port: process.env.POSTGRES_PORT,
-  entities: ["dist/**/*.entity.js"],
-  entitiesTs: ["src/**/*.entity.ts"],
+  entities: ["dist/entities/*.entity.js"],
+  entitiesTs: ["src/entities/*.entity.ts"],
   type: "postgresql",
 } as Parameters<typeof MikroORM.init>[0];
