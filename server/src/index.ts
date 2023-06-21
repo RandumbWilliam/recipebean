@@ -29,7 +29,7 @@ const main = async () => {
   const app = express();
 
   let RedisStore = connectRedis(session);
-  let redis = new Redis(process.env.REDIS_URL);
+  let redis = new Redis("redis://red-ci8tusmnqql0ldec37dg:6379");
 
   app.set("trust proxy", process.env.NODE_ENV !== "production");
 
@@ -48,10 +48,6 @@ const main = async () => {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: "none",
-        domain:
-          process.env.NODE_ENV === "production"
-            ? ".randumb-recipebean.netlify.app"
-            : undefined,
       },
       saveUninitialized: false,
       secret: SESSION_SECRET,
