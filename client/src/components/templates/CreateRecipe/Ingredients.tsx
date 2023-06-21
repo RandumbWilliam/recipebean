@@ -125,6 +125,7 @@ const Ingredients: React.FC<IngredientsProps> = ({
   const addIngredient = async (e?: React.FormEvent<HTMLFormElement>) => {
     e?.preventDefault();
     const response = await parseIngredient({ strIngredient: ingredientValue });
+    console.log(response);
     if (response.data?.parseIngredient) {
       let parsed = response.data
         .parseIngredient as ParsedIngredientResponseFragment;
