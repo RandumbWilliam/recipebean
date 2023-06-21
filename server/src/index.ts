@@ -31,7 +31,7 @@ const main = async () => {
   let RedisStore = connectRedis(session);
   let redis = new Redis(process.env.REDIS_URL);
 
-  app.set("trust proxy", 1);
+  app.set("trust proxy", process.env.NODE_ENV !== "production");
 
   app.use(
     express.json({
@@ -47,7 +47,7 @@ const main = async () => {
         maxAge: 1000 * 60 * 60 * 24 * 365 * 10, // 10 years
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
+        sameSite: "none",
         domain:
           process.env.NODE_ENV === "production"
             ? ".randumb-recipebean.netlify.app"
