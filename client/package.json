@@ -1,6 +1,7 @@
 {
   "name": "recipebean-web",
   "version": "0.1.0",
+  "description": "Recipebean's client",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -9,6 +10,8 @@
     "lint": "next lint",
     "gen": "graphql-codegen --config codegen.yml"
   },
+  "author": "William Zhen",
+  "license": "MIT",
   "dependencies": {
     "@emotion/react": "^11.11.0",
     "@emotion/styled": "^11.11.0",

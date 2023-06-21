@@ -1,7 +1,7 @@
 {
   "name": "recipebean-server",
   "version": "1.0.0",
-  "description": "",
+  "description": "Recipebean's server",
   "main": "index.js",
   "engines": {
     "node": ">=18.16.0 <19"
@@ -17,8 +17,8 @@
     "create:migration": "mikro-orm migration:create"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "William Zhen",
+  "license": "MIT",
   "devDependencies": {
     "@types/connect-redis": "^0.0.20",
     "@types/cors": "^2.8.13",
