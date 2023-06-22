@@ -138,7 +138,7 @@ const EditRecipeTemplate: React.FC<EditRecipeTemplateProps> = ({
   const [instructions, setInstructions] =
     useState<InstructionHeaderUnion[]>(initialInstructions);
 
-  const [, updateRecipe] = useUpdateRecipeMutation();
+  const [{ fetching }, updateRecipe] = useUpdateRecipeMutation();
 
   const [currentCookbooks, setCurrentCookbooks] = useState<
     { id: string; cookbookName: string }[]
@@ -470,6 +470,7 @@ const EditRecipeTemplate: React.FC<EditRecipeTemplateProps> = ({
           <ConfirmButton
             disabled={cookbookIds.length === 0}
             onClick={saveRecipe}
+            fetching={fetching}
           >
             Confirm
           </ConfirmButton>

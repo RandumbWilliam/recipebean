@@ -50,7 +50,7 @@ const CookbooksTemplate: React.FC<CookbooksTemplateProps> = ({ cookbooks }) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [cookbookName, setcookbookName] = useState("");
   const [cookbookCoverId, setCookbookCoverId] = useState(CookbookCover[0].id);
-  const [, createCookbook] = useCreateCookbookMutation();
+  const [{ fetching }, createCookbook] = useCreateCookbookMutation();
 
   const scrollPrev = useCallback(
     () => emblaApi && emblaApi.scrollPrev(),
@@ -245,7 +245,11 @@ const CookbooksTemplate: React.FC<CookbooksTemplateProps> = ({ cookbooks }) => {
             >
               Cancel
             </Button>
-            <Button type="submit" disabled={cookbookName === ""}>
+            <Button
+              type="submit"
+              disabled={cookbookName === ""}
+              fetching={fetching}
+            >
               Confirm
             </Button>
           </ModalButtons>

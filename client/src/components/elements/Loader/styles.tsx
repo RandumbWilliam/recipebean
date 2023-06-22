@@ -1,5 +1,10 @@
 import styled, { keyframes } from "styled-components";
 
+interface Props {
+  color: string;
+  size: number;
+}
+
 const rotate360 = keyframes`
     0% {
     transform: rotate(0deg);
@@ -9,24 +14,23 @@ const rotate360 = keyframes`
   }
 `;
 
-export const SpinnerFragment = styled.div`
+export const SpinnerFragment = styled.div<Props>`
   box-sizing: border-box;
   display: block;
   position: absolute;
-  width: 64px;
-  height: 64px;
-  margin: 8px;
-  border: 8px solid #ff596d;
-  border-radius: 50%;
+  width: ${(props) => `${props.size}px`};
+  height: ${(props) => `${props.size}px`};
+  border: ${(props) => `${props.size / 8}px`} solid ${(props) => props.color};
+  border-radius: 50vh;
   animation: ${rotate360} 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-  border-color: #ff596d transparent transparent transparent;
+  border-color: ${(props) => props.color} transparent transparent transparent;
 `;
 
-export const Spinner = styled.div`
+export const Spinner = styled.div<Props>`
   display: inline-block;
   position: relative;
-  width: 80px;
-  height: 80px;
+  width: ${(props) => `${props.size}px`};
+  height: ${(props) => `${props.size}px`};
 
   ${SpinnerFragment}:nth-child(1) {
     animation-delay: -0.45s;

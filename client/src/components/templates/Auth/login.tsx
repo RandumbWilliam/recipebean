@@ -34,7 +34,7 @@ const initialForm = {
 
 const LoginTemplate: React.FC<{}> = ({}) => {
   const router = useRouter();
-  const [, login] = useLoginMutation();
+  const [{ fetching }, login] = useLoginMutation();
   const [rememberPassword, setRememberPassword] = useState(false);
   const [formData, setFormData] = useState(initialForm);
   const [errors, setErrors] = useState<FieldError[]>([]);
@@ -102,7 +102,9 @@ const LoginTemplate: React.FC<{}> = ({}) => {
               </LoginActions>
             </LoginPasswordContainer>
             <AuthButtons>
-              <AuthSubmitButton type="submit">Log In</AuthSubmitButton>
+              <AuthSubmitButton type="submit" fetching={fetching}>
+                Log In
+              </AuthSubmitButton>
               <TextDivider>or</TextDivider>
               <AuthGoogleButton primary={false}>
                 <AuthGoogleButtonText>

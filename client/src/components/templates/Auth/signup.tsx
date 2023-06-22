@@ -34,7 +34,7 @@ const initialForm = {
 
 const SignupTemplate: React.FC<{}> = ({}) => {
   const router = useRouter();
-  const [, register] = useRegisterMutation();
+  const [{ fetching }, register] = useRegisterMutation();
   const [formData, setFormData] = useState(initialForm);
   const [errors, setErrors] = useState<FieldError[]>([]);
 
@@ -128,7 +128,9 @@ const SignupTemplate: React.FC<{}> = ({}) => {
               />
             )}
             <AuthButtons>
-              <AuthSubmitButton type="submit">Create Account</AuthSubmitButton>
+              <AuthSubmitButton type="submit" fetching={fetching}>
+                Create Account
+              </AuthSubmitButton>
               <TextDivider>or</TextDivider>
               <AuthGoogleButton primary={false} onClick={handleGoogleSignup}>
                 <AuthGoogleButtonText>

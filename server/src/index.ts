@@ -13,7 +13,7 @@ import session from "express-session";
 import Redis from "ioredis";
 import "reflect-metadata";
 import { buildSchema } from "type-graphql";
-import { COOKIE_NAME, SESSION_SECRET, __prod__ } from "./constants";
+import { COOKIE_NAME, REDIS_URL, SESSION_SECRET, __prod__ } from "./constants";
 import microConfig from "./orm.config";
 
 // registerEnumType(HeaderValue, {
@@ -29,7 +29,7 @@ const main = async () => {
   const app = express();
 
   let RedisStore = connectRedis(session);
-  let redis = new Redis(process.env.REDIS_URL);
+  let redis = new Redis(REDIS_URL);
 
   app.set("trust proxy", true);
 
@@ -47,7 +47,7 @@ const main = async () => {
         maxAge: 1000 * 60 * 60 * 24 * 365 * 10, // 10 years
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
-        sameSite: "none",
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
       },
       saveUninitialized: false,
       secret: SESSION_SECRET,
