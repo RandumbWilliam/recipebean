@@ -210,11 +210,9 @@ export class RecipeResolver {
       }
     );
 
-    await cloudinary.uploader.destroy(recipe.coverImageId);
-
     const coverImageUrl = await cloudinary.uploader.upload(input.coverImage, {
-      folder: process.env.CLOUDINARY_FOLDER,
       public_id: recipe.coverImageId,
+      overwrite: true,
     });
 
     // Remove current ingredients, insturctions, and headers

@@ -273,7 +273,6 @@ const CreateRecipeTemplate: React.FC<CreateRecipeTemplateProps> = ({
     });
 
     if (response.data?.createRecipe) {
-      setFetching(false);
       router.push(`/recipe/${response.data.createRecipe.id}`);
     } else {
       console.log("ERRORS");
