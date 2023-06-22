@@ -131,7 +131,7 @@ export const NavButtons = styled.div`
   }
 
   @media (min-width: ${BREAKPOINT_TABLET}) {
-    display: block;
+    display: flex;
   }
 `;
 
