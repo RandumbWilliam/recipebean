@@ -22,6 +22,9 @@ export const StyledButton = styled.button<Props>`
   height: 48px;
   box-sizing: border-box;
   transition: color 100ms;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
   &:hover {
     background-color: ${(props) =>

@@ -1,4 +1,6 @@
+import { WHITE_COLOUR } from "@styles/base/colours";
 import React from "react";
+import Loader from "../Loader";
 import { StyledButton } from "./styles";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -8,6 +10,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   pill?: boolean;
   disabled?: boolean;
   onClick?: any;
+  fetching?: boolean;
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -17,6 +20,7 @@ const Button: React.FC<ButtonProps> = ({
   primary = true,
   disabled = false,
   onClick,
+  fetching = false,
 }) => {
   return (
     <StyledButton
@@ -24,9 +28,9 @@ const Button: React.FC<ButtonProps> = ({
       type={type}
       primary={primary}
       disabled={disabled}
-      onClick={onClick}
+      onClick={fetching ? () => {} : onClick}
     >
-      {children}
+      {fetching ? <Loader color={WHITE_COLOUR} size={18} /> : <>{children}</>}
     </StyledButton>
   );
 };

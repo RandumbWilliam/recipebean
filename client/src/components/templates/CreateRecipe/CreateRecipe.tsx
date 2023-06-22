@@ -78,7 +78,7 @@ const CreateRecipeTemplate: React.FC<CreateRecipeTemplateProps> = ({
     []
   );
 
-  const [, createRecipe] = useCreateRecipeMutation();
+  const [{ fetching }, createRecipe] = useCreateRecipeMutation();
   const [currentCookbooks, setCurrentCookbooks] =
     useState<{ id: string; cookbookName: string }[]>(initialCookbooks);
   const [cookbookIds, setCookbookIds] = useState<string[]>([]);
@@ -400,6 +400,7 @@ const CreateRecipeTemplate: React.FC<CreateRecipeTemplateProps> = ({
           <ConfirmButton
             disabled={cookbookIds.length === 0}
             onClick={saveRecipe}
+            fetching={fetching}
           >
             Confirm
           </ConfirmButton>

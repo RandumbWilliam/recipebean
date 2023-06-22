@@ -1,5 +1,6 @@
 import Icon from "@components/elements/Icon";
 import IconButton from "@components/elements/IconButton";
+import Skeleton from "@components/elements/Skeleton";
 import TextButton from "@components/elements/TextButton";
 import {
   MeasurementResponseFragment,
@@ -24,6 +25,7 @@ import {
   InputHeaderContainer,
   Item,
   ItemList,
+  SkeletonContainer,
   StyledButton,
   StyledInput,
   SubHeader,
@@ -83,6 +85,7 @@ const Ingredients: React.FC<IngredientsProps> = ({
   const editInputRef = useRef<HTMLFormElement>(null);
 
   const [, parseIngredient] = useParseIngredientMutation();
+  const [fetching, setFetching] = useState(false);
 
   const [currentOrder, setCurrentOrder] = useState(initialOrder);
   const [ingredientValue, setIngredientValue] = useState("");
@@ -90,6 +93,7 @@ const Ingredients: React.FC<IngredientsProps> = ({
 
   const [editIndex, setEditIndex] = useState<number | null>(null);
   const [editValue, setEditValue] = useState<string | null>(null);
+  const [editFetching, setEditFetching] = useState<number | null>(null);
 
   const [reorder, setReorder] = useState(false);
   const [showHeader, setShowHeader] = useState(false);
@@ -124,24 +128,31 @@ const Ingredients: React.FC<IngredientsProps> = ({
 
   const addIngredient = async (e?: React.FormEvent<HTMLFormElement>) => {
     e?.preventDefault();
-    const response = await parseIngredient({ strIngredient: ingredientValue });
-    console.log(response);
-    if (response.data?.parseIngredient) {
-      let parsed = response.data
-        .parseIngredient as ParsedIngredientResponseFragment;
+    setFetching(true);
+    setIngredientValue("");
 
-      let ingredientItem: IngredientHeaderUnion = {
-        type: UnionType.VALUE,
-        value: ingredientParser(parsed, currentOrder),
-      };
+    setTimeout(async () => {
+      const response = await parseIngredient({
+        strIngredient: ingredientValue,
+      });
 
-      setIngredients((oldIngredient) => [...oldIngredient, ingredientItem]);
-      setOriginalString((oldString) => [...oldString, ingredientValue]);
-      setCurrentOrder(currentOrder + 1);
-      setIngredientValue("");
-    } else {
-      console.log("ERROR");
-    }
+      if (response.data?.parseIngredient) {
+        let parsed = response.data
+          .parseIngredient as ParsedIngredientResponseFragment;
+
+        let ingredientItem: IngredientHeaderUnion = {
+          type: UnionType.VALUE,
+          value: ingredientParser(parsed, currentOrder),
+        };
+
+        setFetching(false);
+        setIngredients((oldIngredient) => [...oldIngredient, ingredientItem]);
+        setOriginalString((oldString) => [...oldString, ingredientValue]);
+        setCurrentOrder(currentOrder + 1);
+      } else {
+        console.log("ERROR");
+      }
+    }, 1000);
   };
 
   const addHeader = (e?: React.FormEvent<HTMLFormElement>) => {
@@ -207,21 +218,26 @@ const Ingredients: React.FC<IngredientsProps> = ({
       }
 
       if (type === UnionType.VALUE) {
-        const response = await parseIngredient({
-          strIngredient: editValue,
-        });
-        if (response.data?.parseIngredient) {
-          let parsed = response.data
-            .parseIngredient as ParsedIngredientResponseFragment;
+        setEditFetching(index);
 
-          let ingredientItem: IngredientHeaderUnion = {
-            type: UnionType.VALUE,
-            value: ingredientParser(parsed, value.order),
-          };
+        setTimeout(async () => {
+          const response = await parseIngredient({
+            strIngredient: editValue,
+          });
+          if (response.data?.parseIngredient) {
+            let parsed = response.data
+              .parseIngredient as ParsedIngredientResponseFragment;
 
-          newIngredients[index] = ingredientItem;
-          setIngredients(newIngredients);
-        }
+            let ingredientItem: IngredientHeaderUnion = {
+              type: UnionType.VALUE,
+              value: ingredientParser(parsed, value.order),
+            };
+
+            newIngredients[index] = ingredientItem;
+            setIngredients(newIngredients);
+            setEditFetching(null);
+          }
+        }, 1000);
       }
     }
 
@@ -362,46 +378,54 @@ const Ingredients: React.FC<IngredientsProps> = ({
                       </InputForm>
                     );
                   } else {
-                    return (
-                      <Draggable
-                        key={`ingredient-draggable_${index}`}
-                        draggableId={`ingredient-draggable_${index}`}
-                        index={index}
-                      >
-                        {(provided, snapshot) => (
-                          <Item
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
-                            onClick={() => {
-                              if (!reorder) {
-                                setEditIndex(index);
-                                setEditValue(originalString[index]);
-                              }
-                            }}
-                          >
-                            <SubItem>
+                    if (editFetching === index) {
+                      return (
+                        <SkeletonContainer>
+                          <Skeleton />
+                        </SkeletonContainer>
+                      );
+                    } else {
+                      return (
+                        <Draggable
+                          key={`ingredient-draggable_${index}`}
+                          draggableId={`ingredient-draggable_${index}`}
+                          index={index}
+                        >
+                          {(provided, snapshot) => (
+                            <Item
+                              ref={provided.innerRef}
+                              {...provided.draggableProps}
+                              onClick={() => {
+                                if (!reorder) {
+                                  setEditIndex(index);
+                                  setEditValue(originalString[index]);
+                                }
+                              }}
+                            >
+                              <SubItem>
+                                {reorder && (
+                                  <IconButton
+                                    name="Cross"
+                                    size={12}
+                                    color={ONYX_20}
+                                    onClick={() => deleteIngredient(index)}
+                                  />
+                                )}
+                                {renderIngredient(ingredient)}
+                              </SubItem>
                               {reorder && (
-                                <IconButton
-                                  name="Cross"
-                                  size={12}
-                                  color={ONYX_20}
-                                  onClick={() => deleteIngredient(index)}
-                                />
+                                <DragHandler
+                                  dragging={snapshot.isDragging}
+                                  {...provided.dragHandleProps}
+                                >
+                                  <Icon name="Hamburger" color={ONYX_20} />
+                                </DragHandler>
                               )}
-                              {renderIngredient(ingredient)}
-                            </SubItem>
-                            {reorder && (
-                              <DragHandler
-                                dragging={snapshot.isDragging}
-                                {...provided.dragHandleProps}
-                              >
-                                <Icon name="Hamburger" color={ONYX_20} />
-                              </DragHandler>
-                            )}
-                          </Item>
-                        )}
-                      </Draggable>
-                    );
+                            </Item>
+                          )}
+                        </Draggable>
+                      );
+                    }
                   }
                 })}
                 {provided.placeholder}
@@ -409,6 +433,11 @@ const Ingredients: React.FC<IngredientsProps> = ({
             )}
           </StrictModeDroppable>
         </DragDropContext>
+      )}
+      {fetching && (
+        <SkeletonContainer>
+          <Skeleton />
+        </SkeletonContainer>
       )}
       {showHeader && (
         <InputForm onSubmit={addHeader} autoComplete="off">

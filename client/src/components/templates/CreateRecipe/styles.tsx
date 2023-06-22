@@ -243,3 +243,8 @@ export const PreviewImageChangeButton = styled.button`
   border-radius: 8px;
   background-color: ${WHITE_COLOUR};
 `;
+
+export const SkeletonContainer = styled.div`
+  height: 40px;
+  margin-bottom: 12px;
+`;
