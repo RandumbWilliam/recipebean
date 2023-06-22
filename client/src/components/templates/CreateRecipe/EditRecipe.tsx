@@ -13,7 +13,7 @@ import {
   useUpdateRecipeMutation,
 } from "@generated/graphql";
 import { Divider, SelectChangeEvent } from "@mui/material";
-import { WHITE_COLOUR } from "@styles/base/colours";
+import { ERROR_COLOUR, WHITE_COLOUR } from "@styles/base/colours";
 import { CookbookCover } from "@utils/cookbooks/cookbookImage";
 import { formatIngredient } from "@utils/ingredient/formatIngredient";
 import Link from "next/link";
@@ -52,6 +52,8 @@ import {
   InstructionHeaderUnion,
   UnionType,
 } from "./types";
+
+const MAX_FILE_SIZE = 6 * 1024 * 1024; // 6 MB
 
 interface EditRecipeTemplateProps {
   cookbooks: CookbookResponseFragment[];
@@ -132,13 +134,15 @@ const EditRecipeTemplate: React.FC<EditRecipeTemplateProps> = ({
   );
 
   const [coverImage, setCoverImage] = useState(recipe.coverImage);
+  const [coverImageError, setCoverImageError] = useState(false);
 
   const [ingredients, setIngredients] =
     useState<IngredientHeaderUnion[]>(initialIngredients);
   const [instructions, setInstructions] =
     useState<InstructionHeaderUnion[]>(initialInstructions);
 
-  const [{ fetching }, updateRecipe] = useUpdateRecipeMutation();
+  const [, updateRecipe] = useUpdateRecipeMutation();
+  const [fetching, setFetching] = useState(false);
 
   const [currentCookbooks, setCurrentCookbooks] = useState<
     { id: string; cookbookName: string }[]
@@ -157,12 +161,22 @@ const EditRecipeTemplate: React.FC<EditRecipeTemplateProps> = ({
   const handleCoverImage = (file: File) => {
     const reader = (readFile: File) =>
       new Promise<string>((resolve, reject) => {
+        setCoverImageError(true);
+        if (readFile.size > MAX_FILE_SIZE) {
+          reject(new Error("File size exceeds the maximum limit."));
+          return;
+        }
+        setCoverImageError(false);
         const fileReader = new FileReader();
         fileReader.onload = () => resolve(fileReader.result as string);
         fileReader.readAsDataURL(readFile);
       });
 
-    reader(file).then((result: string) => setCoverImage(result));
+    reader(file)
+      .then((result: string) => setCoverImage(result))
+      .catch((error: Error) => {
+        console.log(error);
+      });
   };
 
   const handleServings = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -240,8 +254,26 @@ const EditRecipeTemplate: React.FC<EditRecipeTemplateProps> = ({
     e.preventDefault();
     if (e.target.files) {
       var file = e.target.files[0];
-      setCoverImage(URL.createObjectURL(file));
-      URL.revokeObjectURL(coverImage);
+      const reader = (readFile: File) =>
+        new Promise<string>((resolve, reject) => {
+          if (readFile.size > MAX_FILE_SIZE) {
+            setCoverImageError(true);
+            reject(new Error("File size exceeds the maximum limit."));
+            return;
+          }
+          setCoverImageError(false);
+          const fileReader = new FileReader();
+          fileReader.onload = () => resolve(fileReader.result as string);
+          fileReader.readAsDataURL(readFile);
+        });
+
+      reader(file)
+        .then((result: string) => setCoverImage(result))
+        .catch((error: Error) => {
+          console.log(error);
+        });
+      // setCoverImage(URL.createObjectURL(file));
+      // URL.revokeObjectURL(coverImage);
     }
   };
 
@@ -262,6 +294,7 @@ const EditRecipeTemplate: React.FC<EditRecipeTemplateProps> = ({
   };
 
   const saveRecipe = async () => {
+    setFetching(true);
     const ingredientValues = ingredients
       .filter((item) => item.type === UnionType.VALUE)
       .map((item) => item.value as RecipeIngredientResponseFragment);
@@ -299,6 +332,7 @@ const EditRecipeTemplate: React.FC<EditRecipeTemplateProps> = ({
     });
 
     if (response.data?.updateRecipe) {
+      setFetching(false);
       router.push(`/recipe/${response.data.updateRecipe.id}`);
     } else {
       console.log(response);
@@ -360,6 +394,11 @@ const EditRecipeTemplate: React.FC<EditRecipeTemplateProps> = ({
               </>
             ) : (
               <Dropzone fileCallback={handleCoverImage} />
+            )}
+            {coverImageError && (
+              <p style={{ color: ERROR_COLOUR }}>
+                File size exceeds the maximum limit.
+              </p>
             )}
           </InputContainer>
           <Ingredients

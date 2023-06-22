@@ -42,6 +42,10 @@ export class Recipe extends Base<Recipe> {
   @Property()
   public coverImage: string;
 
+  @Field()
+  @Property()
+  public coverImageId: string;
+
   @Field(() => [RecipeHeaderIngredient])
   @OneToMany(
     () => RecipeHeaderIngredient,

@@ -91,6 +91,7 @@ export class RecipeResolver {
       prepTime: input.prepTime,
       cookTime: input.cookTime,
       coverImage: coverImageUrl.url,
+      coverImageId: coverImageUrl.public_id,
       creator: creator,
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -209,6 +210,13 @@ export class RecipeResolver {
       }
     );
 
+    await cloudinary.uploader.destroy(recipe.coverImageId);
+
+    const coverImageUrl = await cloudinary.uploader.upload(input.coverImage, {
+      folder: process.env.CLOUDINARY_FOLDER,
+      public_id: recipe.coverImageId,
+    });
+
     // Remove current ingredients, insturctions, and headers
     recipe.recipeIngredient.removeAll();
     recipe.recipeInstruction.removeAll();
@@ -221,6 +229,8 @@ export class RecipeResolver {
       servings: input.servings,
       prepTime: input.prepTime,
       cookTime: input.cookTime,
+      coverImage: coverImageUrl.url,
+      coverImageId: coverImageUrl.public_id,
     });
 
     // Remove all current cookbooks associated with Recipe
@@ -335,6 +345,9 @@ export class RecipeResolver {
     const recipeRepository = em.getRepository(Recipe);
 
     const recipe = await recipeRepository.findOneOrFail({ id });
+
+    await cloudinary.uploader.destroy(recipe.coverImageId);
+
     await recipeRepository.remove(recipe).flush();
 
     return true;
