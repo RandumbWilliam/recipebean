@@ -1,9 +1,11 @@
 import LoginImage from "@assets/LoginImage.png";
 import Checkbox from "@components/elements/Checkbox";
 import Icon from "@components/elements/Icon";
+import IconButton from "@components/elements/IconButton";
 import Input from "@components/elements/Input";
 import TextButton from "@components/elements/TextButton";
 import { FieldError, useLoginMutation } from "@generated/graphql";
+import { ERROR_COLOUR } from "@styles/base/colours";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -12,6 +14,7 @@ import {
   AuthButtons,
   AuthCard,
   AuthContentContainer,
+  AuthErrorContainer,
   AuthErrorText,
   AuthForm,
   AuthGoogleButton,
@@ -42,7 +45,6 @@ const LoginTemplate: React.FC<{}> = ({}) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     setFormData({ ...formData, [e.target.name]: e.target.value });
-    setErrors(errors.filter((error) => error.field !== e.target.name));
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -50,9 +52,14 @@ const LoginTemplate: React.FC<{}> = ({}) => {
     const response = await login(formData);
     if (response.data?.login.errors) {
       setErrors(response.data.login.errors);
+      setFormData({ ...formData, password: "" });
     } else if (response.data?.login.user) {
       router.push("/cookbooks");
     }
+  };
+
+  const handleErrorMessage = () => {
+    setErrors([]);
   };
 
   return (
@@ -74,23 +81,41 @@ const LoginTemplate: React.FC<{}> = ({}) => {
               </Link>
             </AuthText>
           </AuthHeader>
+          {errors && (
+            <>
+              {errors.map((error) => (
+                <AuthErrorContainer key={error.field}>
+                  <AuthErrorText>
+                    <Icon name="Error" color={ERROR_COLOUR} />{" "}
+                    <span>Invalid email or password.</span>
+                  </AuthErrorText>
+                  <IconButton
+                    name="Cross"
+                    color={ERROR_COLOUR}
+                    size={12}
+                    onClick={handleErrorMessage}
+                  />
+                </AuthErrorContainer>
+              ))}
+            </>
+          )}
           <AuthForm noValidate onSubmit={handleSubmit}>
             <Input
               type="email"
               name="email"
               label="Email"
+              value={formData.email}
               placeholder="Enter your email"
               onChange={handleChange}
-              error={errors.some((error) => error.field === "email")}
             />
             <LoginPasswordContainer>
               <Input
                 type="password"
                 name="password"
                 label="Password"
+                value={formData.password}
                 placeholder="Password"
                 onChange={handleChange}
-                error={errors.some((error) => error.field === "password")}
               />
               <LoginActions>
                 <Checkbox
@@ -102,7 +127,11 @@ const LoginTemplate: React.FC<{}> = ({}) => {
               </LoginActions>
             </LoginPasswordContainer>
             <AuthButtons>
-              <AuthSubmitButton type="submit" fetching={fetching}>
+              <AuthSubmitButton
+                type="submit"
+                fetching={fetching}
+                disabled={formData.email === "" || formData.password === ""}
+              >
                 Log In
               </AuthSubmitButton>
               <TextDivider>or</TextDivider>
@@ -114,16 +143,6 @@ const LoginTemplate: React.FC<{}> = ({}) => {
               </AuthGoogleButton>
             </AuthButtons>
           </AuthForm>
-          {errors && (
-            <div>
-              {errors.map((error) => (
-                <AuthErrorText key={error.field}>
-                  <Icon name="Error" color="#ff0033" />{" "}
-                  <span>{error?.message}</span>
-                </AuthErrorText>
-              ))}
-            </div>
-          )}
         </AuthCard>
       </AuthContentContainer>
     </>

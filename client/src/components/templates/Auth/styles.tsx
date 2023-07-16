@@ -1,6 +1,12 @@
 import Button from "@components/elements/Button";
 import { BREAKPOINT_LAPTOP } from "@styles/base/breakpoints";
-import { BRINK_PINK_20, ONYX_20, WHITE_COLOUR } from "@styles/base/colours";
+import {
+  BRINK_PINK_20,
+  ERROR_COLOUR,
+  ERROR_MUTED_COLOR,
+  ONYX_20,
+  WHITE_COLOUR,
+} from "@styles/base/colours";
 import styled from "styled-components";
 
 export const AuthImageContainer = styled.div`
@@ -59,7 +65,6 @@ export const AuthForm = styled.form`
   justify-content: center;
   flex-direction: column;
   border-radius: 30px;
-  margin-bottom: 24px;
   gap: 24px;
 `;
 
@@ -93,8 +98,17 @@ export const AuthGoogleButtonText = styled.span`
   gap: 18px;
 `;
 
+export const AuthErrorContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 8px 16px;
+  border-radius: 8px;
+  background-color: ${ERROR_MUTED_COLOR};
+`;
+
 export const AuthErrorText = styled.span`
-  color: #ff0033;
+  color: ${ERROR_COLOUR};
   display: flex;
   gap: 5px;
   align-items: center;

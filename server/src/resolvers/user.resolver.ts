@@ -99,8 +99,8 @@ export class UserResolver {
     const user = await userRepository.findOne({ email: email });
     if (!user) {
       errors.push({
-        field: "email",
-        message: "User does not exist",
+        field: "login",
+        message: "Invalid email or password.",
       });
       return { errors };
       // console.log("User does not exist");
@@ -110,8 +110,8 @@ export class UserResolver {
     const valid = await argon2.verify(user.password, password);
     if (!valid) {
       errors.push({
-        field: "password",
-        message: "Invalid password",
+        field: "login",
+        message: "Invalid email or password.",
       });
       return { errors };
       // console.log("Wrong Password");

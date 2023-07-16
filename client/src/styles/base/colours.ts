@@ -23,4 +23,5 @@ export const SECONDARY_COLOUR = ONYX_50;
 export const TERTIARY_COLOR = "#F7FAFD";
 export const WHITE_COLOUR = "#FFFFFF";
 export const ERROR_COLOUR = "#ED4337";
+export const ERROR_MUTED_COLOR = "#FAE1DB";
 export const DISABLED_COLOUR = "#D3D3D3";
