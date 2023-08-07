@@ -1,5 +1,9 @@
 import UserValidator from "@contracts/validators/user.validator";
 import { User } from "@entities/user.entity";
+import {
+  resetPasswordEmailHTML,
+  resetPasswordEmailSubject,
+} from "@utils/emails/resetPassword.email";
 import { MyContext } from "@utils/interfaces/context.interface";
 import { sendEmail } from "@utils/sendEmails";
 import { validateRegister } from "@utils/validateRegister";
@@ -230,54 +234,85 @@ export class UserResolver {
   ): Promise<boolean> {
     const userRepository = em.getRepository(User);
 
-    const user = await userRepository.findOne({ email: email });
+    const user = await userRepository.findOne({ email });
     if (!user) {
       return true;
     }
 
-    const token = v4();
+    const ticket = v4();
 
+    // Password Reset expires in 24 hours
     await redis.set(
-      FORGET_PASSWORD_PREFIX + token,
+      FORGET_PASSWORD_PREFIX + ticket,
       user.id,
       "EX",
-      1000 * 60 * 60 * 24 * 3
+      1000 * 60 * 60 * 24
     );
 
-    await sendEmail(
+    const resetLink = `http://localhost:3000/reset-password?ticket=${ticket}`;
+
+    const res = await sendEmail(
       email,
-      `<a href="http://localhost:3000/change-password/${token}">reset password</a>`
+      resetPasswordEmailSubject,
+      resetPasswordEmailHTML(resetLink)
     );
+    console.log(res);
     return true;
   }
 
-  // Change Password
-  @Mutation(() => User)
-  public async changePassword(
-    @Arg("token") token: string,
+  // Reset Password
+  @Mutation(() => UserError)
+  public async resetPassword(
+    @Arg("ticket") ticket: string,
     @Arg("newPassword") newPassword: string,
+    @Arg("confirmPassword") confirmPassword: string,
     @Ctx() { em, req, redis }: MyContext
-  ): Promise<User> {
+  ): Promise<UserError> {
     const userRepository = em.getRepository(User);
 
-    const userId = await redis.get(FORGET_PASSWORD_PREFIX + token);
+    const userId = await redis.get(FORGET_PASSWORD_PREFIX + ticket);
     if (!userId) {
-      throw new Error("Token expired");
+      return {
+        errors: [
+          {
+            field: "ticket",
+            message: "Link Expired",
+          },
+        ],
+      };
     }
 
     const user = await userRepository.findOne({ id: userId });
     if (!user) {
-      throw new Error("User no longer exists");
+      return {
+        errors: [
+          {
+            field: "ticket",
+            message: "User no longer exists",
+          },
+        ],
+      };
+    }
+
+    if (confirmPassword !== newPassword) {
+      return {
+        errors: [
+          {
+            field: "confirmPassword",
+            message: "Passwords do not match",
+          },
+        ],
+      };
     }
 
     user.password = await argon2.hash(newPassword);
-    await userRepository.persistAndFlush(user);
+    await em.persistAndFlush(user);
 
-    await redis.del(FORGET_PASSWORD_PREFIX + token);
+    await redis.del(FORGET_PASSWORD_PREFIX + ticket);
 
-    req.session.userId = user.id;
+    req.session!.userId = user.id;
 
-    return user;
+    return { user };
   }
 
   // Delete User

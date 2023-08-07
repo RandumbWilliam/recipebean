@@ -66,7 +66,6 @@ export type MeasurmentValidator = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  changePassword: User;
   createCookbook: Cookbook;
   createRecipe: Recipe;
   deleteCookbook: Scalars['Boolean'];
@@ -77,18 +76,13 @@ export type Mutation = {
   logout: Scalars['Boolean'];
   parseIngredient: ParsedIngredient;
   register: UserError;
+  resetPassword: UserError;
   searchRecipes: Array<Recipe>;
   updateCookbook: Cookbook;
   updatePDP: UserError;
   updatePassword: UserError;
   updateRecipe: Recipe;
   updateUser: UserError;
-};
-
-
-export type MutationChangePasswordArgs = {
-  newPassword: Scalars['String'];
-  token: Scalars['String'];
 };
 
 
@@ -136,6 +130,13 @@ export type MutationParseIngredientArgs = {
 
 export type MutationRegisterArgs = {
   input: UserValidator;
+};
+
+
+export type MutationResetPasswordArgs = {
+  confirmPassword: Scalars['String'];
+  newPassword: Scalars['String'];
+  ticket: Scalars['String'];
 };
 
 
@@ -217,6 +218,7 @@ export type Recipe = {
   cookTime: Scalars['Float'];
   cookbooks: Array<Cookbook>;
   coverImage: Scalars['String'];
+  coverImageId: Scalars['String'];
   createdAt: Scalars['DateTime'];
   id: Scalars['ID'];
   prepTime: Scalars['Float'];
@@ -355,14 +357,6 @@ export type UserErrorResponseFragment = { __typename?: 'UserError', errors?: Arr
 
 export type UserResponseFragment = { __typename?: 'User', id: string, email: string, fullName: string, avatarId: string };
 
-export type ChangePasswordMutationVariables = Exact<{
-  newPassword: Scalars['String'];
-  token: Scalars['String'];
-}>;
-
-
-export type ChangePasswordMutation = { __typename?: 'Mutation', changePassword: { __typename?: 'User', id: string, email: string, fullName: string } };
-
 export type CreateCookbookMutationVariables = Exact<{
   input: CookbookValidator;
 }>;
@@ -432,6 +426,15 @@ export type RegisterMutationVariables = Exact<{
 
 
 export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'UserError', errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null, user?: { __typename?: 'User', id: string, email: string, fullName: string, avatarId: string } | null } };
+
+export type ResetPasswordMutationVariables = Exact<{
+  newPassword: Scalars['String'];
+  confirmPassword: Scalars['String'];
+  ticket: Scalars['String'];
+}>;
+
+
+export type ResetPasswordMutation = { __typename?: 'Mutation', resetPassword: { __typename?: 'UserError', errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null, user?: { __typename?: 'User', id: string, email: string, fullName: string, avatarId: string } | null } };
 
 export type SearchRecipesMutationVariables = Exact<{
   query: Scalars['String'];
@@ -643,19 +646,6 @@ export const UserErrorResponseFragmentDoc = gql`
 }
     ${ErrorResponseFragmentDoc}
 ${UserResponseFragmentDoc}`;
-export const ChangePasswordDocument = gql`
-    mutation ChangePassword($newPassword: String!, $token: String!) {
-  changePassword(newPassword: $newPassword, token: $token) {
-    id
-    email
-    fullName
-  }
-}
-    `;
-
-export function useChangePasswordMutation() {
-  return Urql.useMutation<ChangePasswordMutation, ChangePasswordMutationVariables>(ChangePasswordDocument);
-};
 export const CreateCookbookDocument = gql`
     mutation CreateCookbook($input: CookbookValidator!) {
   createCookbook(input: $input) {
@@ -762,6 +752,21 @@ export const RegisterDocument = gql`
 
 export function useRegisterMutation() {
   return Urql.useMutation<RegisterMutation, RegisterMutationVariables>(RegisterDocument);
+};
+export const ResetPasswordDocument = gql`
+    mutation ResetPassword($newPassword: String!, $confirmPassword: String!, $ticket: String!) {
+  resetPassword(
+    newPassword: $newPassword
+    confirmPassword: $confirmPassword
+    ticket: $ticket
+  ) {
+    ...UserErrorResponse
+  }
+}
+    ${UserErrorResponseFragmentDoc}`;
+
+export function useResetPasswordMutation() {
+  return Urql.useMutation<ResetPasswordMutation, ResetPasswordMutationVariables>(ResetPasswordDocument);
 };
 export const SearchRecipesDocument = gql`
     mutation SearchRecipes($query: String!) {

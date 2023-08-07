@@ -7,6 +7,7 @@ import {
   MyUserDocument,
   MyUserQuery,
   RegisterMutation,
+  ResetPasswordMutation,
 } from "../generated/graphql";
 import { betterUpdateQuery } from "./betterUpdateQuery";
 
@@ -80,6 +81,22 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
                   } else {
                     return {
                       myUser: result.register.user,
+                    };
+                  }
+                }
+              );
+            },
+            resetPassword: (_result, args, cache, info) => {
+              betterUpdateQuery<ResetPasswordMutation, MyUserQuery>(
+                cache,
+                { query: MyUserDocument },
+                _result,
+                (result, query) => {
+                  if (result.resetPassword.errors) {
+                    return query;
+                  } else {
+                    return {
+                      myUser: result.resetPassword.user,
                     };
                   }
                 }

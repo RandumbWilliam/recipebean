@@ -2,7 +2,13 @@ import { useRouter } from "next/router";
 import Load from "../components/modules/Load";
 import { useMyUserQuery } from "../generated/graphql";
 
-const unprotectRoutes = ["/login", "/", "/register"];
+const unprotectRoutes = [
+  "/login",
+  "/",
+  "/register",
+  "/reset-password",
+  "/forgot-password",
+];
 
 export const withAuth = (Component: any) => {
   const Auth = (props: any) => {

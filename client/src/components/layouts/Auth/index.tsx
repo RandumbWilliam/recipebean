@@ -16,7 +16,7 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ children }) => {
   return (
     <>
       <Head>
-        <title>Recipebean | Authentication</title>
+        <title>Recipebean</title>
       </Head>
       <NavLogoContainer>
         <Link href="/">

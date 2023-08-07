@@ -17,6 +17,7 @@ const TextButton: React.FC<TextButtonProps> = ({
   onClick,
   disabled = false,
   color = PRIMARY_COLOUR,
+  type,
 }) => {
   return (
     <StyledTextButton
@@ -24,6 +25,7 @@ const TextButton: React.FC<TextButtonProps> = ({
       onClick={onClick}
       disabled={disabled}
       color={color}
+      type={type}
     >
       {children}
     </StyledTextButton>

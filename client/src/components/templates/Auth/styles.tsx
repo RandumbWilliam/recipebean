@@ -7,6 +7,7 @@ import {
   ONYX_20,
   WHITE_COLOUR,
 } from "@styles/base/colours";
+import { FONT_SIZE_16 } from "@styles/base/typography";
 import styled from "styled-components";
 
 export const AuthImageContainer = styled.div`
@@ -68,6 +69,8 @@ export const AuthForm = styled.form`
   gap: 24px;
 `;
 
+export const AuthActions = styled.div``;
+
 export const AuthButtons = styled.div`
   display: flex;
   flex-direction: column;
@@ -120,6 +123,8 @@ export const TextDivider = styled.div`
   align-items: center;
   letter-spacing: 0.1em;
   color: ${ONYX_20};
+  text-transform: uppercase;
+  font-size: ${FONT_SIZE_16};
 
   &::before,
   ::after {
@@ -141,7 +146,7 @@ export const TextDivider = styled.div`
 export const LoginActions = styled.div`
   display: flex;
   justify-content: space-between;
-  margin-top: 8px;
+  margin-top: 16px;
 `;
 
 export const LoginPasswordContainer = styled.div`
