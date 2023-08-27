@@ -1,8 +1,8 @@
-import BreakfastImage from "@assets/cookbooks/Breakfast.png";
-import DessertImage from "@assets/cookbooks/Dessert.png";
-import DinnerImage from "@assets/cookbooks/Dinner.png";
-import LunchImage from "@assets/cookbooks/Lunch.png";
-import SoupImage from "@assets/cookbooks/Soup.png";
+import BreakfastImage from "@assets/cookbooks/Breakfast.jpg";
+import DessertImage from "@assets/cookbooks/Dessert.jpg";
+import DinnerImage from "@assets/cookbooks/Dinner.jpg";
+import LunchImage from "@assets/cookbooks/Lunch.jpg";
+import SoupImage from "@assets/cookbooks/Soup.jpg";
 
 export const CookbookCover = [
   { id: "0", name: "breakfast", src: BreakfastImage.src },
