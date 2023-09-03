@@ -1,9 +1,11 @@
 import SignUpImage from "@assets/SignUpImage.png";
 import ErrorMessage from "@components/elements/ErrorMessage";
 import Icon from "@components/elements/Icon";
+import IconButton from "@components/elements/IconButton";
 import Input from "@components/elements/Input";
 import TextButton from "@components/elements/TextButton";
 import { FieldError, useRegisterMutation } from "@generated/graphql";
+import { ERROR_COLOUR } from "@styles/base/colours";
 import { Avatars } from "@utils/avatars/avatars";
 import Image from "next/image";
 import Link from "next/link";
@@ -13,6 +15,8 @@ import {
   AuthButtons,
   AuthCard,
   AuthContentContainer,
+  AuthErrorContainer,
+  AuthErrorText,
   AuthForm,
   AuthGoogleButton,
   AuthGoogleButtonText,
@@ -56,6 +60,10 @@ const SignupTemplate: React.FC<{}> = ({}) => {
     }
   };
 
+  const handleErrorMessage = () => {
+    setErrors([]);
+  };
+
   const handleGoogleSignup = () => {
     console.log("Google Log In");
   };
@@ -81,54 +89,52 @@ const SignupTemplate: React.FC<{}> = ({}) => {
               </Link>
             </AuthText>
           </AuthHeader>
+          {errors.length > 0 && (
+            <AuthErrorContainer key={errors[0].field}>
+              <AuthErrorText>
+                <Icon name="Error" color={ERROR_COLOUR} />{" "}
+                <span>{errors[0].message}</span>
+              </AuthErrorText>
+              <IconButton
+                name="Cross"
+                color={ERROR_COLOUR}
+                size={12}
+                onClick={handleErrorMessage}
+              />
+            </AuthErrorContainer>
+          )}
           <AuthForm noValidate onSubmit={handleSubmit}>
             <Input
               type="text"
               name="fullName"
               label="Full Name"
               placeholder="Full Name"
-              error={errors.some((error) => error.field === "fullName")}
               onChange={handleChange}
             />
-            {errors.some((error) => error.field === "fullName") && (
-              <ErrorMessage
-                message={
-                  errors.find((error) => error.field === "fullName")?.message
-                }
-              />
-            )}
             <Input
               type="email"
               name="email"
               label="Email"
               placeholder="example@hotmail.com"
-              error={errors.some((error) => error.field === "email")}
               onChange={handleChange}
             />
-            {errors.some((error) => error.field === "email") && (
-              <ErrorMessage
-                message={
-                  errors.find((error) => error.field === "email")?.message
-                }
-              />
-            )}
             <Input
               type="password"
               name="password"
               label="Password"
               placeholder="At least 8 characters"
-              error={errors.some((error) => error.field === "password")}
               onChange={handleChange}
             />
-            {errors.some((error) => error.field === "password") && (
-              <ErrorMessage
-                message={
-                  errors.find((error) => error.field === "password")?.message
-                }
-              />
-            )}
             <AuthButtons>
-              <AuthSubmitButton type="submit" fetching={fetching}>
+              <AuthSubmitButton
+                type="submit"
+                fetching={fetching}
+                disabled={
+                  formData.fullName === "" ||
+                  formData.email === "" ||
+                  formData.password === ""
+                }
+              >
                 Create Account
               </AuthSubmitButton>
               <TextDivider>or</TextDivider>

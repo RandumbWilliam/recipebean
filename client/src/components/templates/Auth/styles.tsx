@@ -46,7 +46,7 @@ export const AuthImageText = styled.h3`
 
 export const AuthCard = styled.div`
   width: 100%;
-  max-width: 368px;
+  max-width: 420px;
   display: flex;
   flex-direction: column;
   gap: 32px;
