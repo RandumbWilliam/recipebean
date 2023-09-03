@@ -17,6 +17,7 @@ import {
 export class CookbookResolver {
   // Fetch All Cookbooks for User
   @Query(() => [Cookbook])
+  @UseMiddleware(isAuth)
   public async getCookbooks(
     @Ctx() { em, req }: MyContext
   ): Promise<Cookbook[]> {
@@ -36,6 +37,7 @@ export class CookbookResolver {
 
   // Fetch Cookbook by Id
   @Query(() => Cookbook)
+  @UseMiddleware(isAuth)
   public async getCookbook(
     @Arg("id") id: string,
     @Ctx() { em }: MyContext
@@ -80,6 +82,7 @@ export class CookbookResolver {
 
   // Update Cookbook Name
   @Mutation(() => Cookbook)
+  @UseMiddleware(isAuth)
   public async updateCookbook(
     @Arg("id") id: string,
     @Arg("input") input: CookbookValidator,
@@ -99,6 +102,7 @@ export class CookbookResolver {
 
   // Delete Cookbook
   @Mutation(() => Boolean)
+  @UseMiddleware(isAuth)
   public async deleteCookbook(
     @Arg("id") id: string,
     @Ctx() { em }: MyContext

@@ -1,6 +1,14 @@
 // @ts-nocheck
+import { isAuth } from "@middleware/isAuth";
 import parser from "ingredientparserjs";
-import { Arg, Field, Mutation, ObjectType, Resolver } from "type-graphql";
+import {
+  Arg,
+  Field,
+  Mutation,
+  ObjectType,
+  Resolver,
+  UseMiddleware,
+} from "type-graphql";
 
 @ObjectType()
 class ParsedMeasurment {
@@ -44,6 +52,7 @@ class ParsedIngredient {
 @Resolver(() => ParsedIngredient)
 export class IngredientResolver {
   @Mutation(() => ParsedIngredient)
+  @UseMiddleware(isAuth)
   public async parseIngredient(
     @Arg("strIngredient") strIngredient: string
   ): Promise<ParsedIngredient | null> {
