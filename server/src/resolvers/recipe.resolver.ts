@@ -7,10 +7,18 @@ import { RecipeHeaderInstruction } from "@entities/recipe_header_instruction.ent
 import { RecipeIngredient } from "@entities/recipe_ingredient.entity";
 import { RecipeInstruction } from "@entities/recipe_instruction.entity";
 import { User } from "@entities/user.entity";
+import { isAuth } from "@middleware/isAuth";
 import { MyContext } from "@utils/interfaces/context.interface";
 import { v2 as cloudinary } from "cloudinary";
 import "dotenv-safe/config";
-import { Arg, Ctx, Mutation, Query, Resolver } from "type-graphql";
+import {
+  Arg,
+  Ctx,
+  Mutation,
+  Query,
+  Resolver,
+  UseMiddleware,
+} from "type-graphql";
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -22,6 +30,7 @@ cloudinary.config({
 export class RecipeResolver {
   // Fetch All Recipes for User
   @Query(() => [Recipe])
+  @UseMiddleware(isAuth)
   public async getRecipes(@Ctx() { em, req }: MyContext): Promise<Recipe[]> {
     const recipeRepository = em.getRepository(Recipe);
     const userRepository = em.getRepository(User);
@@ -45,6 +54,7 @@ export class RecipeResolver {
 
   // Fetch Recipe by Id
   @Query(() => Recipe, { nullable: true })
+  @UseMiddleware(isAuth)
   public async getRecipe(
     @Arg("id") id: string,
     @Ctx() { em }: MyContext
@@ -69,6 +79,7 @@ export class RecipeResolver {
 
   // Create Recipe
   @Mutation(() => Recipe)
+  @UseMiddleware(isAuth)
   public async createRecipe(
     @Arg("input") input: RecipeValidator,
     @Arg("cookbookId", () => [String]) cookbookId: string[],
@@ -188,6 +199,7 @@ export class RecipeResolver {
 
   // Update Recipe
   @Mutation(() => Recipe)
+  @UseMiddleware(isAuth)
   public async updateRecipe(
     @Arg("input") input: RecipeValidator,
     @Arg("cookbookIds", () => [String]) cookbookIds: string[],
@@ -336,6 +348,7 @@ export class RecipeResolver {
 
   // Delete Recipe
   @Mutation(() => Boolean)
+  @UseMiddleware(isAuth)
   public async deleteRecipe(
     @Arg("id") id: string,
     @Ctx() { em }: MyContext

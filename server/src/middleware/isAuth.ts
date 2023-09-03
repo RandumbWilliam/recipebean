@@ -3,7 +3,7 @@ import { MyContext } from "utils/interfaces/context.interface";
 
 export const isAuth: MiddlewareFn<MyContext> = ({ context }, next) => {
   if (!context.req.session.userId) {
-    throw new Error("new authenticated");
+    throw new Error("Unauthenticated");
   }
 
   return next();

@@ -1,5 +1,6 @@
 import UserValidator from "@contracts/validators/user.validator";
 import { User } from "@entities/user.entity";
+import { isAuth } from "@middleware/isAuth";
 import {
   resetPasswordEmailHTML,
   resetPasswordEmailSubject,
@@ -16,6 +17,7 @@ import {
   ObjectType,
   Query,
   Resolver,
+  UseMiddleware,
 } from "type-graphql";
 import { v4 } from "uuid";
 import { COOKIE_NAME, FORGET_PASSWORD_PREFIX } from "../constants";
@@ -145,6 +147,7 @@ export class UserResolver {
 
   // Update PDP
   @Mutation(() => UserError)
+  @UseMiddleware(isAuth)
   public async updatePDP(
     @Arg("avatarId") avatarId: string,
     @Ctx() { em, req }: MyContext
@@ -165,6 +168,7 @@ export class UserResolver {
 
   // Update Personal Information
   @Mutation(() => UserError)
+  @UseMiddleware(isAuth)
   public async updateUser(
     @Arg("fullName") fullName: string,
     @Arg("email") email: string,
@@ -187,6 +191,7 @@ export class UserResolver {
 
   // Update Password
   @Mutation(() => UserError)
+  @UseMiddleware(isAuth)
   public async updatePassword(
     @Arg("oldPassword") oldPassword: string,
     @Arg("newPassword") newPassword: string,
@@ -317,6 +322,7 @@ export class UserResolver {
 
   // Delete User
   @Mutation(() => BooleanError)
+  @UseMiddleware(isAuth)
   public async deleteUser(
     @Arg("password") password: string,
     @Ctx() { em, req, res }: MyContext
