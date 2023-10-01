@@ -1,10 +1,13 @@
 import LoginImage from "@assets/LoginImage.png";
-import Checkbox from "@components/elements/Checkbox";
 import Icon from "@components/elements/Icon";
 import IconButton from "@components/elements/IconButton";
 import Input from "@components/elements/Input";
 import TextButton from "@components/elements/TextButton";
-import { FieldError, useLoginMutation } from "@generated/graphql";
+import {
+  FieldError,
+  useGoogleOAuthRequestMutation,
+  useLoginMutation,
+} from "@generated/graphql";
 import { ERROR_COLOUR } from "@styles/base/colours";
 import Image from "next/image";
 import Link from "next/link";
@@ -41,6 +44,7 @@ const LoginTemplate: React.FC<{}> = ({}) => {
   // const [rememberPassword, setRememberPassword] = useState(false);
   const [formData, setFormData] = useState(initialForm);
   const [errors, setErrors] = useState<FieldError[]>([]);
+  const [{}, googleAuth] = useGoogleOAuthRequestMutation();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -64,6 +68,12 @@ const LoginTemplate: React.FC<{}> = ({}) => {
 
   const handleErrorMessage = () => {
     setErrors([]);
+  };
+
+  const handleGoogleAuth = async () => {
+    const { data } = await googleAuth();
+    const url = data!.googleOAuthRequest;
+    window.location.href = url;
   };
 
   return (
@@ -141,7 +151,7 @@ const LoginTemplate: React.FC<{}> = ({}) => {
                 Log In
               </AuthSubmitButton>
               <TextDivider>or</TextDivider>
-              <AuthGoogleButton primary={false}>
+              <AuthGoogleButton primary={false} onClick={handleGoogleAuth}>
                 <AuthGoogleButtonText>
                   <Icon name="Google" size={22} />
                   Continue with Google

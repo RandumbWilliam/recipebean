@@ -4,12 +4,14 @@ import { IngredientResolver } from "@resolvers/ingredient.resolver";
 import { RecipeResolver } from "@resolvers/recipe.resolver";
 import { SearchResolver } from "@resolvers/search.resolver";
 import { UserResolver } from "@resolvers/user.resolver";
+import { MyContext } from "@utils/interfaces/context.interface";
 import { ApolloServerPluginLandingPageLocalDefault } from "apollo-server-core";
 import { ApolloServer } from "apollo-server-express";
 import connectRedis from "connect-redis";
 import "dotenv-safe/config";
 import express from "express";
 import session from "express-session";
+import { request } from "graphql-request";
 import Redis from "ioredis";
 import "reflect-metadata";
 import { buildSchema } from "type-graphql";
@@ -78,6 +80,26 @@ const main = async () => {
     app,
     cors: { credentials: true, origin: process.env.CORS_ORIGIN },
   });
+
+  app.get(
+    "/googleOAuthUser",
+    async (req: MyContext["req"], res: MyContext["res"]) => {
+      const baseUrl = `${req.protocol}://${req.get("host")}`;
+      const { code } = req.query;
+      const { googleOAuthUser } = await request<{ googleOAuthUser: string }>(
+        `${baseUrl}/graphql`,
+        `mutation Mutation($code: String!) {
+        googleOAuthUser(code: $code)
+      }`,
+        { code: code }
+      );
+      req.session!.userId = googleOAuthUser;
+
+      // res.json({ redirectUrl: `${process.env.CORS_ORIGIN}/cookbooks` });
+      res.redirect(303, `${process.env.CORS_ORIGIN}/cookbooks`);
+      // res.end();
+    }
+  );
 
   app.listen({ port: process.env.PORT || 4000 }, () => {
     console.log(`Server started`);

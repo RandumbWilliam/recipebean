@@ -72,6 +72,8 @@ export type Mutation = {
   deleteRecipe: Scalars['Boolean'];
   deleteUser: BooleanError;
   forgotPassword: Scalars['Boolean'];
+  googleOAuthRequest: Scalars['String'];
+  googleOAuthUser: UserError;
   login: UserError;
   logout: Scalars['Boolean'];
   parseIngredient: ParsedIngredient;
@@ -114,6 +116,11 @@ export type MutationDeleteUserArgs = {
 
 export type MutationForgotPasswordArgs = {
   email: Scalars['String'];
+};
+
+
+export type MutationGoogleOAuthUserArgs = {
+  code: Scalars['String'];
 };
 
 
@@ -399,6 +406,11 @@ export type ForgotPasswordMutationVariables = Exact<{
 
 
 export type ForgotPasswordMutation = { __typename?: 'Mutation', forgotPassword: boolean };
+
+export type GoogleOAuthRequestMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GoogleOAuthRequestMutation = { __typename?: 'Mutation', googleOAuthRequest: string };
 
 export type LoginMutationVariables = Exact<{
   password: Scalars['String'];
@@ -710,6 +722,15 @@ export const ForgotPasswordDocument = gql`
 
 export function useForgotPasswordMutation() {
   return Urql.useMutation<ForgotPasswordMutation, ForgotPasswordMutationVariables>(ForgotPasswordDocument);
+};
+export const GoogleOAuthRequestDocument = gql`
+    mutation GoogleOAuthRequest {
+  googleOAuthRequest
+}
+    `;
+
+export function useGoogleOAuthRequestMutation() {
+  return Urql.useMutation<GoogleOAuthRequestMutation, GoogleOAuthRequestMutationVariables>(GoogleOAuthRequestDocument);
 };
 export const LoginDocument = gql`
     mutation Login($password: String!, $email: String!) {

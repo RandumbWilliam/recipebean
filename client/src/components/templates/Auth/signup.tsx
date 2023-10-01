@@ -4,7 +4,11 @@ import Icon from "@components/elements/Icon";
 import IconButton from "@components/elements/IconButton";
 import Input from "@components/elements/Input";
 import TextButton from "@components/elements/TextButton";
-import { FieldError, useRegisterMutation } from "@generated/graphql";
+import {
+  FieldError,
+  useGoogleOAuthRequestMutation,
+  useRegisterMutation,
+} from "@generated/graphql";
 import { ERROR_COLOUR } from "@styles/base/colours";
 import { Avatars } from "@utils/avatars/avatars";
 import Image from "next/image";
@@ -41,6 +45,7 @@ const SignupTemplate: React.FC<{}> = ({}) => {
   const [{ fetching }, register] = useRegisterMutation();
   const [formData, setFormData] = useState(initialForm);
   const [errors, setErrors] = useState<FieldError[]>([]);
+  const [{}, googleAuth] = useGoogleOAuthRequestMutation();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -64,8 +69,10 @@ const SignupTemplate: React.FC<{}> = ({}) => {
     setErrors([]);
   };
 
-  const handleGoogleSignup = () => {
-    console.log("Google Log In");
+  const handleGoogleAuth = async () => {
+    const { data } = await googleAuth();
+    const url = data!.googleOAuthRequest;
+    window.location.href = url;
   };
 
   return (
@@ -138,10 +145,10 @@ const SignupTemplate: React.FC<{}> = ({}) => {
                 Create Account
               </AuthSubmitButton>
               <TextDivider>or</TextDivider>
-              <AuthGoogleButton primary={false} onClick={handleGoogleSignup}>
+              <AuthGoogleButton primary={false} onClick={handleGoogleAuth}>
                 <AuthGoogleButtonText>
                   <Icon name="Google" size={22} />
-                  Sign up with Google
+                  Continue with Google
                 </AuthGoogleButtonText>
               </AuthGoogleButton>
             </AuthButtons>

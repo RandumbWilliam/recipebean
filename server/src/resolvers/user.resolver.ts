@@ -6,9 +6,11 @@ import {
   resetPasswordEmailSubject,
 } from "@utils/emails/resetPassword.email";
 import { MyContext } from "@utils/interfaces/context.interface";
+import { passwordGenerator } from "@utils/passwordGenerator";
 import { sendEmail } from "@utils/sendEmails";
 import { validateRegister } from "@utils/validateRegister";
 import argon2 from "argon2";
+import { OAuth2Client } from "google-auth-library";
 import {
   Arg,
   Ctx,
@@ -127,6 +129,74 @@ export class UserResolver {
     req.session!.userId = user.id;
 
     return { user };
+  }
+
+  // Google OAuth
+  @Mutation(() => String)
+  public async googleOAuthRequest(@Ctx() { res }: MyContext) {
+    res.header("Access-Control-Allow-Origin", process.env.CORS_ORIGIN);
+    res.header("Access-Control-Allow-Credentials", "true");
+    res.header("Referrer-Policy", "no-referrer-when-downgrade");
+
+    const redirectUrl = "http://localhost:4000/googleOAuthUser";
+
+    const oAuth2Client = new OAuth2Client(
+      process.env.GOOGLE_CLIENT_ID,
+      process.env.GOOGLE_CLIENT_SECRET,
+      redirectUrl
+    );
+
+    const authorizeUrl = oAuth2Client.generateAuthUrl({
+      access_type: "offline",
+      scope:
+        "https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email openid",
+      prompt: "consent",
+    });
+
+    return authorizeUrl;
+  }
+
+  @Mutation(() => String)
+  public async googleOAuthUser(
+    @Arg("code") code: string,
+    @Ctx() { em }: MyContext
+  ): Promise<String> {
+    const redirectUrl = "http://localhost:4000/googleOAuthUser";
+    const oAuth2Client = new OAuth2Client(
+      process.env.GOOGLE_CLIENT_ID,
+      process.env.GOOGLE_CLIENT_SECRET,
+      redirectUrl
+    );
+
+    const res = await oAuth2Client.getToken(code);
+    await oAuth2Client.setCredentials(res.tokens);
+    const userTokens = oAuth2Client.credentials;
+
+    const response = await fetch(
+      `https://www.googleapis.com/oauth2/v3/userinfo?access_token=${userTokens.access_token}`
+    );
+    const googleUser = await response.json();
+
+    const userRepository = em.getRepository(User);
+    const user = await userRepository.findOne({ email: googleUser.email });
+    if (!user) {
+      const newPassword = await argon2.hash(passwordGenerator(24));
+      const newAvatarId = Math.floor(Math.random() * 15).toString();
+
+      const newUser = em.create(User, {
+        fullName: googleUser.name,
+        email: googleUser.email,
+        password: newPassword,
+        avatarId: newAvatarId,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      });
+      await em.persistAndFlush(newUser);
+
+      return newUser.id;
+    }
+
+    return user.id;
   }
 
   // Logout
