@@ -16,7 +16,7 @@
     <br />
     <br />
 <!--     <a href="https://randumb-recipebean.netlify.app/">View Demo</a> -->
-    <p>Currently down :(. Will be up soon!</p>
+    <p>Currently down 😔. Will be up soon!</p>
   </p>
 </div>
 
