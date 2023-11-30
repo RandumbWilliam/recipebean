@@ -15,7 +15,8 @@
     Modernized cooking app
     <br />
     <br />
-    <a href="https://randumb-recipebean.netlify.app/">View Demo</a>
+<!--     <a href="https://randumb-recipebean.netlify.app/">View Demo</a> -->
+    <p>Currently down :(. Will be up soon!</p>
   </p>
 </div>
 
@@ -44,10 +45,7 @@
 <!-- ABOUT THE PROJECT -->
 
 ## About The Project
-
-  <a href="https://randumb-recipebean.netlify.app/" target="_blank">
-    <img src="images/home_screenshot.png" alt="Logo" width="800" height="auto">
-</a>
+<img src="images/home_screenshot.png" alt="Logo" width="800" height="auto">
 <br />
 <br />
 
