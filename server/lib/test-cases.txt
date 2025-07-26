@@ -1,0 +1,264 @@
+0 tbsp salt
+1 tbsp salt
+2 tbsp salt
+10 tbsp salt
+100 tbsp salt
+1000 tbsp salt
+
+01 tbsp salt
+0001 tbsp salt
+
+1/2 tbsp salt
+1 1/2 tbsp salt
+2 & 3/4 tbsp salt
+3 and 7/8 tbsp salt
+¾ tbsp salt
+2 ½ tbsp salt
+4⅘ tbsp salt
+
+0.5 tbsp salt
+.75 tbsp salt
+1.00 tbsp salt
+2.05 tbsp salt
+
+-1 tbsp salt
+
+[<qty>] [<unit>] [(<qty unit>)] <product> [,() <notes>]
+
+ingredient: {
+  qty: number | null;
+  unit: string | null;
+  product: string | null;
+  notes: string | null;
+}
+
+measurement: {
+  minQty: number | null;
+  maxQty: number | null;
+  unit: string | null
+}
+
+ingredient: {
+  measurement: measurement
+  convertedMeasurements: measurement[]
+  product: string | null;
+  notes: string | null;
+}
+
+1 cup (2 sticks; 227g) unsalted butter cubed
+2 ½ cups (312g) all-purpose flour (spooned and leveled), gluten-free if needed (Note 1)
+1 teaspoon baking soda
+1/2 teaspoon kosher salt
+1 cup (200g) dark brown sugar packed (Note 2)
+⅓ cup (67g) granulated sugar
+2 large eggs room temperature
+1 Tablespoon (15ml) milk
+2 teaspoons pure vanilla extract
+8 ounces semi-sweet baking bars roughly chopped, plus more for topping
+Flaky sea salt for finishing
+
+1 package frozen Korean rice cakes
+3 cups water
+2 tbsp. gochujang (Korean red chili paste)
+2 tbsp. soy sauce
+1 pinch gochugaru (Korean chili flakes)
+½ tsp. sesame oil
+2 ½ tbsp. sugar
+2 hard-boiled eggs
+1 cup grated mozzarella cheese
+
+3 tablespoons vegetable oil
+2 shallots (thinly sliced)
+7 cloves garlic (sliced)
+3 Thai bird or holland chilies (de-seeded, if desired, and thinly sliced)
+1 pound ground pork (450g)
+1 teaspoon sugar
+1 tablespoon fish sauce
+1 tablespoon thin/light soy sauce
+2 teaspoons dark soy sauce
+2 teaspoons oyster sauce
+⅓ cup low sodium chicken broth or water
+holy basil leaves (about 1 1/2 cups packed)
+
+8 ounces uncooked penne pasta
+1 tablespoon olive oil
+2 tablespoons butter
+1/2 small onion chopped finely
+1 clove garlic minced
+1/4 cup vodka
+1/4 cup tomato paste see note
+3/4 cup heavy/whipping cream
+Salt & pepper to taste
+Fresh basil, sliced thin optional, to taste
+Freshly grated parmesan cheese optional, to taste
+
+2 pack frozen udon noodles
+3 tbsp butter (unsalted)
+3 clove garlic, minced
+2 shallots, chopped
+1 ½ tbsp gochujang
+½ cup heavy cream
+½ cup reserved noodle water
+2 tsp soy sauce
+1 tsp gochugaru
+1 green onion, chopped (for garnish)
+grated parmesan cheese
+egg yolk (optional)
+
+1 tablespoon vegetable or canola oil
+1 1/2 pounds boneless, skinless chicken thighs
+1 teaspoon kosher salt
+1/3 cup mirin
+1/3 cup sake
+1/4 cup soy sauce or tamari
+1/4 cup water
+2 tablespoons packed light or dark brown sugar
+1 tablespoon cornstarch
+1 medium scallion, thinly sliced (optional)
+White sesame seeds, for garnish (optional)
+Steamed white rice and cooked broccoli, for serving
+
+4 (6-ounce) boneless skinless chicken breasts
+1 teaspoon Italian seasoning, or a mix of individual spices such as oregano, thyme, basil, and rosemary
+1 teaspoon kosher salt
+½ teaspoon freshly ground black pepper
+3 tablespoons extra virgin olive oil
+4 garlic cloves, minced
+¼ cup finely chopped yellow onion
+½ cup sun-dried tomatoes, thinly sliced
+2 cups baby spinach
+1 ½ cups heavy cream, *see note above for dairy-free options
+¼ cup freshly grated parmesan
+
+12 lasagna noodles uncooked
+4 cups shredded mozzarella cheese divided
+½ cup shredded Parmesan cheese shredded and divided
+¾ teaspoon salt more to taste
+½ pound lean ground beef
+½ pound Italian sausage
+1 yellow onion diced
+2 cloves garlic minced
+36 ounces pasta sauce *see note
+2 tablespoons tomato paste
+1 teaspoon Italian seasoning
+2 cups ricotta cheese or cottage cheese
+¼ cup chopped fresh parsley
+1 large egg beaten
+
+1 lb short-cut pasta, elbow macaroni or shells
+16 ounces (two 8-ounce blocks) smoked gouda cheese- grated by hand, divided
+8-ounces extra sharp white cheddar cheese, grated by hand
+½ cup (1 stick) unsalted butter
+4 tablespoons all-purpose flour
+2 cups heavy whipping cream
+2 cups whole milk
+½ teaspoon smoked paprika
+½ teaspoon ground white pepper
+½ teaspoon ground mustard
+1 teaspoon garlic powder
+¼ teaspoon ground nutmeg
+Kosher salt, to taste
+4 slices cooked bacon, crumbled- for topping/garnish– optional
+
+2 lb. russet potatoes, peeled, sliced 1/2" thick
+Kosher salt
+2/3 cup half-and-half
+4 Tbsp. unsalted butter
+2 Tbsp. chopped fresh parsley, divided
+Freshly ground black pepper
+1 Tbsp. canola oil
+2 lb. lean ground beef
+1 medium yellow onion, chopped
+2 medium carrots, peeled, chopped
+3 cloves garlic, chopped
+2 tsp. chopped fresh rosemary
+2 tsp. chopped fresh thyme
+3 Tbsp. tomato paste
+1/2 cup dry red wine, such as Cabernet Sauvignon
+1 cup low-sodium beef broth
+3 Tbsp. Worcestershire sauce
+Cooking spray
+3 Tbsp. all-purpose flour
+1 cup frozen corn
+1 cup frozen peas
+3 Tbsp. grated Parmesan
+
+350 g Korean rice cakes (12 ounces), separated
+150 g Korean fish cakes (5.3 ounces), rinsed over hot water & cut into bite size pieces
+2 cups Korean soup stock (dried kelp and dried anchovy stock)
+60 g onion (2 ounces), thinly sliced
+3 Tbsp gochujang (Korean chili paste)
+1 1/2 Tbsp raw sugar
+1 Tbsp soy sauce
+1 tsp minced garlic
+1 tsp gochugaru (Korean chili flakes)
+1 tsp toasted sesame seeds
+1 tsp sesame oil
+1 stalk green onion , finely chopped
+
+100 g beef mince (3.5 ounces), (or other cuts)
+1 Tbsp soy sauce
+1 Tbsp sesame oil
+1 tsp brown sugar
+1/4 tsp minced garlic
+250 g spinach (0.6 pounds)
+350 g bean sprouts (0.8 pounds), You don’t have to use them up if you think it’s too much but I love having lots of vegetables on my bibimbap!
+100 g shiitake mushroom (3.5 ounces)
+120 g carrots (4.2 ounces, 1 small)
+1/2 tsp fine sea salt (1/4 tsp each will be used when cooking shiitake mushroom and carrots)
+3 cups steamed rice (3 to 4 serving portions )
+3 eggs (3 or 4 depending on the serving portion)
+Some cooking oil (to cook the meat, mushroom, carrots and eggs – I used rice bran oil)
+Some toasted seasoned seaweed shredded (long thin cut)
+2 Tbsp gochujang
+1 Tbsp sesame oil
+1 Tbsp sugar - I used raw sugar
+1 Tbsp water
+1 Tbsp toasted sesame seeds
+1 tsp vinegar - I used apple vinegar
+1 tsp minced garlic
+
+12 ounces boneless skinless chicken breast (or thighs)
+3 tablespoons water
+1 teaspoon cornstarch
+1 teaspoon neutral oil (such as vegetable, canola, or avocado oil)
+2 teaspoons oyster sauce
+1/2 teaspoon coarsely ground black pepper
+1/2 cup low sodium chicken stock
+1 tablespoon oyster sauce
+1 tablespoon light soy sauce
+1 teaspoon sugar
+2 teaspoons dark soy sauce
+1/2 teaspoon sesame oil
+3 tablespoons neutral oil (divided)
+2 cloves garlic (finely chopped)
+1 medium onion (cut into wedges)
+1 tablespoon Shaoxing wine
+1/2 bell pepper (any color, cut into 1-inch/2.5cm pieces)
+1 stalk celery (thinly sliced on an angle)
+1 teaspoon coarsely ground black pepper
+1 1/2 teaspoons cornstarch (mixed with 2 tablespoons water to form a cornstarch slurry)
+
+3 large chicken breasts boneless and skinless, sliced lengthwise into thin cutlets
+½ teaspoon salt
+¼ teaspoon ground black pepper
+6 tablespoons (50 grams) all-purpose flour
+2 tablespoons (30 ml) olive oil
+2 tablespoons (28 grams) unsalted butter
+3 cloves garlic minced
+1 cup (240 ml) chicken stock
+1 cup (240 ml) heavy cream (double cream in the UK)
+½ cup (43 grams) parmesan cheese grated
+1 teaspoon chili flakes
+¼ teaspoon oregano
+¼ teaspoon thyme
+⅓ cup sundried tomatoes chopped
+1 tablespoon fresh basil leaves
+
+1-1/2 cups graham cracker crumbs
+3 tbsp sugar
+1/3 cup butter or margarine, melted
+4 pkg (8 oz. each) PHILADELPHIA Cream Cheese, softened
+1 cup sugar
+1 tsp vanilla
+4 eggs
