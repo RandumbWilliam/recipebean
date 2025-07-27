@@ -8,7 +8,11 @@
       <header class="container flex h-20 items-center justify-between">
         <img src="/logo_primary.svg" width="180">
 
-        <Button>Log in</Button>
+        <Button as-child>
+          <NuxtLink href="/login">
+            Log in
+          </NuxtLink>
+        </Button>
       </header>
       <main class="container flex flex-1 justify-center">
         <section class="grid grid-cols-2 items-center gap-12">
@@ -19,8 +23,10 @@
             <p class="text-xl">
               Simply save your recipes.
             </p>
-            <Button>
-              Get Started
+            <Button as-child>
+              <NuxtLink href="/login">
+                Get Started
+              </NuxtLink>
             </Button>
           </div>
           <img src="~/assets/img/hero.png">
