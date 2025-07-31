@@ -1,13 +1,13 @@
-import type { Session } from '~/../shared/types/sessions.type'
-import type { User } from '~/../shared/types/users.type'
+import type { Session } from '#shared/types/sessions.type'
+import type { User } from '#shared/types/users.type'
 import { eq } from 'drizzle-orm'
-import { db } from '~/../server/db'
-import { sessionsModel, usersModel } from '~/../server/db/schema'
+import { db } from '~~/server/db'
+import { sessionsModel, usersModel } from '~~/server/db/schema'
 import {
   encodeToken,
   EXPIRATION_TIME,
   SESSION_EXPIRATION,
-} from '~/../server/helpers/auth'
+} from '~~/server/helpers/auth'
 
 export async function createSession(
   token: string,

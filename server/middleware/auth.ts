@@ -1,10 +1,10 @@
-import type { Session } from '~/../shared/types/sessions.type'
-import type { User } from '~/../shared/types/users.type'
+import type { Session } from '#shared/types/sessions.type'
+import type { User } from '#shared/types/users.type'
 import {
   AUTH_SESSION_COOKIE_NAME,
   deleteSessionCookie,
-} from '~/../server/helpers/auth'
-import { validateSessionToken } from '~/../server/lib/sessions'
+} from '~~/server/helpers/auth'
+import { validateSessionToken } from '~~/server/lib/sessions'
 
 export default defineEventHandler(async (event) => {
   const sessionToken = getCookie(event, AUTH_SESSION_COOKIE_NAME)

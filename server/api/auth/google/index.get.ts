@@ -1,6 +1,6 @@
 import { generateCodeVerifier, generateState } from 'arctic'
 import { setCookie } from 'h3'
-import { google } from '~/../server/lib/sso'
+import { google } from '~~/server/lib/sso'
 
 export default defineEventHandler(async (event) => {
   const state = generateState()

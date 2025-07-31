@@ -1,12 +1,12 @@
 import type { OAuth2Tokens } from 'arctic'
-import type { GoogleClaims } from '~/../server/lib/sso'
+import type { GoogleClaims } from '~~/server/lib/sso'
 import { decodeIdToken } from 'arctic'
 import { eq } from 'drizzle-orm'
 import { getCookie } from 'h3'
-import { db } from '~/../server/db'
-import { usersModel } from '~/../server/db/schema'
-import { setAuthSession } from '~/../server/helpers/auth'
-import { google } from '~/../server/lib/sso'
+import { db } from '~~/server/db'
+import { usersModel } from '~~/server/db/schema'
+import { setAuthSession } from '~~/server/helpers/auth'
+import { google } from '~~/server/lib/sso'
 
 export default defineEventHandler(async (event) => {
   const url = getRequestURL(event)

@@ -1,3 +1,5 @@
+import type { Ingredient, Measurement } from '#shared/types/recipes.type'
+
 function parseNumber(numberStr: string): number {
   const [numeratorStr, denominatorStr] = numberStr.split('/')
   const numerator = Number(numeratorStr)
@@ -28,8 +30,8 @@ function preprocess(str: string): string {
   return str.trim()
 }
 
-function extractMeasurement(ingredientStr: string): { measurement: measurement, ingredientStrNoMeasurement: string } {
-  const measurement: measurement = {
+function extractMeasurement(ingredientStr: string): { measurement: Measurement, ingredientStrNoMeasurement: string } {
+  const measurement: Measurement = {
     quantity: null,
     unit: null,
   }
@@ -101,12 +103,12 @@ function extractMeasurement(ingredientStr: string): { measurement: measurement, 
 }
 
 function extractConvertedMeasurements(ingredientStrNoMeasurement: string): {
-  convertedMeasurements: measurement[]
+  convertedMeasurements: Measurement[]
   ingredientStrNoMeasurments: string
 } {
   const parenthesesMatch = ingredientStrNoMeasurement.match(/^\(([^)]+)\)/)
 
-  const convertedMeasurements: measurement[] = []
+  const convertedMeasurements: Measurement[] = []
   if (parenthesesMatch) {
     const measurementStrs = parenthesesMatch[1].split(/\s*[;,]\s*/).map(s => s.trim())
     for (const measurementStr of measurementStrs) {
@@ -146,8 +148,8 @@ function extractProductNotes(ingredientStrNoMeasurments: string): { product: str
   return { product, notes }
 }
 
-export function parse(ingredientStr: string): ingredient {
-  const result: ingredient = {
+export function parse(ingredientStr: string): Omit<Ingredient, 'type'> {
+  const result: Omit<Ingredient, 'type'> = {
     measurement: {
       quantity: null,
       unit: null,
@@ -170,16 +172,4 @@ export function parse(ingredientStr: string): ingredient {
   result.notes = notes
 
   return result
-}
-
-export interface measurement {
-  quantity: number | null
-  unit: string | null
-}
-
-export interface ingredient {
-  measurement: measurement
-  convertedMeasurements: measurement[] | null
-  product: string | null
-  notes: string | null
 }

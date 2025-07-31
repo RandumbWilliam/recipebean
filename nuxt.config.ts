@@ -1,4 +1,5 @@
 import tailwindcss from '@tailwindcss/vite'
+import { defineNuxtConfig } from 'nuxt/config'
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
@@ -23,14 +24,7 @@ export default defineNuxtConfig({
     ],
   },
   shadcn: {
-    /**
-     * Prefix for all the imported component
-     */
     prefix: '',
-    /**
-     * Directory that the component lives in.
-     * @default "./components/ui"
-     */
     componentDir: './app/components/ui',
   },
   fonts: {

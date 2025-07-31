@@ -5,7 +5,7 @@ import {
   encodeHexLowerCase,
 } from '@oslojs/encoding'
 import { deleteCookie, setCookie } from 'h3'
-import { createSession } from '~/../server/lib/sessions'
+import { createSession } from '~~/server/lib/sessions'
 
 export const AUTH_SESSION_COOKIE_NAME = 'auth_session'
 
