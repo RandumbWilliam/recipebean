@@ -11,7 +11,14 @@ const { authUser, logout } = useAuth()
         mx-auto flex h-full w-full max-w-[1440px] items-center justify-between
       "
     >
-      <img src="/logo_primary.svg" width="180">
+      <NuxtLink to="/recipes">
+        <img
+          src="/logo_primary.svg" class="
+            w-[120px]
+            sm:w-[180px]
+          "
+        >
+      </NuxtLink>
 
       <DropdownMenu v-if="authUser">
         <DropdownMenuTrigger>

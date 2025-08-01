@@ -32,8 +32,10 @@ export const createRecipeDto = z.object({
   description: z.string().nullish(),
   images: z.array(z.string()).nullish(),
   servings: z.number().min(1),
-  cookTime: z.number({ message: '' }).nonnegative(),
-  prepTime: z.number({ message: '' }).nonnegative(),
+  cookTime: z.number().nonnegative(),
+  prepTime: z.number().nonnegative(),
   ingredients: z.array(recipeIngredientDto),
   instructions: z.array(recipeInstructionDto),
 })
+
+export type CreateRecipeDto = z.infer<typeof createRecipeDto>

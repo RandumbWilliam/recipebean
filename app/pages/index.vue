@@ -13,7 +13,7 @@ definePageMeta({
         </NuxtLink>
 
         <Button as-child>
-          <NuxtLink href="/login">
+          <NuxtLink to="/login">
             Log in
           </NuxtLink>
         </Button>
@@ -28,7 +28,7 @@ definePageMeta({
               Simply save your recipes.
             </p>
             <Button as-child>
-              <NuxtLink href="/login">
+              <NuxtLink to="/login">
                 Get Started
               </NuxtLink>
             </Button>

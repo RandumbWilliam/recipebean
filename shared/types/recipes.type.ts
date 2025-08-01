@@ -1,3 +1,5 @@
+import type { recipesModel } from '~~/server/db/schema'
+
 export interface Measurement {
   quantity: number | null
   unit: string | null
@@ -24,3 +26,5 @@ export interface Header {
 export type RecipeIngredient = Header | Ingredient
 
 export type RecipeInstruction = Header | Instruction
+
+export type Recipe = typeof recipesModel.$inferSelect
