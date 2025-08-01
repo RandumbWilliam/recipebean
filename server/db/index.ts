@@ -1,9 +1,9 @@
 import process from 'node:process'
-import { drizzle } from 'drizzle-orm/mysql2'
+import { drizzle } from 'drizzle-orm/node-postgres'
 import * as schema from './schema'
 
 export const connectionUrl = (() => {
-  const url = new URL('mysql://')
+  const url = new URL('postgresql://')
   url.host = process.env.DB_HOST || 'localhost'
   url.port = (process.env.DB_PORT || 3306).toString()
   url.pathname = process.env.DB_NAME!
@@ -16,5 +16,4 @@ export const db = drizzle({
   connection: connectionUrl,
   casing: 'snake_case',
   schema,
-  mode: 'default',
 })

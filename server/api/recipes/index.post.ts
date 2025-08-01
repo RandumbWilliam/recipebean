@@ -9,7 +9,7 @@ export default defineEventHandler(async (event) => {
 
   const [recipe] = await db.insert(recipesModel)
     .values({ userId: user.id, ...recipeBody })
-    .$returningId()
+    .returning({ id: recipesModel.id })
 
   return recipe.id
 })

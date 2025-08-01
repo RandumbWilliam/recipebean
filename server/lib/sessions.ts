@@ -17,7 +17,6 @@ export async function createSession(
 ): Promise<void> {
   const sessionToken = encodeToken(token)
   const session = {
-    id: crypto.randomUUID(),
     userId,
     token: sessionToken,
     ipAddress,

@@ -1,12 +1,11 @@
-import crypto from 'node:crypto'
-import { mysqlTable, text, timestamp, varchar } from 'drizzle-orm/mysql-core'
+import { pgTable, text, timestamp, varchar } from 'drizzle-orm/pg-core'
+import { nanoid } from 'nanoid'
 
-export const usersModel = mysqlTable('users', {
-  id: varchar({ length: 36 }).primaryKey().$defaultFn(crypto.randomUUID),
+export const usersModel = pgTable('users', {
+  id: varchar({ length: 12 }).primaryKey().$defaultFn(() => nanoid(12)),
   googleId: varchar({ length: 255 }).notNull().unique(),
-  email: varchar({ length: 255 }).notNull(),
   name: varchar({ length: 255 }).notNull(),
   image: text(),
   createdAt: timestamp().notNull().defaultNow(),
-  updatedAt: timestamp().notNull().defaultNow().onUpdateNow(),
+  updatedAt: timestamp().notNull().defaultNow().$onUpdate(() => new Date()),
 })
