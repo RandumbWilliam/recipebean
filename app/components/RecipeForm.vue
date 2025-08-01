@@ -50,6 +50,13 @@ function addInstruction() {
   setFieldValue('instructions', newInstructions)
   editInstruction.value = ''
 }
+
+function updateIngredient(index: number, value: string) {
+  const ingredient = parse(value)
+  const newIngredients = [...values.ingredients!]
+  newIngredients[index] = { type: 'ingredient' as const, ...ingredient }
+  setFieldValue('ingredients', newIngredients)
+}
 </script>
 
 <template>
@@ -134,9 +141,9 @@ function addInstruction() {
     <FormField v-slot="{ errorMessage, value }" name="ingredients">
       <FormItem>
         <FormLabel>Ingredients {{ errorMessage && `(${errorMessage})` }}</FormLabel>
-        <ul class="list-disc pl-4 text-sm">
-          <li v-for="(ingredient, index) in value" :key="index">
-            {{ format(ingredient) }}
+        <ul class="flex list-disc flex-col gap-1 pl-4 text-sm">
+          <li v-for="(ingredient, index) in value" :key="`ingredient-${index}`">
+            <EditableInput :model-value="format(ingredient)" @update:model-value="(value) => updateIngredient(index, value)" />
           </li>
         </ul>
         <div class="flex gap-1.5">
@@ -151,9 +158,9 @@ function addInstruction() {
     <FormField v-slot="{ errorMessage, value }" name="instructions">
       <FormItem>
         <FormLabel>Instructions{{ errorMessage && `(${errorMessage})` }}</FormLabel>
-        <ol class="list-decimal pl-4 text-sm">
+        <ol class="flex list-decimal flex-col gap-1 pl-4 text-sm">
           <li v-for="(instruction, index) in value" :key="`instruction-${index}`">
-            {{ instruction.value }}
+            <EditableInput v-model="instruction.value" />
           </li>
         </ol>
         <div class="flex gap-1.5">

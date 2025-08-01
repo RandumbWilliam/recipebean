@@ -6,7 +6,7 @@ import { format } from '~/lib/recipe-ingredient'
 const route = useRoute()
 const recipeId = route.params.id as string
 
-const { data, status, error } = await useFetch(`/api/recipes/${recipeId}`, { deep: true })
+const { data, status, error } = await useFetch(`/api/recipes/${recipeId}`)
 
 if (error.value) {
   throw createError({
@@ -17,6 +17,31 @@ if (error.value) {
 
 const loading = ref(false)
 const isOpenDelete = ref(false)
+
+const adjustedServings = ref(data.value?.servings ?? 1)
+const adjustedIngredients = computed(() => {
+  if (!data.value?.ingredients)
+    return []
+
+  const ratio = adjustedServings.value / data.value.servings
+
+  return data.value.ingredients.map((ingredient) => {
+    if (ingredient.type === 'header')
+      return ingredient
+
+    const quantity = ingredient.measurement.quantity
+    if (quantity === null)
+      return ingredient
+
+    return {
+      ...ingredient,
+      measurement: {
+        ...ingredient.measurement,
+        quantity: Number((quantity * ratio).toFixed(2)),
+      },
+    }
+  })
+})
 
 async function deleteRecipe() {
   try {
@@ -79,13 +104,13 @@ async function deleteRecipe() {
       >
         <p>Servings</p>
         <div class="flex items-center">
-          <Button size="icon" :disabled="data.servings === 1" class="size-8" @click.prevent="data.servings--">
+          <Button size="icon" :disabled="adjustedServings === 1" class="size-8" @click.prevent="adjustedServings--">
             <Minus />
           </Button>
           <p class="w-12 text-center">
-            {{ data.servings }}
+            {{ adjustedServings }}
           </p>
-          <Button size="icon" :disabled="data.servings === 99" class="size-8" @click.prevent="data.servings++">
+          <Button size="icon" :disabled="adjustedServings === 99" class="size-8" @click.prevent="adjustedServings++">
             <Plus />
           </Button>
         </div>
@@ -110,7 +135,7 @@ async function deleteRecipe() {
             No ingredients
           </div>
           <ul v-else class="list-disc">
-            <template v-for="(ingredient, index) in data.ingredients" :key="`ingredient-${index}`">
+            <template v-for="(ingredient, index) in adjustedIngredients" :key="`ingredient-${index}`">
               <p v-if="ingredient.type === 'header'" class="font-medium">
                 {{ ingredient.value }}
               </p>
@@ -132,16 +157,16 @@ async function deleteRecipe() {
           >
             No instructions
           </div>
-          <ul v-else class="list-decimal">
+          <ol v-else class="list-decimal">
             <template v-for="(instruction, index) in data.instructions" :key="`ingredient-${index}`">
               <p v-if="instruction.type === 'header'" class="font-medium">
                 {{ instruction.value }}
               </p>
-              <ol v-else class="pl-4 text-sm">
-                {{ instruction }}
-              </ol>
+              <li v-else class="ml-4 text-sm">
+                {{ instruction.value }}
+              </li>
             </template>
-          </ul>
+          </ol>
         </div>
       </div>
 
