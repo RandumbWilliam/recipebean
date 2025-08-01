@@ -63,9 +63,8 @@ export default defineEventHandler(async (event) => {
   else {
     const [user] = await db.insert(usersModel).values({
       googleId,
-      email: claims.email,
       name: claims.name,
-    }).$returningId()
+    }).returning({ id: usersModel.id })
 
     await setAuthSession(event, user.id)
   }

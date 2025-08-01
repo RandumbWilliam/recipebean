@@ -1,20 +1,20 @@
-import crypto from 'node:crypto'
 import { relations } from 'drizzle-orm'
-import { mysqlTable, text, timestamp, varchar } from 'drizzle-orm/mysql-core'
+import { pgTable, text, timestamp, varchar } from 'drizzle-orm/pg-core'
+import { nanoid } from 'nanoid'
 import { usersModel } from './users.model'
 
-export const sessionsModel = mysqlTable('sessions', {
-  id: varchar({ length: 36 }).primaryKey().$defaultFn(crypto.randomUUID),
-  userId: varchar({ length: 36 }).notNull().references(() => usersModel.id, {
+export const sessionsModel = pgTable('sessions', {
+  id: varchar({ length: 12 }).primaryKey().$defaultFn(() => nanoid(12)),
+  userId: varchar({ length: 12 }).notNull().references(() => usersModel.id, {
     onDelete: 'cascade',
     onUpdate: 'cascade',
   }),
-  token: varchar({ length: 255 }).notNull().unique(),
+  token: text().notNull().unique(),
   expiresAt: timestamp().notNull(),
   ipAddress: text(),
   userAgent: text(),
   createdAt: timestamp().notNull().defaultNow(),
-  updatedAt: timestamp().notNull().defaultNow().onUpdateNow(),
+  updatedAt: timestamp().notNull().defaultNow().$onUpdate(() => new Date()),
 })
 
 export const sessionsRelations = relations(sessionsModel, ({ one }) => ({
