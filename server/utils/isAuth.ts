@@ -5,7 +5,7 @@ export function isAuth(event: H3Event) {
 
   if (!session || !user) {
     throw createError({
-      status: 401,
+      statusCode: 401,
       message: 'Unauthorized',
     })
   }

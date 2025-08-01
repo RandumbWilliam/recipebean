@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { authUser } = useAuth()
+const { authUser, logout } = useAuth()
 </script>
 
 <template>
@@ -32,7 +32,7 @@ const { authUser } = useAuth()
             </DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
-          <DropdownMenuItem>
+          <DropdownMenuItem @click.prevent="logout">
             <span>Log out</span>
           </DropdownMenuItem>
         </DropdownMenuContent>

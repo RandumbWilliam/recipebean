@@ -8,7 +8,9 @@ definePageMeta({
   <div>
     <div class="flex h-[768px] flex-col">
       <header class="container flex h-20 items-center justify-between">
-        <img src="/logo_primary.svg" width="180">
+        <NuxtLink to="/">
+          <img src="/logo_primary.svg" width="180">
+        </NuxtLink>
 
         <Button as-child>
           <NuxtLink href="/login">

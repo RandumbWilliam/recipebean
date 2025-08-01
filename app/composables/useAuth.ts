@@ -12,8 +12,19 @@ export function useAuth() {
     }
   }
 
+  async function logout() {
+    await $fetch('/api/auth/logout', {
+      method: 'POST',
+    })
+
+    authUser.value = null
+
+    return navigateTo('/', { replace: true })
+  }
+
   return {
     authUser,
     authenticate,
+    logout,
   }
 }
