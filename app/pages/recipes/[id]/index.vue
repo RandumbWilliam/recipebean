@@ -114,7 +114,7 @@ async function deleteRecipe() {
               <p v-if="ingredient.type === 'header'" class="font-medium">
                 {{ ingredient.value }}
               </p>
-              <li v-else class="pl-4 text-sm">
+              <li v-else class="ml-4 text-sm">
                 {{ format(ingredient) }}
               </li>
             </template>

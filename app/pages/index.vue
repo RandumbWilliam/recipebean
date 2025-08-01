@@ -12,11 +12,11 @@ definePageMeta({
           <img src="/logo_primary.svg" width="180">
         </NuxtLink>
 
-        <Button as-child>
-          <NuxtLink to="/login">
+        <NuxtLink to="/login">
+          <Button>
             Log in
-          </NuxtLink>
-        </Button>
+          </Button>
+        </NuxtLink>
       </header>
       <main class="container flex flex-1 justify-center">
         <section class="grid grid-cols-2 items-center gap-12">
@@ -27,11 +27,11 @@ definePageMeta({
             <p class="text-xl">
               Simply save your recipes.
             </p>
-            <Button as-child>
-              <NuxtLink to="/login">
+            <NuxtLink to="/login">
+              <Button>
                 Get Started
-              </NuxtLink>
-            </Button>
+              </Button>
+            </NuxtLink>
           </div>
           <img src="~/assets/img/hero.png">
         </section>

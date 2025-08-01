@@ -6,11 +6,11 @@ const { data, status } = useFetch('/api/recipes')
 
 <template>
   <section class="grid h-full grid-rows-[auto_1fr] gap-3 pt-3">
-    <Button as-child class="absolute right-3 bottom-3 rounded-full" size="icon">
-      <NuxtLink to="/recipes/new">
+    <NuxtLink to="/recipes/new" class="absolute right-3 bottom-3">
+      <Button class="rounded-full" size="icon">
         <Plus />
-      </NuxtLink>
-    </Button>
+      </Button>
+    </NuxtLink>
 
     <h1
       class="
@@ -32,11 +32,11 @@ const { data, status } = useFetch('/api/recipes')
         <p class="text-muted-foreground">
           No Recipes.
         </p>
-        <Button as-child>
-          <NuxtLink to="/recipes/new">
+        <NuxtLink to="/recipes/new">
+          <Button>
             Create
-          </NuxtLink>
-        </Button>
+          </Button>
+        </NuxtLink>
       </div>
       <div
         v-else class="

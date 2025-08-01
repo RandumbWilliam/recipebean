@@ -9,6 +9,7 @@ export default defineNuxtConfig({
     '@nuxt/fonts',
     '@nuxt/test-utils/module',
     'shadcn-nuxt',
+    'nuxt-security',
   ],
   devtools: { enabled: true },
   compatibilityDate: '2025-07-15',

@@ -31,11 +31,11 @@ async function onSubmit(values: CreateRecipeDto) {
     <section class="flex flex-col items-center py-6">
       <div class="w-xl">
         <div class="mb-6 flex items-center gap-3">
-          <Button as-child size="icon">
-            <NuxtLink to="/recipes">
+          <NuxtLink to="/recipes">
+            <Button size="icon">
               <ArrowLeft />
-            </NuxtLink>
-          </Button>
+            </Button>
+          </NuxtLink>
           <h2 class="text-2xl font-bold">
             Create Recipe
           </h2>
@@ -43,11 +43,11 @@ async function onSubmit(values: CreateRecipeDto) {
         <div class="flex flex-col gap-6">
           <RecipeForm id="create-recipe" @submit="onSubmit" />
           <div class="flex justify-end gap-1.5">
-            <Button type="button" variant="outline">
-              <NuxtLink to="/recipes">
+            <NuxtLink to="/recipes">
+              <Button type="button" variant="outline">
                 Cancel
-              </NuxtLink>
-            </Button>
+              </Button>
+            </NuxtLink>
             <Button type="submit" form="create-recipe" :loading="loading">
               Create
             </Button>
