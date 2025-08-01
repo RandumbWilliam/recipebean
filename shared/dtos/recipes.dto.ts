@@ -39,3 +39,7 @@ export const createRecipeDto = z.object({
 })
 
 export type CreateRecipeDto = z.infer<typeof createRecipeDto>
+
+export const deleteRecipesDto = z.object({
+  ids: z.array(z.string()),
+}).strict()

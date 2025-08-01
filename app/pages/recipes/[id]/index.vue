@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Minus, Pencil, Plus } from 'lucide-vue-next'
+import { DialogClose } from 'reka-ui'
 import { format } from '~/lib/recipe-ingredient'
 
 const route = useRoute()
@@ -12,6 +13,32 @@ if (error.value) {
     statusCode: error.value.statusCode,
     message: error.value.data.message,
   })
+}
+
+const loading = ref(false)
+const isOpenDelete = ref(false)
+
+async function deleteRecipe() {
+  try {
+    if (!loading.value) {
+      loading.value = true
+
+      await $fetch('/api/recipes', {
+        method: 'DELETE',
+        body: {
+          ids: [recipeId],
+        },
+      })
+
+      return navigateTo('/recipes')
+    }
+  }
+  catch (error) {
+    console.error(error)
+  }
+  finally {
+    loading.value = false
+  }
 }
 </script>
 
@@ -118,11 +145,46 @@ if (error.value) {
         </div>
       </div>
 
-      <Button size="icon" class="absolute right-3 bottom-3 rounded-full" as-child>
-        <NuxtLink :to="`/recipes/${recipeId}/edit`">
-          <Pencil />
-        </NuxtLink>
-      </Button>
+      <DropdownMenu>
+        <DropdownMenuTrigger as-child>
+          <Button size="icon" class="absolute right-3 bottom-3 rounded-full" as-child>
+            <Pencil />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent class="w-40" align="end">
+          <DropdownMenuGroup>
+            <NuxtLink :to="`/recipes/${recipeId}/edit`">
+              <DropdownMenuItem>
+                <span>Edit</span>
+              </DropdownMenuItem>
+            </NuxtLink>
+            <DropdownMenuItem @click.prevent="isOpenDelete = true">
+              <span>Delete</span>
+            </DropdownMenuItem>
+          </DropdownMenuGroup>
+        </DropdownMenuContent>
+      </DropdownMenu>
+
+      <Dialog v-model:open="isOpenDelete">
+        <DialogContent class="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Delete this recipe?</DialogTitle>
+            <DialogDescription>
+              You are about to delete <b>{{ data.title }}</b>. This action can not be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <DialogClose>
+              <Button variant="outline">
+                Cancel
+              </Button>
+            </DialogClose>
+            <Button variant="destructive" :loading="loading" @click.prevent="deleteRecipe">
+              Delete
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   </section>
 </template>

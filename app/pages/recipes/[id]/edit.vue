@@ -40,7 +40,7 @@ async function onSubmit(values: CreateRecipeDto) {
       <div v-else-if="status === 'success' && data" class="w-xl">
         <div class="mb-6 flex items-center gap-3">
           <Button as-child size="icon">
-            <NuxtLink to="/recipes">
+            <NuxtLink :to="`/recipes/${recipeId}`">
               <ArrowLeft />
             </NuxtLink>
           </Button>
