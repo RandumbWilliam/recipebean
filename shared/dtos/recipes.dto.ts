@@ -28,12 +28,12 @@ const recipeIngredientDto = z.discriminatedUnion('type', [headerDto, ingredientD
 const recipeInstructionDto = z.discriminatedUnion('type', [headerDto, instructionDto])
 
 export const createRecipeDto = z.object({
-  name: z.string().min(1, { message: 'Required' }),
+  title: z.string().min(1, { message: 'Required' }),
   description: z.string().nullish(),
   images: z.array(z.string()).nullish(),
-  servings: z.coerce.number(),
-  cookTime: z.coerce.number(),
-  prepTime: z.coerce.number(),
+  servings: z.number().min(1),
+  cookTime: z.number({ message: '' }).nonnegative(),
+  prepTime: z.number({ message: '' }).nonnegative(),
   ingredients: z.array(recipeIngredientDto),
   instructions: z.array(recipeInstructionDto),
 })

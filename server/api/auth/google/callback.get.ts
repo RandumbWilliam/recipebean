@@ -70,5 +70,5 @@ export default defineEventHandler(async (event) => {
     await setAuthSession(event, user.id)
   }
 
-  return await sendRedirect(event, '/app', 302)
+  return await sendRedirect(event, '/recipes', 302)
 })

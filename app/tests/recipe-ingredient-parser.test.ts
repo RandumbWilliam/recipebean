@@ -1,5 +1,4 @@
 import { describe, expect, it } from 'vitest'
-// import { parse } from '../app/lib/recipe-ingredient/parser'
 import { parse } from '~/lib/recipe-ingredient'
 
 describe('ingredient parser', () => {

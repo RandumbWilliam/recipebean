@@ -9,7 +9,7 @@ export const recipesModel = mysqlTable('recipes', {
     onDelete: 'cascade',
     onUpdate: 'cascade',
   }),
-  name: text().notNull(),
+  title: text().notNull(),
   description: text(),
   images: json().$type<string[]>(),
   cookTime: int().notNull(),
