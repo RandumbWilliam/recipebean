@@ -16,5 +16,6 @@ export default withNuxt(antfu(
         entryPoint: 'app/assets/css/tailwind.css',
       },
     },
+    ignores: ['**/migrations/*'],
   },
 ))
