@@ -1,10 +1,12 @@
 import type { Ingredient } from '#shared/types/recipes.type'
+import Fraction from 'fraction.js'
 
 export function format(ingredient: Ingredient) {
   let result = ''
 
   if (ingredient.measurement.quantity) {
-    result += ingredient.measurement.quantity
+    const qty = new Fraction(ingredient.measurement.quantity)
+    result += qty.simplify(0.001).toFraction(true)
   }
 
   if (ingredient.measurement.unit) {

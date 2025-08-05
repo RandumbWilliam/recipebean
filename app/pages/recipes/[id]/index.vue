@@ -37,7 +37,7 @@ const adjustedIngredients = computed(() => {
       ...ingredient,
       measurement: {
         ...ingredient.measurement,
-        quantity: Number((quantity * ratio).toFixed(2)),
+        quantity: (quantity * ratio),
       },
     }
   })
