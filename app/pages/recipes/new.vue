@@ -29,7 +29,7 @@ async function onSubmit(values: CreateRecipeDto) {
 <template>
   <main>
     <section class="flex flex-col items-center py-6">
-      <div class="w-xl">
+      <div class="w-full max-w-xl">
         <div class="mb-6 flex items-center gap-3">
           <NuxtLink to="/recipes">
             <Button size="icon">

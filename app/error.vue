@@ -9,7 +9,7 @@ const handleError = () => clearError({ redirect: '/recipes' })
 </script>
 
 <template>
-  <section class="flex h-screen flex-col items-center justify-center">
+  <section class="flex h-dvh flex-col items-center justify-center">
     <h2 class="mb-1 text-7xl font-bold">
       {{ error?.statusCode }}
     </h2>

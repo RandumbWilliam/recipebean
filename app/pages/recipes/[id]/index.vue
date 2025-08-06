@@ -134,12 +134,17 @@ async function deleteRecipe() {
           >
             No ingredients
           </div>
-          <ul v-else class="list-disc">
+          <ul
+            v-else class="
+              ml-6 list-disc text-sm
+              [&>li]:mt-2
+            "
+          >
             <template v-for="(ingredient, index) in adjustedIngredients" :key="`ingredient-${index}`">
               <p v-if="ingredient.type === 'header'" class="font-medium">
                 {{ ingredient.value }}
               </p>
-              <li v-else class="ml-4 text-sm">
+              <li v-else class="text-sm">
                 {{ format(ingredient) }}
               </li>
             </template>
@@ -157,12 +162,17 @@ async function deleteRecipe() {
           >
             No instructions
           </div>
-          <ol v-else class="list-decimal">
+          <ol
+            v-else class="
+              ml-6 list-decimal text-sm
+              [&>li]:mt-2
+            "
+          >
             <template v-for="(instruction, index) in data.instructions" :key="`ingredient-${index}`">
               <p v-if="instruction.type === 'header'" class="font-medium">
                 {{ instruction.value }}
               </p>
-              <li v-else class="ml-4 text-sm">
+              <li v-else class="text-sm">
                 {{ instruction.value }}
               </li>
             </template>
@@ -172,7 +182,7 @@ async function deleteRecipe() {
 
       <DropdownMenu>
         <DropdownMenuTrigger as-child>
-          <Button size="icon" class="absolute right-3 bottom-3 rounded-full" as-child>
+          <Button size="icon" class="fixed right-3 bottom-3 rounded-full" as-child>
             <Pencil />
           </Button>
         </DropdownMenuTrigger>

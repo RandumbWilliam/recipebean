@@ -141,7 +141,12 @@ function updateIngredient(index: number, value: string) {
     <FormField v-slot="{ errorMessage, value }" name="ingredients">
       <FormItem>
         <FormLabel>Ingredients {{ errorMessage && `(${errorMessage})` }}</FormLabel>
-        <ul class="flex list-disc flex-col gap-1 pl-4 text-sm">
+        <ul
+          class="
+            ml-6 list-disc text-sm
+            [&>li]:mt-2
+          "
+        >
           <li v-for="(ingredient, index) in value" :key="`ingredient-${index}`">
             <EditableInput :model-value="format(ingredient)" @update:model-value="(value) => updateIngredient(index, value)" />
           </li>
@@ -158,8 +163,15 @@ function updateIngredient(index: number, value: string) {
     <FormField v-slot="{ errorMessage, value }" name="instructions">
       <FormItem>
         <FormLabel>Instructions{{ errorMessage && `(${errorMessage})` }}</FormLabel>
-        <ol class="flex list-decimal flex-col gap-1 pl-4 text-sm">
-          <li v-for="(instruction, index) in value" :key="`instruction-${index}`">
+        <ol
+          class="
+            ml-6 list-decimal text-sm
+            [&>li]:mt-2
+          "
+        >
+          <li
+            v-for="(instruction, index) in value" :key="`instruction-${index}`"
+          >
             <EditableInput v-model="instruction.value" />
           </li>
         </ol>

@@ -34,7 +34,7 @@ function onEdit() {
       <X :size="16" class="text-muted-foreground" />
     </button>
   </div>
-  <p v-else class="my-1" @click.prevent="onEdit">
+  <p v-else @click.prevent="onEdit">
     {{ modelValue }}
   </p>
 </template>

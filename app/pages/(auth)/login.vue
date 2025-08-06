@@ -8,10 +8,15 @@ definePageMeta({
   <div>
     <header>
       <NuxtLink to="/" class="absolute top-2 left-2">
-        <img src="/logo_primary.svg" width="180">
+        <img
+          src="/logo_primary.svg" class="
+            w-[120px]
+            sm:w-[180px]
+          "
+        >
       </NuxtLink>
     </header>
-    <main class="h-screen min-h-[768px]">
+    <main class="h-dvh min-h-[768px]">
       <section class="flex h-full items-center justify-center">
         <div class="space-y-6 rounded-lg border p-6">
           <img src="/logo_primary.svg" width="180">

@@ -6,7 +6,7 @@ const { data, status } = useFetch('/api/recipes')
 
 <template>
   <section class="grid h-full grid-rows-[auto_1fr] gap-3 pt-3">
-    <NuxtLink to="/recipes/new" class="absolute right-3 bottom-3">
+    <NuxtLink to="/recipes/new" class="fixed right-3 bottom-3">
       <Button class="rounded-full" size="icon">
         <Plus />
       </Button>

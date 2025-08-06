@@ -9,7 +9,7 @@ export default defineNuxtConfig({
     '@nuxt/fonts',
     '@nuxt/test-utils/module',
     'shadcn-nuxt',
-    'nuxt-security',
+    // 'nuxt-security',
   ],
   devtools: { enabled: true },
   compatibilityDate: '2025-07-15',
@@ -23,6 +23,9 @@ export default defineNuxtConfig({
     plugins: [
       tailwindcss(),
     ],
+    server: {
+      allowedHosts: ['4bb7eb9207ae.ngrok-free.app'],
+    },
   },
   shadcn: {
     prefix: '',

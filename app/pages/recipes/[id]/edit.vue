@@ -37,7 +37,7 @@ async function onSubmit(values: CreateRecipeDto) {
       <div v-if="status === 'pending'">
         Loading...
       </div>
-      <div v-else-if="status === 'success' && data" class="w-xl">
+      <div v-else-if="status === 'success' && data" class="w-full max-w-xl">
         <div class="mb-6 flex items-center gap-3">
           <NuxtLink :to="`/recipes/${recipeId}`">
             <Button size="icon">

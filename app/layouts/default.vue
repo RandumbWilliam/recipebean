@@ -1,5 +1,5 @@
 <template>
-  <div class="grid h-screen">
+  <div class="grid h-dvh">
     <Header
       class="
         fixed w-full px-2
