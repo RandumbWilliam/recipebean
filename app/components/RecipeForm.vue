@@ -57,6 +57,15 @@ function updateIngredient(index: number, value: string) {
   newIngredients[index] = { type: 'ingredient' as const, ...ingredient }
   setFieldValue('ingredients', newIngredients)
 }
+
+function pasteInstructions(event: ClipboardEvent) {
+  const clipboardData = event.clipboardData?.getData('text')
+  if (clipboardData) {
+    const data = clipboardData.replace(/\r/g, '').split('\n')
+    const newInstructions = [...values.instructions!, ...data.map(value => ({ type: 'instruction' as const, value }))]
+    setFieldValue('instructions', newInstructions)
+  }
+}
 </script>
 
 <template>
@@ -152,7 +161,11 @@ function updateIngredient(index: number, value: string) {
           </li>
         </ul>
         <div class="flex gap-1.5">
-          <Input v-model="editIngredient" placeholder="5 cloves of garlic, finely chopped" @keydown.enter.prevent="addIngredient" />
+          <Input
+            v-model="editIngredient"
+            placeholder="5 cloves of garlic, finely chopped"
+            @keydown.enter.prevent="addIngredient"
+          />
           <Button type="button" size="icon" @click.prevent="addIngredient">
             <Plus />
           </Button>
@@ -176,7 +189,12 @@ function updateIngredient(index: number, value: string) {
           </li>
         </ol>
         <div class="flex gap-1.5">
-          <Input v-model="editInstruction" placeholder="Chop the garlic" @keydown.enter.prevent="addInstruction" />
+          <Input
+            v-model="editInstruction"
+            placeholder="Chop the garlic"
+            @keydown.enter.prevent="addInstruction"
+            @paste.prevent="pasteInstructions"
+          />
           <Button type="button" size="icon" @click.prevent="addInstruction">
             <Plus />
           </Button>
