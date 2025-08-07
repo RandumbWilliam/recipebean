@@ -134,21 +134,25 @@ async function deleteRecipe() {
           >
             No ingredients
           </div>
-          <ul
-            v-else class="
-              ml-6 list-disc text-sm
-              [&>li]:mt-2
-            "
-          >
+          <div class="space-y-3">
             <template v-for="(ingredient, index) in adjustedIngredients" :key="`ingredient-${index}`">
               <p v-if="ingredient.type === 'header'" class="font-medium">
                 {{ ingredient.value }}
               </p>
-              <li v-else class="text-sm">
-                {{ format(ingredient) }}
-              </li>
+              <div v-else class="flex items-center space-x-2">
+                <Checkbox :id="`ingredient-${index}`" />
+                <label
+                  :for="`ingredient-${index}`"
+                  class="
+                    text-sm leading-none font-medium
+                    peer-disabled:cursor-not-allowed peer-disabled:opacity-70
+                  "
+                >
+                  {{ format(ingredient) }}
+                </label>
+              </div>
             </template>
-          </ul>
+          </div>
         </div>
         <div class="w-full">
           <p class="mb-2 font-semibold">

@@ -29,7 +29,7 @@ function onEdit() {
 
 <template>
   <div v-if="isEdit" class="relative flex items-center">
-    <Input ref="edit-input" v-model="edit" @keydown.enter.prevent="onSave" @keydown.esc.prevent="onCancel" />
+    <Input ref="edit-input" v-model="edit" class="pr-8" @keydown.enter.prevent="onSave" @keydown.esc.prevent="onCancel" />
     <button type="button" class="absolute right-2 h-full" @click.prevent="onCancel">
       <X :size="16" class="text-muted-foreground" />
     </button>

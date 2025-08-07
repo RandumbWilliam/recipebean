@@ -24,7 +24,7 @@ export default defineNuxtConfig({
       tailwindcss(),
     ],
     server: {
-      allowedHosts: ['4bb7eb9207ae.ngrok-free.app'],
+      allowedHosts: ['2fa56a3edbf3.ngrok-free.app'],
     },
   },
   shadcn: {
