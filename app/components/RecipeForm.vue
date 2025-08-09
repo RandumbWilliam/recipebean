@@ -1,15 +1,17 @@
 <script setup lang="ts">
 import type { CreateRecipeDto } from '#shared/dtos/recipes.dto'
 import type { SerializeObject } from 'nitropack'
-import type { Recipe } from '~~/shared/types/recipes.type'
+import type { Ingredient, Instruction, Recipe } from '~~/shared/types/recipes.type'
 import { createRecipeDto } from '#shared/dtos/recipes.dto'
 import { toTypedSchema } from '@vee-validate/zod'
-import { Plus } from 'lucide-vue-next'
+import { GripVertical, Plus } from 'lucide-vue-next'
 import { NumberFieldInput, NumberFieldRoot } from 'reka-ui'
 import { useForm } from 'vee-validate'
+import { VueDraggable } from 'vue-draggable-plus'
 import { inputStyle } from '~/components/ui/input'
 import { format, parse } from '~/lib/recipe-ingredient'
 import { cn } from '~/lib/utils'
+import { generateId } from '~/utils/generateId'
 
 const props = defineProps<{
   id: string
@@ -44,7 +46,10 @@ const onSubmit = handleSubmit(async (values) => {
 function addIngredient() {
   if (editIngredient.value) {
     const ingredient = parse(editIngredient.value)
-    const newIngredients = [...values.ingredients!, { type: 'ingredient' as const, ...ingredient }]
+    const newIngredients = [
+      ...values.ingredients!,
+      { type: 'ingredient' as const, id: generateId('ingredient'), ...ingredient },
+    ]
     setFieldValue('ingredients', newIngredients)
     editIngredient.value = ''
   }
@@ -52,43 +57,52 @@ function addIngredient() {
 
 function addInstruction() {
   if (editInstruction.value) {
-    const newInstructions = [...values.instructions!, { type: 'instruction' as const, value: editInstruction.value }]
+    const newInstructions = [
+      ...values.instructions!,
+      { type: 'instruction' as const, id: generateId('instruction'), value: editInstruction.value },
+    ]
     setFieldValue('instructions', newInstructions)
     editInstruction.value = ''
   }
 }
 
-function updateIngredient(index: number, type: 'header' | 'ingredient', value: string) {
+function updateIngredient(index: number, value: string) {
   const newIngredients = [...values.ingredients!]
 
   if (value.trim() === '') {
     newIngredients.splice(index, 1)
   }
   else {
-    if (type === 'ingredient') {
+    if (!newIngredients[index])
+      return
+
+    if (newIngredients[index].type === 'ingredient') {
       const ingredient = parse(value)
-      newIngredients[index] = { type: 'ingredient' as const, ...ingredient }
+      newIngredients[index] = { ...newIngredients[index], ...ingredient }
     }
     else {
-      newIngredients[index] = { type: 'header' as const, value }
+      newIngredients[index] = { ...newIngredients[index], value }
     }
   }
 
   setFieldValue('ingredients', newIngredients)
 }
 
-function updateInstruction(index: number, type: 'header' | 'instruction', value: string) {
+function updateInstruction(index: number, value: string) {
   const newInstructions = [...values.instructions!]
 
   if (value.trim() === '') {
     newInstructions.splice(index, 1)
   }
   else {
-    if (type === 'instruction') {
-      newInstructions[index] = { type: 'instruction' as const, value }
+    if (!newInstructions[index])
+      return
+
+    if (newInstructions[index].type === 'instruction') {
+      newInstructions[index] = { ...newInstructions[index], value }
     }
     else {
-      newInstructions[index] = { type: 'header' as const, value }
+      newInstructions[index] = { ...newInstructions[index], value }
     }
   }
 
@@ -99,13 +113,19 @@ function pasteInstructions(event: ClipboardEvent) {
   const clipboardData = event.clipboardData?.getData('text')
   if (clipboardData) {
     const data = clipboardData.replace(/\r/g, '').split('\n')
-    const newInstructions = [...values.instructions!, ...data.map(value => ({ type: 'instruction' as const, value }))]
+    const newInstructions = [
+      ...values.instructions!,
+      ...data.map(value => ({ type: 'instruction' as const, id: generateId('instruction'), value })),
+    ]
     setFieldValue('instructions', newInstructions)
   }
 }
 
 function addIngredientHeader() {
-  const newIngredients = [...values.ingredients!, { type: 'header' as const, value: '' }]
+  const newIngredients = [
+    ...values.ingredients!,
+    { type: 'header' as const, id: generateId('ingredient'), value: '' },
+  ]
   setFieldValue('ingredients', newIngredients)
   nextTick(() => {
     const inputs = ingredientEditableInputRefs.value
@@ -115,7 +135,10 @@ function addIngredientHeader() {
 }
 
 function addInstructionHeader() {
-  const newInstructions = [...values.instructions!, { type: 'header' as const, value: '' }]
+  const newInstructions = [
+    ...values.instructions!,
+    { type: 'header' as const, id: generateId('instruction'), value: '' },
+  ]
   setFieldValue('instructions', newInstructions)
   nextTick(() => {
     const inputs = instructionEditableInputRefs.value
@@ -207,21 +230,35 @@ function addInstructionHeader() {
     <FormField v-slot="{ errorMessage }" name="ingredients">
       <FormItem>
         <FormLabel>Ingredients {{ errorMessage && `(${errorMessage})` }}</FormLabel>
-        {{ values.ingredients }}
         <ul
-          class="
-            list-disc text-sm
-            [&>*]:mt-2
-          "
+          class="list-disc text-sm"
         >
-          <template v-for="(ingredient, index) in values.ingredients" :key="`ingredient-${index}`">
-            <li v-if="ingredient.type === 'ingredient'" class="ml-6">
-              <EditableInput ref="ingredient-editable-input" :model-value="format(ingredient)" @update="(value) => updateIngredient(index, ingredient.type, value)" />
-            </li>
-            <p v-else class="text-lg font-medium">
-              <EditableInput ref="ingredient-editable-input" :model-value="ingredient.value" @update="(value) => updateIngredient(index, ingredient.type, value)" />
-            </p>
-          </template>
+          <VueDraggable
+            :model-value="values.ingredients!"
+            :animation="150"
+            group="ingredients"
+            handle=".drag-handle"
+            class="w-full"
+            @update:model-value="(value: Ingredient[]) => setFieldValue('ingredients', value)"
+          >
+            <div
+              v-for="(ingredient, index) in values.ingredients" :key="ingredient.id" class="
+                mt-2 grid w-full grid-cols-[auto_1fr]
+              "
+            >
+              <GripVertical
+                :size="16" class="
+                  drag-handle mt-0.5 cursor-move text-muted-foreground
+                "
+              />
+              <li v-if="ingredient.type === 'ingredient'" class="ml-6">
+                <EditableInput ref="ingredient-editable-input" :model-value="format(ingredient)" @update="(value) => updateIngredient(index, value)" />
+              </li>
+              <p v-else class="ml-2 text-lg font-medium">
+                <EditableInput ref="ingredient-editable-input" :model-value="ingredient.value" @update="(value) => updateIngredient(index, value)" />
+              </p>
+            </div>
+          </VueDraggable>
         </ul>
         <div class="flex gap-1.5">
           <Input
@@ -248,21 +285,38 @@ function addInstructionHeader() {
     <FormField v-slot="{ errorMessage }" name="instructions">
       <FormItem>
         <FormLabel>Instructions{{ errorMessage && `(${errorMessage})` }}</FormLabel>
-        {{ values.instructions }}
         <ol
           class="
             list-decimal text-sm
             [&>*]:mt-2
           "
         >
-          <template v-for="(instruction, index) in values.instructions" :key="`ingredient-${index}`">
-            <li v-if="instruction.type === 'instruction'" class="ml-6">
-              <EditableInput ref="instruction-editable-input" :model-value="instruction.value" @update="(value) => updateInstruction(index, instruction.type, value)" />
-            </li>
-            <p v-else class="text-lg font-medium">
-              <EditableInput ref="instruction-editable-input" :model-value="instruction.value" @update="(value) => updateInstruction(index, instruction.type, value)" />
-            </p>
-          </template>
+          <VueDraggable
+            :model-value="values.instructions!"
+            :animation="150"
+            group="instructions"
+            handle=".drag-handle"
+            class="w-full"
+            @update:model-value="(value: Instruction[]) => setFieldValue('instructions', value)"
+          >
+            <div
+              v-for="(instruction, index) in values.instructions" :key="instruction.id" class="
+                mt-2 grid w-full grid-cols-[auto_1fr]
+              "
+            >
+              <GripVertical
+                :size="16" class="
+                  drag-handle mt-0.5 cursor-move text-muted-foreground
+                "
+              />
+              <li v-if="instruction.type === 'instruction'" class="ml-6">
+                <EditableInput ref="instruction-editable-input" :model-value="instruction.value" @update="(value) => updateInstruction(index, value)" />
+              </li>
+              <p v-else class="ml-2 text-lg font-medium">
+                <EditableInput ref="instruction-editable-input" :model-value="instruction.value" @update="(value) => updateInstruction(index, value)" />
+              </p>
+            </div>
+          </VueDraggable>
         </ol>
         <div class="flex gap-1.5">
           <Input

@@ -6,6 +6,7 @@ export interface Measurement {
 }
 
 export interface Ingredient {
+  id: string
   type: 'ingredient'
   measurement: Measurement
   convertedMeasurements: Measurement[] | null
@@ -14,11 +15,13 @@ export interface Ingredient {
 }
 
 export interface Instruction {
+  id: string
   type: 'instruction'
   value: string
 }
 
 export interface Header {
+  id: string
   type: 'header'
   value: string
 }

@@ -6,6 +6,7 @@ const measurementDto = z.object({
 })
 
 const ingredientDto = z.object({
+  id: z.string(),
   type: z.literal('ingredient'),
   measurement: measurementDto,
   convertedMeasurements: z.array(measurementDto).nullable(),
@@ -14,11 +15,13 @@ const ingredientDto = z.object({
 })
 
 const instructionDto = z.object({
+  id: z.string(),
   type: z.literal('instruction'),
   value: z.string(),
 })
 
 const headerDto = z.object({
+  id: z.string(),
   type: z.literal('header'),
   value: z.string(),
 })

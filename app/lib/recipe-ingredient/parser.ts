@@ -148,8 +148,8 @@ function extractProductNotes(ingredientStrNoMeasurments: string): { product: str
   return { product, notes }
 }
 
-export function parse(ingredientStr: string): Omit<Ingredient, 'type'> {
-  const result: Omit<Ingredient, 'type'> = {
+export function parse(ingredientStr: string): Omit<Ingredient, 'type' | 'id'> {
+  const result: Omit<Ingredient, 'type' | 'id'> = {
     measurement: {
       quantity: null,
       unit: null,
