@@ -1,7 +1,7 @@
 import { z } from 'zod'
 
 const measurementDto = z.object({
-  quantity: z.coerce.number().nullable(),
+  quantity: z.number().nullable(),
   unit: z.string().nullable(),
 })
 
@@ -15,12 +15,12 @@ const ingredientDto = z.object({
 
 const instructionDto = z.object({
   type: z.literal('instruction'),
-  value: z.string().min(1, { message: 'Required' }),
+  value: z.string(),
 })
 
 const headerDto = z.object({
   type: z.literal('header'),
-  value: z.string().min(1, { message: 'Required' }),
+  value: z.string(),
 })
 
 const recipeIngredientDto = z.discriminatedUnion('type', [headerDto, ingredientDto])

@@ -31,6 +31,9 @@ const { values, setFieldValue, handleSubmit } = useForm({
   },
 })
 
+const ingredientEditableInputRefs = useTemplateRef('ingredient-editable-input')
+const instructionEditableInputRefs = useTemplateRef('instruction-editable-input')
+
 const editIngredient = ref('')
 const editInstruction = ref('')
 
@@ -39,23 +42,57 @@ const onSubmit = handleSubmit(async (values) => {
 })
 
 function addIngredient() {
-  const ingredient = parse(editIngredient.value)
-  const newIngredients = [...values.ingredients!, { type: 'ingredient' as const, ...ingredient }]
-  setFieldValue('ingredients', newIngredients)
-  editIngredient.value = ''
+  if (editIngredient.value) {
+    const ingredient = parse(editIngredient.value)
+    const newIngredients = [...values.ingredients!, { type: 'ingredient' as const, ...ingredient }]
+    setFieldValue('ingredients', newIngredients)
+    editIngredient.value = ''
+  }
 }
 
 function addInstruction() {
-  const newInstructions = [...values.instructions!, { type: 'instruction' as const, value: editInstruction.value }]
-  setFieldValue('instructions', newInstructions)
-  editInstruction.value = ''
+  if (editInstruction.value) {
+    const newInstructions = [...values.instructions!, { type: 'instruction' as const, value: editInstruction.value }]
+    setFieldValue('instructions', newInstructions)
+    editInstruction.value = ''
+  }
 }
 
-function updateIngredient(index: number, value: string) {
-  const ingredient = parse(value)
+function updateIngredient(index: number, type: 'header' | 'ingredient', value: string) {
   const newIngredients = [...values.ingredients!]
-  newIngredients[index] = { type: 'ingredient' as const, ...ingredient }
+
+  if (value.trim() === '') {
+    newIngredients.splice(index, 1)
+  }
+  else {
+    if (type === 'ingredient') {
+      const ingredient = parse(value)
+      newIngredients[index] = { type: 'ingredient' as const, ...ingredient }
+    }
+    else {
+      newIngredients[index] = { type: 'header' as const, value }
+    }
+  }
+
   setFieldValue('ingredients', newIngredients)
+}
+
+function updateInstruction(index: number, type: 'header' | 'instruction', value: string) {
+  const newInstructions = [...values.instructions!]
+
+  if (value.trim() === '') {
+    newInstructions.splice(index, 1)
+  }
+  else {
+    if (type === 'instruction') {
+      newInstructions[index] = { type: 'instruction' as const, value }
+    }
+    else {
+      newInstructions[index] = { type: 'header' as const, value }
+    }
+  }
+
+  setFieldValue('instructions', newInstructions)
 }
 
 function pasteInstructions(event: ClipboardEvent) {
@@ -65,6 +102,26 @@ function pasteInstructions(event: ClipboardEvent) {
     const newInstructions = [...values.instructions!, ...data.map(value => ({ type: 'instruction' as const, value }))]
     setFieldValue('instructions', newInstructions)
   }
+}
+
+function addIngredientHeader() {
+  const newIngredients = [...values.ingredients!, { type: 'header' as const, value: '' }]
+  setFieldValue('ingredients', newIngredients)
+  nextTick(() => {
+    const inputs = ingredientEditableInputRefs.value
+    const editableInput = inputs?.[inputs.length - 1]
+    editableInput?.$el.click()
+  })
+}
+
+function addInstructionHeader() {
+  const newInstructions = [...values.instructions!, { type: 'header' as const, value: '' }]
+  setFieldValue('instructions', newInstructions)
+  nextTick(() => {
+    const inputs = instructionEditableInputRefs.value
+    const editableInput = inputs?.[inputs.length - 1]
+    editableInput?.$el.click()
+  })
 }
 </script>
 
@@ -147,18 +204,24 @@ function pasteInstructions(event: ClipboardEvent) {
       </FormItem>
     </FormField>
 
-    <FormField v-slot="{ errorMessage, value }" name="ingredients">
+    <FormField v-slot="{ errorMessage }" name="ingredients">
       <FormItem>
         <FormLabel>Ingredients {{ errorMessage && `(${errorMessage})` }}</FormLabel>
+        {{ values.ingredients }}
         <ul
           class="
-            ml-6 list-disc text-sm
-            [&>li]:mt-2
+            list-disc text-sm
+            [&>*]:mt-2
           "
         >
-          <li v-for="(ingredient, index) in value" :key="`ingredient-${index}`">
-            <EditableInput :model-value="format(ingredient)" @update:model-value="(value) => updateIngredient(index, value)" />
-          </li>
+          <template v-for="(ingredient, index) in values.ingredients" :key="`ingredient-${index}`">
+            <li v-if="ingredient.type === 'ingredient'" class="ml-6">
+              <EditableInput ref="ingredient-editable-input" :model-value="format(ingredient)" @update="(value) => updateIngredient(index, ingredient.type, value)" />
+            </li>
+            <p v-else class="text-lg font-medium">
+              <EditableInput ref="ingredient-editable-input" :model-value="ingredient.value" @update="(value) => updateIngredient(index, ingredient.type, value)" />
+            </p>
+          </template>
         </ul>
         <div class="flex gap-1.5">
           <Input
@@ -170,23 +233,36 @@ function pasteInstructions(event: ClipboardEvent) {
             <Plus />
           </Button>
         </div>
+        <div class="flex justify-start">
+          <button
+            type="button"
+            class="cursor-pointer text-sm font-medium text-primary"
+            @click.prevent="addIngredientHeader"
+          >
+            Add Header
+          </button>
+        </div>
       </FormItem>
     </FormField>
 
-    <FormField v-slot="{ errorMessage, value }" name="instructions">
+    <FormField v-slot="{ errorMessage }" name="instructions">
       <FormItem>
         <FormLabel>Instructions{{ errorMessage && `(${errorMessage})` }}</FormLabel>
+        {{ values.instructions }}
         <ol
           class="
-            ml-6 list-decimal text-sm
-            [&>li]:mt-2
+            list-decimal text-sm
+            [&>*]:mt-2
           "
         >
-          <li
-            v-for="(instruction, index) in value" :key="`instruction-${index}`"
-          >
-            <EditableInput v-model="instruction.value" />
-          </li>
+          <template v-for="(instruction, index) in values.instructions" :key="`ingredient-${index}`">
+            <li v-if="instruction.type === 'instruction'" class="ml-6">
+              <EditableInput ref="instruction-editable-input" :model-value="instruction.value" @update="(value) => updateInstruction(index, instruction.type, value)" />
+            </li>
+            <p v-else class="text-lg font-medium">
+              <EditableInput ref="instruction-editable-input" :model-value="instruction.value" @update="(value) => updateInstruction(index, instruction.type, value)" />
+            </p>
+          </template>
         </ol>
         <div class="flex gap-1.5">
           <Input
@@ -198,6 +274,15 @@ function pasteInstructions(event: ClipboardEvent) {
           <Button type="button" size="icon" @click.prevent="addInstruction">
             <Plus />
           </Button>
+        </div>
+        <div class="flex justify-start">
+          <button
+            type="button"
+            class="cursor-pointer text-sm font-medium text-primary"
+            @click.prevent="addInstructionHeader"
+          >
+            Add Header
+          </button>
         </div>
       </FormItem>
     </FormField>
