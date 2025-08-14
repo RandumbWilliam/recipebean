@@ -30,7 +30,12 @@ definePageMeta({
             md:grid-cols-2 md:gap-12
           "
         >
-          <div class="space-y-3 text-center">
+          <div
+            class="
+              space-y-3 text-center
+              md:text-start
+            "
+          >
             <h1 class="text-6xl/18 font-bold">
               Recipe Book for Beans
             </h1>
