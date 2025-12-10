@@ -1,0 +1,11 @@
+services:
+  app:
+    build: .
+    environment:
+      NODE_ENV: production
+      APP_URL: ${APP_URL}
+      DATABASE_URL: ${DATABASE_URL}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+    ports:
+      - '3000:3000'
