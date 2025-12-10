@@ -11,12 +11,12 @@ services:
     ports:
       - '3000:3000'
     networks:
-      - recipebean-bridge
+      - bridge
       - nginx-proxy-manager
     restart: always
 
 networks:
-  recipebean-bridge:
+  bridge:
     driver: bridge
   nginx-proxy-manager:
     external: true
