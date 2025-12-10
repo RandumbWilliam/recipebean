@@ -16,9 +16,10 @@ FROM node:20-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 
+COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/.output ./.output
-COPY --from=builder /app/server/db/migrations ./.output/server/server/db/migrations
-COPY --from=builder /app/migrate.js ./.output/server/migrate.js
+COPY --from=builder /app/server/db/migrations ./server/db/migrations
+COPY --from=builder /app/migrate.js ./migrate.js
 
 EXPOSE 3000
 
