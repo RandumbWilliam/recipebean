@@ -7,8 +7,13 @@ console.log(process.env.DATABASE_URL)
 
 const db = drizzle(process.env.DATABASE_URL)
 
-migrate(db, { migrationsFolder: './server/db/migrations' })
+async function runMigrations() {
+  await migrate(db, { migrationsFolder: './server/db/migrations' })
+  console.log('Migrations completed')
+  process.exit(0)
+}
 
-console.log('Migrations completed')
-
-process.exit(0)
+runMigrations().catch((err) => {
+  console.error('Migration failed:', err)
+  process.exit(1)
+})
