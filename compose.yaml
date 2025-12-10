@@ -11,14 +11,13 @@ services:
     ports:
       - '3000:3000'
     networks:
-      - portainer-bridge
+      - recipebean-bridge
       - nginx-proxy-manager
     restart: always
 
 networks:
-  portainer-bridge:
-    external: true
-    name: bridge
+  recipebean-bridge:
+    driver: bridge
   nginx-proxy-manager:
     external: true
     name: nginx-proxy-manager-stack_default
