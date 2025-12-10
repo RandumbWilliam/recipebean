@@ -14,3 +14,9 @@ services:
       - bridge
       - nginx-proxy-manager-stack_default
     restart: always
+
+networks:
+  bridge:
+    external: true
+  nginx-proxy-manager-stack_default:
+    external: true
