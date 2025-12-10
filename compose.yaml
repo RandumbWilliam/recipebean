@@ -10,13 +10,4 @@ services:
       GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
     ports:
       - '3000:3000'
-    networks:
-      - bridge
-      - nginx-proxy-manager-stack_default
     restart: always
-
-networks:
-  bridge:
-    external: true
-  nginx-proxy-manager-stack_default:
-    external: true

@@ -17,6 +17,8 @@ WORKDIR /app
 ENV NODE_ENV=production
 
 COPY --from=builder /app/.output ./.output
+COPY --from=builder /app/server/db/migrations ./.output/server/server/db/migrations
+COPY --from=builder /app/migrate.js ./.output/server/migrate.js
 
 EXPOSE 3000
 
