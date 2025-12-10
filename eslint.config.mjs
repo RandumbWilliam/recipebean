@@ -10,6 +10,7 @@ export default withNuxt(antfu(
     },
     rules: {
       ...betterTailwindcss.configs['recommended-warn'].rules,
+      'no-console': 'off',
     },
     settings: {
       'better-tailwindcss': {

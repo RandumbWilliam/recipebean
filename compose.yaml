@@ -1,6 +1,7 @@
 services:
-  app:
+  recipebean:
     build: .
+    container_name: recipebean
     environment:
       NODE_ENV: production
       APP_URL: ${APP_URL}
@@ -9,3 +10,7 @@ services:
       GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
     ports:
       - '3000:3000'
+    networks:
+      - bridge
+      - nginx-proxy-manager-stack_default
+    restart: always
