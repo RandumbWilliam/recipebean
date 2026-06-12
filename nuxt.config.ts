@@ -1,3 +1,5 @@
+import tailwindcss from '@tailwindcss/vite'
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
@@ -5,11 +7,29 @@ export default defineNuxtConfig({
   modules: [
     '@nuxt/eslint',
     '@clerk/nuxt',
+    'shadcn-nuxt',
+    '@nuxt/fonts',
   ],
   eslint: {
     config: {
       standalone: false,
     },
+  },
+  css: ['~/assets/css/tailwind.css'],
+  fonts: {
+    families: [
+      { name: 'Hanken Grotesk', provider: 'google', weights: [400, 500, 600, 700] },
+      { name: 'Newsreader', provider: 'google', weights: [400, 500, 600, 700], styles: ['normal', 'italic'] },
+    ],
+  },
+  vite: {
+    plugins: [
+      tailwindcss(),
+    ],
+  },
+  shadcn: {
+    prefix: '',
+    componentDir: '@/components/ui',
   },
   runtimeConfig: {
     clerk: {
@@ -18,10 +38,8 @@ export default defineNuxtConfig({
     public: {
       clerk: {
         publishableKey: '',
+        signInUrl: '',
       },
     },
-  },
-  typescript: {
-    typeCheck: true,
   },
 })
