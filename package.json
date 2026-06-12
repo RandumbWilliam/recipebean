@@ -1,0 +1,28 @@
+{
+  "name": "recipebean",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare",
+    "tsc": "nuxt typecheck",
+    "lint": "eslint",
+    "lint:fix": "eslint --fix"
+  },
+  "dependencies": {
+    "@clerk/nuxt": "^2.6.2",
+    "@nuxt/eslint": "1.16.0",
+    "eslint": "^9.0.0 || ^10.0.0",
+    "nuxt": "^4.4.8",
+    "vue": "^3.5.35",
+    "vue-router": "^5.1.0"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^9.0.0",
+    "typescript": "^6.0.3",
+    "vue-tsc": "^3.3.4"
+  }
+}
