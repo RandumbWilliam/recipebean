@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { useRegleSchema } from '@regle/schemas'
 import { z } from 'zod'
-import AuthShell from '@/components/auth/AuthShell.vue'
 import GoogleButton from '@/components/auth/GoogleButton.vue'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -30,6 +29,7 @@ async function onSubmit() {
 
   if (valid && !loading.value) {
     try {
+      error.value = ''
       loading.value = true
 
       const result = await signIn.value.create({
@@ -80,7 +80,9 @@ async function onGoogle() {
 <template>
   <section class="grid grid-rows-1 min-h-[768px] min-h-screen grid-cols-[1fr_min(50%,640px)] max-md:grid-cols-1">
     <div class="flex flex-col gap-6 px-14 py-11">
-      <Logo class="h-7" />
+      <div class="w-fit">
+        <Logo class="h-7" />
+      </div>
 
       <div class="flex-1 flex items-center">
         <div class="w-full max-w-sm flex flex-col gap-6">
@@ -110,7 +112,7 @@ async function onGoogle() {
           <form id="login-form" @submit.prevent="onSubmit">
             <FieldSet>
               <FieldGroup>
-                <Field :data-invalid="r$.email.$error">
+                <Field :data-invalid="r$.email.$error" class="gap-1">
                   <FieldLabel for="login-form-email">
                     Email
                   </FieldLabel>
@@ -122,7 +124,7 @@ async function onGoogle() {
                     :aria-invalid="r$.email.$error"
                   />
                 </Field>
-                <Field :data-invalid="r$.password.$error">
+                <Field :data-invalid="r$.password.$error" class="gap-1">
                   <div class="flex items-center justify-between">
                     <FieldLabel for="login-form-password">
                       Password
@@ -139,7 +141,7 @@ async function onGoogle() {
                     :aria-invalid="r$.password.$error"
                   />
                 </Field>
-                <Button type="submit" form="login-form" :disabled="loading || oauthLoading || !isLoaded">
+                <Button type="submit" form="login-form" size="lg" :disabled="loading || oauthLoading || !isLoaded">
                   {{ loading ? "Signing in…" : "Sign in" }}
                 </Button>
               </FieldGroup>
