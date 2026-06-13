@@ -39,6 +39,9 @@ export default defineNuxtConfig({
       clerk: {
         publishableKey: '',
         signInUrl: '',
+        signUpUrl: '',
+        signInFallbackRedirectUrl: '',
+        signUpFallbackRedirectUrl: '',
       },
     },
   },

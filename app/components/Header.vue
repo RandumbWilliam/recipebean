@@ -27,11 +27,17 @@
         </ul>
       </nav>
 
-      <div class="flex items-center gap-3">
-        <Button variant="ghost">
-          Sign In
+      <div class="flex items-center gap-1">
+        <Button variant="ghost" as-child>
+          <NuxtLink to="/login">
+            Sign In
+          </NuxtLink>
         </Button>
-        <Button>Start your cookbook</Button>
+        <Button as-child>
+          <NuxtLink to="/signup">
+            Start your cookbook
+          </NuxtLink>
+        </Button>
       </div>
     </div>
   </header>
