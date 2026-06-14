@@ -34,7 +34,7 @@
           </NuxtLink>
         </Button>
         <Button as-child>
-          <NuxtLink to="/signup">
+          <NuxtLink to="/sign-up">
             Start your cookbook
           </NuxtLink>
         </Button>

@@ -2,14 +2,13 @@ import tailwindcss from '@tailwindcss/vite'
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  ssr: false,
+  routeRules: {
+    '/': { prerender: true },
+  },
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
-  modules: [
-    '@nuxt/eslint',
-    '@clerk/nuxt',
-    'shadcn-nuxt',
-    '@nuxt/fonts',
-  ],
+  modules: ['@nuxt/eslint', '@clerk/nuxt', 'shadcn-nuxt', '@nuxt/fonts', '@vueuse/nuxt'],
   eslint: {
     config: {
       standalone: false,
@@ -32,16 +31,19 @@ export default defineNuxtConfig({
     componentDir: '@/components/ui',
   },
   runtimeConfig: {
+    db: {
+      host: 'localhost',
+      port: 5432,
+      user: '',
+      password: '',
+      name: '',
+    },
     clerk: {
       secretKey: '',
     },
     public: {
       clerk: {
         publishableKey: '',
-        signInUrl: '',
-        signUpUrl: '',
-        signInFallbackRedirectUrl: '',
-        signUpFallbackRedirectUrl: '',
       },
     },
   },
