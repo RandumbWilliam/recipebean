@@ -103,7 +103,7 @@ async function onGoogle() {
 
       <div class="flex-1 flex items-center">
         <div class="w-full max-w-md flex flex-col gap-6">
-          <div v-if="errorMessage" class="border rounded-md  py-3 px-4 text-destructive bg-destructive/5 font-medium border-destructive">
+          <div v-if="errorMessage" class="border rounded-md text-sm py-3 px-4 text-destructive bg-destructive/5 font-medium border-destructive">
             {{ errorMessage }}
           </div>
 
@@ -186,6 +186,7 @@ async function onGoogle() {
                     At least 8 characters.
                   </FieldDescription>
                 </Field>
+                <div id="clerk-captcha" />
                 <div class="flex flex-col gap-3 w-full">
                   <Button type="submit" form="signup-form" size="lg" :disabled="loading || !isLoaded">
                     {{ loading ? "Creating account…" : "Create account" }}

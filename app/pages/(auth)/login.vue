@@ -14,8 +14,10 @@ const { r$ } = useRegleSchema({
   password: '',
 }, z.object({
   email: z.email(),
-  password: z.string().min(8, { error: 'Minimum 8 characters' }),
-}))
+  password: z.string().min(1, { error: 'Required' }),
+}), {
+  autoDirty: false,
+})
 
 const errorMessage = ref('')
 const loading = ref(false)
@@ -96,7 +98,7 @@ async function onGoogle() {
 
       <div class="flex-1 flex items-center">
         <div class="w-full max-w-md flex flex-col gap-6">
-          <div v-if="errorMessage" class="border rounded-md  py-3 px-4 text-destructive bg-destructive/5 font-medium border-destructive">
+          <div v-if="errorMessage" class="border rounded-md text-sm py-3 px-4 text-destructive bg-destructive/5 font-medium border-destructive">
             {{ errorMessage }}
           </div>
 
@@ -133,6 +135,7 @@ async function onGoogle() {
                     autocomplete="email"
                     class="bg-white"
                     :aria-invalid="r$.email.$error"
+                    @input="errorMessage = ''"
                   />
                 </Field>
                 <Field :data-invalid="r$.password.$error" class="gap-1">
@@ -151,6 +154,7 @@ async function onGoogle() {
                     autocomplete="current-password"
                     class="bg-white"
                     :aria-invalid="r$.password.$error"
+                    @input="errorMessage = ''"
                   />
                 </Field>
                 <Button type="submit" form="login-form" size="lg" :disabled="loading || !isLoaded">
