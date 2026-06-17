@@ -1,10 +1,14 @@
 <script setup lang="ts">
+import { cn } from '@/lib/utils'
+
 defineOptions({ inheritAttrs: false })
+
+const attrs = useAttrs()
 </script>
 
 <template>
   <NuxtLink to="/">
-    <svg v-bind="$attrs" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 756 164" xml:space="preserve" class="h-8 w-auto fill-primary">
+    <svg v-bind="{ ...attrs, class: undefined }" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 756 164" xml:space="preserve" :class="cn('h-8 w-auto fill-primary', attrs.class as string)">
       <desc>Created with Fabric.js 6.5.3</desc>
       <defs />
       <g transform="matrix(0.2919 0 0 0.2919 378 81.9827)">
