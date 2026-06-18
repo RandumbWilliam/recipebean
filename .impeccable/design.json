@@ -1,0 +1,190 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-06-17T00:00:00.000Z",
+  "title": "Design System: recipebean",
+  "extensions": {
+    "colorMeta": {
+      "coral": {
+        "role": "primary",
+        "displayName": "Coral",
+        "canonical": "oklch(0.691 0.201 17.2)",
+        "tonalRamp": [
+          "oklch(0.30 0.12 17.2)",
+          "oklch(0.40 0.16 17.2)",
+          "oklch(0.50 0.19 17.2)",
+          "oklch(0.60 0.20 17.2)",
+          "oklch(0.691 0.201 17.2)",
+          "oklch(0.78 0.15 17.2)",
+          "oklch(0.87 0.09 17.2)",
+          "oklch(0.95 0.04 17.2)"
+        ]
+      },
+      "blush-accent": {
+        "role": "secondary",
+        "displayName": "Blush Accent",
+        "canonical": "oklch(0.9525 0.0243 8.16)",
+        "tonalRamp": [
+          "oklch(0.45 0.10 8.16)",
+          "oklch(0.55 0.11 8.16)",
+          "oklch(0.66 0.10 8.16)",
+          "oklch(0.76 0.08 8.16)",
+          "oklch(0.85 0.05 8.16)",
+          "oklch(0.91 0.035 8.16)",
+          "oklch(0.9525 0.0243 8.16)",
+          "oklch(0.98 0.012 8.16)"
+        ]
+      },
+      "warm-paper": {
+        "role": "neutral",
+        "displayName": "Warm Paper",
+        "canonical": "oklch(0.9898 0.0079 73.75)",
+        "tonalRamp": [
+          "oklch(0.27 0.011 60)",
+          "oklch(0.40 0.011 65)",
+          "oklch(0.52 0.012 68)",
+          "oklch(0.65 0.011 70)",
+          "oklch(0.78 0.010 72)",
+          "oklch(0.88 0.009 73)",
+          "oklch(0.95 0.008 73.5)",
+          "oklch(0.9898 0.0079 73.75)"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ink",
+        "canonical": "oklch(0.2675 0.0113 36.49)",
+        "tonalRamp": [
+          "oklch(0.2675 0.0113 36.49)",
+          "oklch(0.36 0.012 40)",
+          "oklch(0.46 0.014 45)",
+          "oklch(0.5058 0.0218 56.89)",
+          "oklch(0.62 0.018 60)",
+          "oklch(0.74 0.013 65)",
+          "oklch(0.86 0.010 70)",
+          "oklch(0.95 0.008 73)"
+        ]
+      },
+      "destructive": {
+        "role": "tertiary",
+        "displayName": "Destructive Red",
+        "canonical": "oklch(0.577 0.245 27.325)",
+        "tonalRamp": [
+          "oklch(0.30 0.13 27.3)",
+          "oklch(0.40 0.18 27.3)",
+          "oklch(0.48 0.22 27.3)",
+          "oklch(0.577 0.245 27.3)",
+          "oklch(0.66 0.21 27.3)",
+          "oklch(0.76 0.15 27.3)",
+          "oklch(0.86 0.09 27.3)",
+          "oklch(0.94 0.04 27.3)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display Serif", "purpose": "Hero and page-defining headlines in Newsreader; emotional word goes italic + coral." },
+      "headline": { "displayName": "Headline Serif", "purpose": "Section and auth headings in Newsreader, scaled down." },
+      "title": { "displayName": "Title Sans", "purpose": "Card titles, feature names, inline emphasis in Hanken Grotesk bold." },
+      "body": { "displayName": "Body Sans", "purpose": "Default reading text in Hanken Grotesk; secondary copy uses Warm Muted." },
+      "label": { "displayName": "Label Sans", "purpose": "Small UI labels and dividers; the only place uppercase tracking is allowed." }
+    },
+    "shadows": [
+      { "name": "button-xs", "value": "0 1px 2px 0 rgba(43,36,34,0.05)", "purpose": "Near-invisible hairline lift on outline buttons only. The system is otherwise flat." }
+    ],
+    "motion": [
+      { "name": "state-transition", "value": "all 150ms ease", "purpose": "Default for button/input hover, focus, and color state changes (150–250ms band)." },
+      { "name": "rbfloat", "value": "translateY(-10px) over 6s ease-in-out infinite", "purpose": "Decorative hero illustration float on the landing. Needs a prefers-reduced-motion fallback." }
+    ],
+    "breakpoints": [
+      { "name": "md", "value": "768px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button (lg CTA)",
+      "kind": "button",
+      "refersTo": "button-lg",
+      "description": "The canonical call-to-action — coral fill, white text, used on the landing hero and auth forms.",
+      "html": "<button class=\"ds-btn-primary\">Start your cookbook</button>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 40px; padding: 0 24px; border: none; border-radius: 8px; background: var(--primary, oklch(0.691 0.201 17.2)); color: var(--primary-foreground, oklch(0.985 0 0)); font-family: 'Hanken Grotesk', ui-sans-serif, system-ui, sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 150ms ease; } .ds-btn-primary:hover { background: color-mix(in oklch, var(--primary, oklch(0.691 0.201 17.2)) 90%, transparent); } .ds-btn-primary:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in oklch, var(--primary, oklch(0.691 0.201 17.2)) 50%, transparent); } .ds-btn-primary:disabled { opacity: 0.5; pointer-events: none; }"
+    },
+    {
+      "name": "Ghost Button",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "Low-emphasis nav action — transparent at rest, blush fill with coral text on hover.",
+      "html": "<button class=\"ds-btn-ghost\">Sign In</button>",
+      "css": ".ds-btn-ghost { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 36px; padding: 0 16px; border: none; border-radius: 8px; background: transparent; color: var(--foreground, oklch(0.2675 0.0113 36.49)); font-family: 'Hanken Grotesk', ui-sans-serif, system-ui, sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 150ms ease; } .ds-btn-ghost:hover { background: var(--accent, oklch(0.9525 0.0243 8.16)); color: var(--primary, oklch(0.691 0.201 17.2)); } .ds-btn-ghost:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in oklch, var(--primary, oklch(0.691 0.201 17.2)) 50%, transparent); }"
+    },
+    {
+      "name": "Text Input",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Form text field — hairline border, white fill over warm paper, coral focus ring.",
+      "html": "<input class=\"ds-input\" type=\"email\" placeholder=\"you@kitchen.com\" />",
+      "css": ".ds-input { display: flex; width: 100%; height: 40px; padding: 0 12px; border: 1px solid var(--input, oklch(0.922 0 0)); border-radius: 8px; background: #ffffff; color: var(--foreground, oklch(0.2675 0.0113 36.49)); font-family: 'Hanken Grotesk', ui-sans-serif, system-ui, sans-serif; font-size: 14px; transition: border-color 150ms ease, box-shadow 150ms ease; } .ds-input::placeholder { color: var(--muted-foreground, oklch(0.5058 0.0218 56.89)); } .ds-input:focus-visible { outline: none; border-color: var(--ring, oklch(0.6907 0.2007 17.18)); box-shadow: 0 0 0 3px color-mix(in oklch, var(--ring, oklch(0.6907 0.2007 17.18)) 50%, transparent); } .ds-input[aria-invalid='true'] { border-color: var(--destructive, oklch(0.577 0.245 27.325)); box-shadow: 0 0 0 3px color-mix(in oklch, var(--destructive, oklch(0.577 0.245 27.325)) 20%, transparent); }"
+    },
+    {
+      "name": "Status Pill",
+      "kind": "chip",
+      "refersTo": "pill-badge",
+      "description": "The landing's brand pill — blush fill, coral dot, coral bold label.",
+      "html": "<span class=\"ds-pill\"><span class=\"ds-pill-dot\"></span>Your kitchen, beautifully organized</span>",
+      "css": ".ds-pill { display: inline-flex; align-items: center; gap: 12px; height: 32px; padding: 0 16px; border-radius: 9999px; background: var(--accent, oklch(0.9525 0.0243 8.16)); color: var(--primary, oklch(0.691 0.201 17.2)); font-family: 'Hanken Grotesk', ui-sans-serif, system-ui, sans-serif; font-size: 14px; font-weight: 700; } .ds-pill-dot { width: 7px; height: 7px; border-radius: 9999px; background: var(--primary, oklch(0.691 0.201 17.2)); }"
+    },
+    {
+      "name": "Feature Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Landing feature tile — white fill, hairline border, soft 14px corners, no shadow (tonal lift).",
+      "html": "<div class=\"ds-card\"><div class=\"ds-card-icon\">🥗</div><p class=\"ds-card-title\">One tidy library</p><p class=\"ds-card-body\">All your recipes in a single, searchable place — no more screenshots and scattered links.</p></div>",
+      "css": ".ds-card { display: flex; flex-direction: column; gap: 6px; padding: 24px; border: 1px solid var(--border, oklch(0.922 0 0)); border-radius: 14px; background: #ffffff; font-family: 'Hanken Grotesk', ui-sans-serif, system-ui, sans-serif; } .ds-card-icon { display: flex; align-items: center; justify-content: center; height: 56px; width: 56px; border-radius: 8px; background: #ffe9ec; font-size: 28px; } .ds-card-title { margin: 0; font-weight: 700; color: var(--foreground, oklch(0.2675 0.0113 36.49)); } .ds-card-body { margin: 0; font-size: 14px; color: var(--muted-foreground, oklch(0.5058 0.0218 56.89)); }"
+    },
+    {
+      "name": "Coral-Italic Headline",
+      "kind": "custom",
+      "refersTo": "display",
+      "description": "The signature headline treatment — Newsreader display in ink with one word pulled into coral italic.",
+      "html": "<h1 class=\"ds-headline\">Every recipe you love, <em>finally</em> in one cozy place.</h1>",
+      "css": ".ds-headline { margin: 0; max-width: 18ch; font-family: Newsreader, ui-serif, Georgia, serif; font-weight: 500; font-size: clamp(2.25rem, 5vw, 3.875rem); line-height: 1.04; letter-spacing: -0.015em; text-wrap: balance; color: var(--foreground, oklch(0.2675 0.0113 36.49)); } .ds-headline em { font-style: italic; color: var(--primary, oklch(0.691 0.201 17.2)); }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Well-Loved Recipe Box",
+    "overview": "recipebean looks and feels like a cherished physical recipe box that someone has kept for years — warm to the touch, a little personal, built to be opened a thousand times. The warmth is real but grown-up: it comes from a single confident coral, a Newsreader serif that handles the emotional beats in italic, and soft organic shapes — never from cute overload or a wall of pastel. The interface is calm and glanceable, the kind of thing you can read across a kitchen counter with flour on your hands. The system runs on a warm-paper canvas with near-black warm ink for text and a single saturated coral doing all the emotional and action work. Product surfaces stay restrained and tool-like; the marketing landing is allowed to bloom a little more, but both registers share the same paper, the same ink, the same one coral.",
+    "keyCharacteristics": [
+      "One warm coral carries every action and emotional accent; everything else is paper, ink, and hairline.",
+      "Newsreader serif (often italic, often coral) for headlines and emotional words; Hanken Grotesk for everything functional.",
+      "Soft, generous radii (8–14px) and a warm-paper background — never stark white chrome.",
+      "Kitchen-legible first: large, high-contrast type beats density everywhere it counts.",
+      "Restrained in the app, a touch more expressive on the landing — same palette, different volume."
+    ],
+    "rules": [
+      { "name": "The One Coral Rule", "body": "There is exactly one accent color, and it is Coral. Pinks, peaches, and pastels are decorative imagery, not a second accent. If a screen needs to 'add color,' it adds coral or it adds nothing.", "section": "colors" },
+      { "name": "The Muted-Floor Rule", "body": "Warm Muted on Warm Paper is the system's contrast floor, and it is close to the AA line. Body and placeholder text must hit ≥4.5:1; never push secondary text lighter 'for elegance.' When in doubt, step toward Ink, not away from it.", "section": "colors" },
+      { "name": "The Two-Voice Rule", "body": "Newsreader speaks; Hanken Grotesk works. Serif is for headlines and emotional words only — never buttons, labels, inputs, or data. A serif button is always wrong.", "section": "typography" },
+      { "name": "The Coral-Italic Rule", "body": "The signature flourish is a single word set in Newsreader italic and colored Coral inside an otherwise plain headline. Use it once per heading, on the word that carries the feeling — never on a whole line.", "section": "typography" },
+      { "name": "The Tonal-Lift Rule", "body": "A surface lifts by being whiter than the paper around it and ringed by one hairline — not by casting a shadow. If you reach for box-shadow to separate a card from the page, change the fill or the border instead.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do keep Coral as the only accent — actions, current selection, links, ratings, and the serif-italic flourish.",
+      "Do set headlines and emotional words in Newsreader (italic + coral for the signature beat) and everything operable in Hanken Grotesk.",
+      "Do lift surfaces with tone — Card White on Warm Paper plus one Hairline — not with shadows.",
+      "Do keep Warm Paper as the page background; reserve true white for cards and inputs.",
+      "Do verify Warm Muted text clears 4.5:1 on Warm Paper, and bump toward Ink whenever it's close.",
+      "Do prioritize kitchen-legibility: large, high-contrast ingredients and steps over dense layouts.",
+      "Do give every interactive element its full state set — default, hover, focus-visible (3px coral ring), active, disabled, error.",
+      "Do pair category colors with text labels; never encode meaning in color alone."
+    ],
+    "donts": [
+      "Don't look like a cluttered recipe-blog SEO site — no ad-stuffed columns, no life-story-before-the-recipe.",
+      "Don't drift toward cold enterprise SaaS — no blue-gray dashboards, no dense corporate tables, no sterile chrome.",
+      "Don't reach for trendy AI-gradient startup moves — no glassmorphism, no purple gradients, no gradient text, no hero-metric template.",
+      "Don't go childish or over-cute — kawaii icons and pastels are seasoning, not the meal.",
+      "Don't set UI labels, buttons, inputs, or data in Newsreader. The serif never operates anything.",
+      "Don't color a whole headline line coral — the flourish is one word.",
+      "Don't add drop-shadows to cards to separate them from the page; change the fill or border instead.",
+      "Don't extend the identical icon+title+text feature-card grid on the landing — vary size, weight, or affordance.",
+      "Don't introduce a second accent color or a fourth named font; the system is one coral and two families."
+    ]
+  }
+}
