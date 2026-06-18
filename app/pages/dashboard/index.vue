@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import RecipeCard from '~/components/RecipeCard.vue'
 import AppSidebar from '~/components/sidebar/AppSidebar.vue'
 </script>
 
@@ -6,18 +7,23 @@ import AppSidebar from '~/components/sidebar/AppSidebar.vue'
   <SidebarProvider>
     <AppSidebar />
     <SidebarInset>
-      <header class="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
-        <div class="flex items-center gap-2 px-4">
-          All Recipes
+      <div class="flex flex-col gap-6 py-6 px-6">
+        <header class="flex items-start justify-between">
+          <div class="flex flex-col gap-1">
+            <h1 class="text-4xl font-serif font-medium">
+              All recipes
+            </h1>
+            <p class="text-sm text-muted-foreground">
+              48 dishes worth making again
+            </p>
+          </div>
+          <div>
+            <Button>Add recipe</Button>
+          </div>
+        </header>
+        <div class="grid grid-cols-4 gap-4">
+          <RecipeCard v-for="i in 10" :key="i" :recipe="i" />
         </div>
-      </header>
-      <div class="flex flex-1 flex-col gap-4 p-4 pt-0">
-        <div class="grid auto-rows-min gap-4 md:grid-cols-3">
-          <div class="bg-muted/50 aspect-video rounded-xl" />
-          <div class="bg-muted/50 aspect-video rounded-xl" />
-          <div class="bg-muted/50 aspect-video rounded-xl" />
-        </div>
-        <div class="bg-muted/50 min-h-[100vh] flex-1 rounded-xl md:min-h-min" />
       </div>
     </SidebarInset>
   </SidebarProvider>

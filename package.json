@@ -18,7 +18,7 @@
   },
   "dependencies": {
     "@clerk/nuxt": "^2.6.2",
-    "@lucide/vue": "^1.18.0",
+    "@lucide/vue": "^1.20.0",
     "@nuxt/eslint": "1.16.0",
     "@nuxt/fonts": "0.14.0",
     "@regle/core": "^1.27.2",

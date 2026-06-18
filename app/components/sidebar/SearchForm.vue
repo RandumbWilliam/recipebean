@@ -18,7 +18,7 @@ import {
         <SidebarInput
           id="search"
           placeholder="Search recipes"
-          class="pl-8"
+          class="pl-8 bg-white"
         />
         <Search class="pointer-events-none absolute left-2 top-1/2 size-4 -translate-y-1/2 select-none opacity-50" />
       </SidebarGroupContent>

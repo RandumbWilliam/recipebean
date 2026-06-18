@@ -1,5 +1,5 @@
 import { relations } from 'drizzle-orm'
-import { index, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core'
+import { index, integer, jsonb, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core'
 import { recipesCategoriesTable } from './recipes-categories'
 import { usersTable } from './users'
 
@@ -9,6 +9,12 @@ export const recipesTable = pgTable('recipes', {
     onDelete: 'cascade',
   }).notNull(),
   name: text().notNull(),
+  prepTime: integer(),
+  cookTime: integer(),
+  servings: integer(),
+  imageUrl: text(),
+  ingredients: jsonb().$type<string[]>().notNull().default([]),
+  instructions: jsonb().$type<string[]>().notNull().default([]),
   createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp({ withTimezone: true }).notNull().defaultNow().$onUpdate(() => new Date()),
 }, table => [
