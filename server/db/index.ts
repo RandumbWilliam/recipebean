@@ -12,4 +12,5 @@ export const db = drizzle({
     database: config.db.name,
   },
   schema,
+  casing: 'snake_case',
 })

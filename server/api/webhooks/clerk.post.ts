@@ -1,7 +1,7 @@
 import { verifyWebhook } from '@clerk/nuxt/webhooks'
 import { eq } from 'drizzle-orm'
 import { db } from '~~/server/db'
-import { users } from '~~/server/db/schema'
+import { usersTable } from '~~/server/db/schema'
 import { randomPfpId } from '~~/shared/misc/pfp'
 
 export default defineEventHandler(async (event) => {
@@ -16,14 +16,14 @@ export default defineEventHandler(async (event) => {
   switch (evt.type) {
     case 'user.created': {
       await db
-        .insert(users)
+        .insert(usersTable)
         .values({ clerkId: evt.data.id, pfpId: randomPfpId() })
-        .onConflictDoNothing({ target: users.clerkId })
+        .onConflictDoNothing({ target: usersTable.clerkId })
       break
     }
     case 'user.deleted': {
       if (evt.data.id)
-        await db.delete(users).where(eq(users.clerkId, evt.data.id))
+        await db.delete(usersTable).where(eq(usersTable.clerkId, evt.data.id))
       break
     }
   }

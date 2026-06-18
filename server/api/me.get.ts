@@ -1,6 +1,6 @@
 import { eq } from 'drizzle-orm'
 import { db } from '~~/server/db'
-import { users } from '~~/server/db/schema'
+import { usersTable } from '~~/server/db/schema'
 import { randomPfpId } from '~~/shared/misc/pfp'
 
 export default defineEventHandler(async (event) => {
@@ -8,23 +8,23 @@ export default defineEventHandler(async (event) => {
   if (!userId)
     throw createError({ statusCode: 401, statusMessage: 'Unauthorized' })
 
-  const existing = await db.query.users.findFirst({
-    where: eq(users.clerkId, userId),
+  const existing = await db.query.usersTable.findFirst({
+    where: eq(usersTable.clerkId, userId),
     columns: { pfpId: true },
   })
   if (existing)
     return existing
 
   const [created] = await db
-    .insert(users)
+    .insert(usersTable)
     .values({ clerkId: userId, pfpId: randomPfpId() })
-    .onConflictDoNothing({ target: users.clerkId })
-    .returning({ pfpId: users.pfpId })
+    .onConflictDoNothing({ target: usersTable.clerkId })
+    .returning({ pfpId: usersTable.pfpId })
   if (created)
     return created
 
-  const row = await db.query.users.findFirst({
-    where: eq(users.clerkId, userId),
+  const row = await db.query.usersTable.findFirst({
+    where: eq(usersTable.clerkId, userId),
     columns: { pfpId: true },
   })
   return row

@@ -1,12 +1,20 @@
+import { relations } from 'drizzle-orm'
 import { integer, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core'
+import { categoriesTable } from './categories'
+import { recipesTable } from './recipes'
 
-export const users = pgTable('users', {
-  id: uuid('id').primaryKey().defaultRandom(),
-  clerkId: text('clerk_id').notNull().unique(),
-  pfpId: integer('pfp_id').notNull(),
-  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
-  updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+export const usersTable = pgTable('users', {
+  id: uuid().primaryKey().defaultRandom(),
+  clerkId: text().notNull().unique(),
+  pfpId: integer().notNull(),
+  createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp({ withTimezone: true }).notNull().defaultNow().$onUpdate(() => new Date()),
 })
 
-export type User = typeof users.$inferSelect
-export type NewUser = typeof users.$inferInsert
+export const usersRelations = relations(usersTable, ({ many }) => ({
+  recipes: many(recipesTable),
+  categories: many(categoriesTable),
+}))
+
+export type User = typeof usersTable.$inferSelect
+export type NewUser = typeof usersTable.$inferInsert
