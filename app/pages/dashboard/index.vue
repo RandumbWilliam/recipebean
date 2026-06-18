@@ -21,7 +21,7 @@ import AppSidebar from '~/components/sidebar/AppSidebar.vue'
             <Button>Add recipe</Button>
           </div>
         </header>
-        <div class="grid grid-cols-4 gap-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           <RecipeCard v-for="i in 10" :key="i" :recipe="i" />
         </div>
       </div>

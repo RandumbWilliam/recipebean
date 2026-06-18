@@ -51,7 +51,7 @@ async function signOut() {
             size="lg"
             class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
           >
-            <Avatar class="h-9 w-9 rounded-full">
+            <Avatar class="h-9 w-9 rounded-lg">
               <AvatarImage :src="`/kawaii-icons/${PFP[user.pfpId]}`" :alt="fullName" class="bg-accent" />
               <AvatarFallback class="rounded-lg">
                 {{ initials }}

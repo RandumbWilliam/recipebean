@@ -31,12 +31,14 @@ const sidebarUser = computed(() =>
 </script>
 
 <template>
-  <Sidebar v-bind="props" class="py-6 px-4">
-    <SidebarHeader class="p-0 gap-4 mb-5">
-      <div class="w-fit">
-        <Logo class="h-6" />
-      </div>
-      <SearchForm />
+  <Sidebar v-bind="props">
+    <SidebarHeader class="py-6 gap-4 group-data-[collapsible=icon]:hidden">
+      <SidebarMenu>
+        <SidebarMenuItem>
+          <Logo class="h-6" />
+        </SidebarMenuItem>
+      </SidebarMenu>
+      <SearchForm class="group-data-[collapsible=icon]:hidden" />
     </SidebarHeader>
     <SidebarContent class="gap-5">
       <NavMain />

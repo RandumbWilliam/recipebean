@@ -24,7 +24,7 @@ const CATEGORIES = [
 </script>
 
 <template>
-  <SidebarGroup class="p-0">
+  <SidebarGroup class="group-data-[collapsible=icon]:hidden">
     <SidebarGroupLabel class="uppercase text-muted-foreground font-bold tracking-[0.08em]">
       Categories
     </SidebarGroupLabel>
