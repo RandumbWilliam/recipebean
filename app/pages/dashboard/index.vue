@@ -18,7 +18,11 @@ import AppSidebar from '~/components/sidebar/AppSidebar.vue'
             </p>
           </div>
           <div>
-            <Button>Add recipe</Button>
+            <Button as-child>
+              <NuxtLink to="/dashboard/new">
+                Add recipe
+              </NuxtLink>
+            </Button>
           </div>
         </header>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
