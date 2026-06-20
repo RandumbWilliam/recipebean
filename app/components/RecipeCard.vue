@@ -1,6 +1,8 @@
 <script setup lang="ts">
+import type { SerializedRecipe } from '~~/shared/schemas/recipes'
+
 const props = defineProps<{
-  recipe: any
+  recipe: SerializedRecipe
 }>()
 </script>
 
@@ -11,7 +13,7 @@ const props = defineProps<{
     </div>
     <div class="p-3">
       <h3 class="font-serif text-lg">
-        {{ props.recipe }}
+        {{ props.recipe.name }}
       </h3>
     </div>
   </div>

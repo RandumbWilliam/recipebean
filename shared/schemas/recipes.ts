@@ -1,3 +1,5 @@
+import type { Serialize } from 'nitropack/types'
+import type { recipesTable } from '~~/server/db/schema'
 import * as z from 'zod'
 
 export const createRecipeSchema = z.object({
@@ -14,3 +16,5 @@ export const createRecipeSchema = z.object({
   notes: z.string(),
   categoryIds: z.array(z.string()),
 })
+
+export type SerializedRecipe = Serialize<typeof recipesTable.$inferSelect>

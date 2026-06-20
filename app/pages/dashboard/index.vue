@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import RecipeCard from '~/components/RecipeCard.vue'
 import AppSidebar from '~/components/sidebar/AppSidebar.vue'
+
+const { data, status } = useFetch('/api/recipes')
 </script>
 
 <template>
@@ -25,9 +27,21 @@ import AppSidebar from '~/components/sidebar/AppSidebar.vue'
             </Button>
           </div>
         </header>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-          <RecipeCard v-for="i in 10" :key="i" :recipe="i" />
-        </div>
+        <template v-if="status === 'success' && data">
+          <div v-if="data.length === 0" class="flex flex-col gap-3 h-120 items-center justify-center">
+            <p class="text-muted-foreground italic">
+              No recipes
+            </p>
+            <Button as-child>
+              <NuxtLink to="/dashboard/new">
+                Add recipe
+              </NuxtLink>
+            </Button>
+          </div>
+          <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            <RecipeCard v-for="recipe in data" :key="recipe.id" :recipe />
+          </div>
+        </template>
       </div>
     </SidebarInset>
   </SidebarProvider>
