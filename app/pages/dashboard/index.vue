@@ -15,8 +15,8 @@ const { data, status } = useFetch('/api/recipes')
             <h1 class="text-4xl font-serif font-medium">
               All recipes
             </h1>
-            <p class="text-sm text-muted-foreground">
-              48 dishes worth making again
+            <p v-if="status === 'success' && data" class="text-sm text-muted-foreground">
+              {{ data.length }} {{ data.length === 1 ? 'recipe' : 'recipes' }}
             </p>
           </div>
           <div>
@@ -39,7 +39,9 @@ const { data, status } = useFetch('/api/recipes')
             </Button>
           </div>
           <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-            <RecipeCard v-for="recipe in data" :key="recipe.id" :recipe />
+            <NuxtLink v-for="recipe in data" :key="recipe.id" :to="`/dashboard/${recipe.id}`">
+              <RecipeCard :recipe />
+            </NuxtLink>
           </div>
         </template>
       </div>

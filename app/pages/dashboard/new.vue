@@ -10,16 +10,8 @@ const { r$ } = useRegleSchema({
   prepTime: 0,
   cookTime: 0,
   servings: 0,
-  ingredients: [{
-    raw: 'test',
-  }, {
-    raw: 'test',
-  }],
-  instructions: [{
-    raw: 'sdu oijasejoij asjejfa;ej wieojjwe jeijfslj ajselijjjs jojsejjs ljwjjw lsjsjij sjjd lisjejs eflijs ejljse fjlij sejlj;iw sdu oijasejoij asjejfa;ej wieojjwe jeijfslj ajselijjjs jojsejjs ljwjjw lsjsjij sjjd lisjejs eflijs ejljse fjlij sejlj;iw',
-  }, {
-    raw: 'sdu oijas',
-  }],
+  ingredients: [],
+  instructions: [],
   notes: '',
   categoryIds: [],
 }, createRecipeSchema, {

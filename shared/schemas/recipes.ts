@@ -17,4 +17,8 @@ export const createRecipeSchema = z.object({
   categoryIds: z.array(z.string()),
 })
 
+export const toggleFavoriteSchema = z.object({
+  isFavorite: z.boolean(),
+})
+
 export type SerializedRecipe = Serialize<typeof recipesTable.$inferSelect>
