@@ -35,7 +35,9 @@ const sidebarUser = computed(() =>
     <SidebarHeader class="py-6 gap-4 group-data-[collapsible=icon]:hidden">
       <SidebarMenu>
         <SidebarMenuItem>
-          <Logo class="h-6" />
+          <NuxtLink to="/dashboard">
+            <Logo class="h-6" />
+          </NuxtLink>
         </SidebarMenuItem>
       </SidebarMenu>
       <SearchForm class="group-data-[collapsible=icon]:hidden" />

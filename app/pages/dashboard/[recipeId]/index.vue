@@ -1,7 +1,172 @@
 <script setup lang="ts">
+import { Heart, Minus, Plus } from '@lucide/vue'
+import { NumberFieldDecrement, NumberFieldIncrement, NumberFieldInput, NumberFieldRoot } from 'reka-ui'
+import { cn } from '~/lib/utils'
 
+const route = useRoute()
+const router = useRouter()
+const recipeId = computed(() => route.params.recipeId)
+
+function goBack() {
+  if (window.history.state.back) {
+    router.back()
+  }
+  else {
+    router.push('/dashboard')
+  }
+}
+
+const { data, status } = await useFetch(`/api/recipes/${recipeId.value}`)
+
+const isFavorite = ref(data.value?.isFavorite ?? false)
+const servings = ref(data.value?.servings ?? 0)
+
+async function toggleFavorite() {
+  const next = !isFavorite.value
+  isFavorite.value = next
+  try {
+    await $fetch(`/api/recipes/${recipeId.value}/favorite`, {
+      method: 'PATCH',
+      body: { isFavorite: next },
+    })
+  }
+  catch {
+    isFavorite.value = !next
+  }
+}
 </script>
 
 <template>
-  <div>Recipe</div>
+  <div>
+    <header class="flex items-center h-20 border-b">
+      <div class="flex items-center justify-between container">
+        <button @click="goBack">
+          <Logo class="h-7" />
+        </button>
+
+        <div class="flex items-center gap-1">
+          <button
+            :aria-label="isFavorite ? 'Remove from favourites' : 'Add to favourites'"
+            :aria-pressed="isFavorite"
+            @click="toggleFavorite"
+          >
+            <Heart
+              :size="26"
+              :class="cn({
+                'fill-primary stroke-primary': isFavorite,
+              })"
+            />
+          </button>
+        </div>
+      </div>
+    </header>
+    <section class="container">
+      <div v-if="status === 'success' && data" class="flex flex-col gap-6 py-8">
+        <h1 class="text-center font-medium text-5xl font-serif">
+          {{ data.name }}
+        </h1>
+        <p v-if="data.description" class="mx-auto max-w-2xl text-muted-foreground text-lg text-center">
+          {{ data.description }}
+        </p>
+        <div class="mx-auto max-w-md w-full">
+          <div class="flex divide-x divide-border rounded-xl border bg-white p-1">
+            <div class="flex flex-1 flex-col items-center justify-center py-2 px-3">
+              <div class="text-xs uppercase text-muted-foreground font-semibold">
+                Prep
+              </div>
+              <div class="text-xl font-serif">
+                {{ data.prepTime }} min
+              </div>
+            </div>
+            <div class="flex flex-1 flex-col items-center justify-center py-2 px-3">
+              <div class="text-xs uppercase text-muted-foreground font-semibold">
+                Cook
+              </div>
+              <div class="text-xl font-serif">
+                {{ data.cookTime }} min
+              </div>
+            </div>
+            <div class="flex flex-1 flex-col items-center justify-center py-2 px-3">
+              <div class="text-xs uppercase text-muted-foreground font-semibold">
+                Serves
+              </div>
+              <div class="text-xl font-serif">
+                {{ data.servings }}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="w-full h-95 bg-muted rounded-xl overflow-hidden">
+          <img
+            v-if="data.imageUrl"
+            :src="data.imageUrl"
+            :alt="data.name"
+            class="inset-0 h-full w-full object-cover"
+          >
+          <Image v-else :size="18" class="text-muted-foreground" />
+        </div>
+
+        <div class="relative grid grid-cols-[330px_1fr] gap-10">
+          <!-- Ingredients -->
+          <div class="sticky top-6 self-start flex flex-col gap-3 py-6 px-4 border bg-white rounded-xl">
+            <h2 class="font-serif font-medium text-2xl">
+              Ingredients
+            </h2>
+            <NumberFieldRoot
+              id="servings"
+              v-model="servings"
+              :min="0"
+              class="flex py-2 px-3 items-center justify-between border bg-background rounded-lg"
+            >
+              <label
+                for="servings"
+                class="text-sm text-muted-foreground font-bold"
+              >
+                Servings
+              </label>
+              <div class="flex items-center gap-1">
+                <NumberFieldDecrement as-child>
+                  <Button size="icon" variant="outline" class="bg-white h-7 w-7">
+                    <Minus :size="16" />
+                  </Button>
+                </NumberFieldDecrement>
+                <NumberFieldInput class="text-center w-10 font-bold" />
+                <NumberFieldIncrement as-child>
+                  <Button size="icon" class="h-7 w-7">
+                    <Plus :size="16" />
+                  </Button>
+                </NumberFieldIncrement>
+              </div>
+            </NumberFieldRoot>
+            <div class="flex flex-col">
+              <div v-for="(ingredient, index) of data.ingredients" :key="`ingredient-${index}`" class="flex items-start gap-3 border-b py-3 px-2 last:border-b-0">
+                <Checkbox :id="`ingredient-${index}`" />
+                <Label
+                  :for="`ingredient-${index}`"
+                  class="text-regular peer-data-[state=checked]:line-through peer-data-[state=checked]:text-muted-foreground"
+                >{{ ingredient.raw }}</Label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Instructions -->
+          <div class="flex flex-col gap-3">
+            <h2 class="font-serif font-medium text-2xl">
+              Method
+            </h2>
+            <div class="flex flex-col">
+              <div v-for="(instruction, index) of data.instructions" :key="`instruction-${index}`" class="flex items-start gap-3 py-3 px-2">
+                <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent font-serif font-semibold text-primary">
+                  {{ index + 1 }}
+                </div>
+                <p class="min-w-0 flex-1 leading-6">
+                  {{ instruction.raw }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
 </template>

@@ -1,11 +1,9 @@
-<script setup lang="ts">
-
-</script>
-
 <template>
   <header class="flex items-center h-20 border-b">
     <div class="flex items-center justify-between  container">
-      <Logo class="h-7" />
+      <NuxtLink to="/">
+        <Logo class="h-7" />
+      </NuxtLink>
 
       <nav>
         <ul class="flex items-center gap-9">
