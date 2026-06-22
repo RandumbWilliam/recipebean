@@ -1,3 +1,4 @@
+import type { RecipeIngredient, RecipeInstruction } from '~~/shared/schemas/recipes'
 import { relations } from 'drizzle-orm'
 import { boolean, index, integer, jsonb, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core'
 import { recipesCategoriesTable } from './recipes-categories'
@@ -14,8 +15,8 @@ export const recipesTable = pgTable('recipes', {
   prepTime: integer().notNull(),
   cookTime: integer().notNull(),
   servings: integer().notNull(),
-  ingredients: jsonb().$type<any[]>().notNull().default([]),
-  instructions: jsonb().$type<any[]>().notNull().default([]),
+  ingredients: jsonb().$type<RecipeIngredient[]>().notNull().default([]),
+  instructions: jsonb().$type<RecipeInstruction[]>().notNull().default([]),
   notes: text(),
   isFavorite: boolean().notNull().default(false),
   createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),

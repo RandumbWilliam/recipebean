@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { GripVertical, Plus, X } from '@lucide/vue'
+import { Check, GripVertical, Plus, X } from '@lucide/vue'
 import { useRegleSchema } from '@regle/schemas'
 import { createRecipeSchema } from '~~/shared/schemas/recipes'
+import { cn } from '~/lib/utils'
 
 const { r$ } = useRegleSchema({
   name: '',
@@ -22,13 +23,23 @@ const loading = ref(false)
 const currentIngredient = ref('')
 const currentInstruction = ref('')
 
+// Ingredients header editor
+const addingIngredientHeader = ref(false)
+const ingredientHeaderTitle = ref('')
+const ingredientHeaderInput = useTemplateRef<HTMLInputElement>('ingredientHeaderInput')
+
+// Instructions header editor
+const addingInstructionHeader = ref(false)
+const instructionHeaderTitle = ref('')
+const instructionHeaderInput = useTemplateRef<HTMLInputElement>('instructionHeaderInput')
+
 function addIngredient() {
   const currIngredient = currentIngredient.value.trim()
 
   if (currIngredient.length === 0)
     return
 
-  r$.$value.ingredients.push({ raw: currIngredient })
+  r$.$value.ingredients.push({ type: 'ingredient', raw: currIngredient })
   currentIngredient.value = ''
 }
 
@@ -42,12 +53,58 @@ function addInstruction() {
   if (currInstruction.length === 0)
     return
 
-  r$.$value.instructions.push({ raw: currInstruction })
+  r$.$value.instructions.push({ type: 'instruction', raw: currInstruction })
   currentInstruction.value = ''
 }
 
 function deleteInstruction(index: number) {
   r$.$value.instructions.splice(index, 1)
+}
+
+async function startIngredientHeader() {
+  addingIngredientHeader.value = true
+  ingredientHeaderTitle.value = ''
+  await nextTick()
+  ingredientHeaderInput.value?.focus()
+}
+
+function commitIngredientHeader() {
+  if (!addingIngredientHeader.value)
+    return
+  const title = ingredientHeaderTitle.value.trim()
+  addingIngredientHeader.value = false
+  ingredientHeaderTitle.value = ''
+  if (title.length === 0)
+    return
+  r$.$value.ingredients.push({ type: 'header', title })
+}
+
+function cancelIngredientHeader() {
+  addingIngredientHeader.value = false
+  ingredientHeaderTitle.value = ''
+}
+
+async function startInstructionHeader() {
+  addingInstructionHeader.value = true
+  instructionHeaderTitle.value = ''
+  await nextTick()
+  instructionHeaderInput.value?.focus()
+}
+
+function commitInstructionHeader() {
+  if (!addingInstructionHeader.value)
+    return
+  const title = instructionHeaderTitle.value.trim()
+  addingInstructionHeader.value = false
+  instructionHeaderTitle.value = ''
+  if (title.length === 0)
+    return
+  r$.$value.instructions.push({ type: 'header', title })
+}
+
+function cancelInstructionHeader() {
+  addingInstructionHeader.value = false
+  instructionHeaderTitle.value = ''
 }
 
 async function onSubmit() {
@@ -180,26 +237,69 @@ async function onSubmit() {
               </span>
             </div>
             <FieldGroup class="gap-5">
-              <Field orientation="horizontal" class="gap-1">
-                <Input
-                  v-model="currentIngredient"
-                  type="text"
-                  placeholder="e.g. 400g bronze-cut rigatoni"
-                  class="bg-white"
-                  @keydown.enter.prevent="addIngredient"
-                />
-                <Button
-                  type="button"
-                  size="icon"
-                  @click="addIngredient"
-                >
-                  <Plus :size="18" />
-                </Button>
-              </Field>
+              <div class="flex flex-col gap-1.5">
+                <Field orientation="horizontal" class="gap-1">
+                  <Input
+                    v-model="currentIngredient"
+                    type="text"
+                    placeholder="e.g. 400g bronze-cut rigatoni"
+                    class="bg-white"
+                    @keydown.enter.prevent="addIngredient"
+                  />
+                  <Button
+                    type="button"
+                    size="icon"
+                    @click="addIngredient"
+                  >
+                    <Plus :size="18" />
+                  </Button>
+                </Field>
+                <template v-if="addingIngredientHeader">
+                  <Field orientation="horizontal" class="gap-1">
+                    <input
+                      ref="ingredientHeaderInput"
+                      v-model="ingredientHeaderTitle"
+                      type="text"
+                      placeholder="Section header (e.g. For the sauce)"
+                      class="flex h-10 w-full rounded-md border border-input bg-white px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+                      @keydown.enter.prevent="commitIngredientHeader"
+                      @keydown.esc.prevent="cancelIngredientHeader"
+                      @blur="commitIngredientHeader"
+                    >
+                    <Button
+                      type="button"
+                      size="icon"
+                      @mousedown.prevent
+                      @click="commitIngredientHeader"
+                    >
+                      <Check :size="18" />
+                    </Button>
+                    <Button
+                      type="button"
+                      size="icon"
+                      variant="outline"
+                      @mousedown.prevent
+                      @click="cancelIngredientHeader"
+                    >
+                      <X :size="18" />
+                    </Button>
+                  </Field>
+                </template>
+                <button v-else type="button" class="flex items-center gap-1 text-xs font-bold w-fit rounded-full bg-accent py-2 px-3 border border-primary text-primary" @click="startIngredientHeader">
+                  <Plus :size="16" /> Add section header
+                </button>
+              </div>
               <div class="flex flex-col">
-                <div v-for="(ingredient, index) of r$.ingredients.$each" :key="`ingredient-${index}`" class="flex items-start gap-3 border-b py-3 px-2">
+                <div
+                  v-for="(ingredient, index) of r$.ingredients.$each" :key="`ingredient-${index}`" :class="cn('flex items-start gap-3 py-3 px-2', {
+                    'border-b': ingredient.$value.type === 'ingredient',
+                  })"
+                >
                   <GripVertical :size="16" class="mt-1 shrink-0 text-muted-foreground" />
-                  <p class="min-w-0 flex-1 leading-6">
+                  <div v-if="ingredient.$value.type === 'header'" class="min-w-0 flex-1 text-primary font-semibold">
+                    {{ ingredient.$value.title }}
+                  </div>
+                  <p v-else class="min-w-0 flex-1 leading-6">
                     {{ ingredient.$value.raw }}
                   </p>
                   <button type="button" class="mt-1 shrink-0" @click="deleteIngredient(index)">
@@ -219,31 +319,72 @@ async function onSubmit() {
               </span>
             </div>
             <FieldGroup class="gap-5">
-              <Field orientation="horizontal" class="gap-1">
-                <Input
-                  v-model="currentIngredient"
-                  type="text"
-                  placeholder="e.g. Make sauce"
-                  class="bg-white"
-                  @keydown.enter.prevent="addInstruction"
-                />
-                <Button
-                  type="button"
-                  size="icon"
-                  @click="addInstruction"
-                >
-                  <Plus :size="18" />
-                </Button>
-              </Field>
+              <div class="flex flex-col gap-1.5">
+                <Field orientation="horizontal" class="gap-1">
+                  <Input
+                    v-model="currentInstruction"
+                    type="text"
+                    placeholder="e.g. Make sauce"
+                    class="bg-white"
+                    @keydown.enter.prevent="addInstruction"
+                  />
+                  <Button
+                    type="button"
+                    size="icon"
+                    @click="addInstruction"
+                  >
+                    <Plus :size="18" />
+                  </Button>
+                </Field>
+                <template v-if="addingInstructionHeader">
+                  <Field orientation="horizontal" class="gap-1">
+                    <input
+                      ref="instructionHeaderInput"
+                      v-model="instructionHeaderTitle"
+                      type="text"
+                      placeholder="Section header (e.g. For the sauce)"
+                      class="flex h-10 w-full rounded-md border border-input bg-white px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+                      @keydown.enter.prevent="commitInstructionHeader"
+                      @keydown.esc.prevent="cancelInstructionHeader"
+                      @blur="commitInstructionHeader"
+                    >
+                    <Button
+                      type="button"
+                      size="icon"
+                      @mousedown.prevent
+                      @click="commitInstructionHeader"
+                    >
+                      <Check :size="18" />
+                    </Button>
+                    <Button
+                      type="button"
+                      size="icon"
+                      variant="outline"
+                      @mousedown.prevent
+                      @click="cancelInstructionHeader"
+                    >
+                      <X :size="18" />
+                    </Button>
+                  </Field>
+                </template>
+                <button v-else type="button" class="flex items-center gap-1 text-xs font-bold w-fit rounded-full bg-accent py-2 px-3 border border-primary text-primary" @click="startInstructionHeader">
+                  <Plus :size="16" /> Add section header
+                </button>
+              </div>
               <div class="flex flex-col">
                 <div v-for="(instruction, index) of r$.instructions.$each" :key="`instruction-${index}`" class="flex items-start gap-3 py-3 px-2">
                   <GripVertical :size="16" class="mt-1 shrink-0 text-muted-foreground" />
-                  <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent font-serif font-semibold text-primary">
-                    {{ index + 1 }}
+                  <div v-if="instruction.$value.type === 'header'" class="text-primary font-semibold">
+                    {{ instruction.$value.title }}
                   </div>
-                  <p class="min-w-0 flex-1 leading-6">
-                    {{ instruction.$value.raw }}
-                  </p>
+                  <template v-else>
+                    <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent font-serif font-semibold text-primary">
+                      {{ index + 1 }}
+                    </div>
+                    <p class="min-w-0 flex-1 leading-6">
+                      {{ instruction.$value.raw }}
+                    </p>
+                  </template>
                   <button type="button" class="mt-1 shrink-0" @click="deleteInstruction(index)">
                     <X :size="18" class="text-muted-foreground" />
                   </button>

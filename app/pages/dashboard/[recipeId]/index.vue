@@ -139,13 +139,18 @@ async function toggleFavorite() {
               </div>
             </NumberFieldRoot>
             <div class="flex flex-col">
-              <div v-for="(ingredient, index) of data.ingredients" :key="`ingredient-${index}`" class="flex items-start gap-3 border-b py-3 px-2 last:border-b-0">
-                <Checkbox :id="`ingredient-${index}`" />
-                <Label
-                  :for="`ingredient-${index}`"
-                  class="text-regular peer-data-[state=checked]:line-through peer-data-[state=checked]:text-muted-foreground"
-                >{{ ingredient.raw }}</Label>
-              </div>
+              <template v-for="(ingredient, index) of data.ingredients" :key="`ingredient-${index}`">
+                <div v-if="ingredient.type === 'header'" class="py-3 text-primary font-semibold">
+                  {{ ingredient.title }}
+                </div>
+                <div v-else class="flex items-start gap-3 border-b py-3 px-2 last:border-b-0">
+                  <Checkbox :id="`ingredient-${index}`" />
+                  <Label
+                    :for="`ingredient-${index}`"
+                    class="text-regular peer-data-[state=checked]:line-through peer-data-[state=checked]:text-muted-foreground"
+                  >{{ ingredient.raw }}</Label>
+                </div>
+              </template>
             </div>
           </div>
 
@@ -155,14 +160,19 @@ async function toggleFavorite() {
               Method
             </h2>
             <div class="flex flex-col">
-              <div v-for="(instruction, index) of data.instructions" :key="`instruction-${index}`" class="flex items-start gap-3 py-3 px-2">
-                <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent font-serif font-semibold text-primary">
-                  {{ index + 1 }}
+              <template v-for="(instruction, index) of data.instructions" :key="`instruction-${index}`">
+                <div v-if="instruction.type === 'header'" class="py-3 text-primary font-semibold">
+                  {{ instruction.title }}
                 </div>
-                <p class="min-w-0 flex-1 leading-6">
-                  {{ instruction.raw }}
-                </p>
-              </div>
+                <div v-else class="flex items-start gap-3 py-3 px-2">
+                  <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent font-serif font-semibold text-primary">
+                    {{ index + 1 }}
+                  </div>
+                  <p class="min-w-0 flex-1 leading-6">
+                    {{ instruction.raw }}
+                  </p>
+                </div>
+              </template>
             </div>
           </div>
         </div>

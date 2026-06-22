@@ -23,7 +23,7 @@ defineEmits<{ (e: 'click'): void }>()
     :disabled="disabled"
     @click="$emit('click')"
   >
-    <Google />
+    <Google class="size-4" />
     <span>{{ label }}</span>
   </Button>
 </template>
