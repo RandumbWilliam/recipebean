@@ -10,7 +10,7 @@ const NAV_MENU = [
   {
     title: 'Favorites',
     icon: Heart,
-    url: '#',
+    url: '/dashboard/favorites',
   },
   {
     title: 'Collections',

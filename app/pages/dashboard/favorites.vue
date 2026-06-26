@@ -2,7 +2,11 @@
 import RecipeCard from '~/components/RecipeCard.vue'
 import AppSidebar from '~/components/sidebar/AppSidebar.vue'
 
-const { data, status } = await useFetch('/api/recipes')
+const { data, status } = await useFetch('/api/recipes', {
+  query: {
+    favorite: 'true',
+  },
+})
 </script>
 
 <template>
@@ -13,7 +17,7 @@ const { data, status } = await useFetch('/api/recipes')
         <header class="flex items-start justify-between">
           <div class="flex flex-col gap-1">
             <h1 class="text-4xl font-serif font-medium">
-              All recipes
+              Favorite recipes
             </h1>
             <p v-if="status === 'success' && data" class="text-sm text-muted-foreground">
               {{ data.length }} {{ data.length === 1 ? 'recipe' : 'recipes' }}
@@ -30,7 +34,7 @@ const { data, status } = await useFetch('/api/recipes')
         <template v-if="status === 'success' && data">
           <div v-if="data.length === 0" class="flex flex-col gap-3 h-120 items-center justify-center">
             <p class="text-muted-foreground italic">
-              No recipes
+              No favorites
             </p>
             <Button as-child>
               <NuxtLink to="/dashboard/new">
