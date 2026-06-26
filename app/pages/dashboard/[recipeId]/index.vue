@@ -2,6 +2,7 @@
 import { Heart, Minus, Plus } from '@lucide/vue'
 import { NumberFieldDecrement, NumberFieldIncrement, NumberFieldInput, NumberFieldRoot } from 'reka-ui'
 import { cn } from '~/lib/utils'
+import { withInstructionSteps } from '~/utils/recipes'
 
 const route = useRoute()
 const router = useRouter()
@@ -20,6 +21,8 @@ const { data, status } = await useFetch(`/api/recipes/${recipeId.value}`)
 
 const isFavorite = ref(data.value?.isFavorite ?? false)
 const servings = ref(data.value?.servings ?? 0)
+
+const numberedInstructions = computed(() => withInstructionSteps(data.value?.instructions ?? []))
 
 async function toggleFavorite() {
   const next = !isFavorite.value
@@ -115,7 +118,7 @@ async function toggleFavorite() {
             <NumberFieldRoot
               id="servings"
               v-model="servings"
-              :min="0"
+              :min="1"
               class="flex py-2 px-3 items-center justify-between border bg-background rounded-lg"
             >
               <label
@@ -160,13 +163,13 @@ async function toggleFavorite() {
               Method
             </h2>
             <div class="flex flex-col">
-              <template v-for="(instruction, index) of data.instructions" :key="`instruction-${index}`">
+              <template v-for="{ instruction, step, index } of numberedInstructions" :key="`instruction-${index}`">
                 <div v-if="instruction.type === 'header'" class="py-3 text-primary font-semibold">
                   {{ instruction.title }}
                 </div>
                 <div v-else class="flex items-start gap-3 py-3 px-2">
                   <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent font-serif font-semibold text-primary">
-                    {{ index + 1 }}
+                    {{ step }}
                   </div>
                   <p class="min-w-0 flex-1 leading-6">
                     {{ instruction.raw }}

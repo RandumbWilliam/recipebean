@@ -3,6 +3,7 @@ import { Check, GripVertical, Plus, X } from '@lucide/vue'
 import { useRegleSchema } from '@regle/schemas'
 import { createRecipeSchema } from '~~/shared/schemas/recipes'
 import { cn } from '~/lib/utils'
+import { withInstructionSteps } from '~/utils/recipes'
 
 const { r$ } = useRegleSchema({
   name: '',
@@ -10,7 +11,7 @@ const { r$ } = useRegleSchema({
   description: '',
   prepTime: 0,
   cookTime: 0,
-  servings: 0,
+  servings: 1,
   ingredients: [],
   instructions: [],
   notes: '',
@@ -106,6 +107,8 @@ function cancelInstructionHeader() {
   addingInstructionHeader.value = false
   instructionHeaderTitle.value = ''
 }
+
+const numberedInstructions = computed(() => withInstructionSteps(r$.$value.instructions))
 
 async function onSubmit() {
   const { valid, data } = await r$.$validate()
@@ -215,7 +218,7 @@ async function onSubmit() {
                 <NumberField
                   id="create-recipe-form-servings"
                   v-model="r$.$value.servings"
-                  :min="0"
+                  :min="1"
                 >
                   <NumberFieldContent>
                     <NumberFieldInput class="bg-white" :aria-invalid="r$.servings.$error" />
@@ -372,17 +375,17 @@ async function onSubmit() {
                 </button>
               </div>
               <div class="flex flex-col">
-                <div v-for="(instruction, index) of r$.instructions.$each" :key="`instruction-${index}`" class="flex items-start gap-3 py-3 px-2">
+                <div v-for="{ instruction, step, index } of numberedInstructions" :key="`instruction-${index}`" class="flex items-start gap-3 py-3 px-2">
                   <GripVertical :size="16" class="mt-1 shrink-0 text-muted-foreground" />
-                  <div v-if="instruction.$value.type === 'header'" class="text-primary font-semibold">
-                    {{ instruction.$value.title }}
+                  <div v-if="instruction.type === 'header'" class="text-primary font-semibold">
+                    {{ instruction.title }}
                   </div>
                   <template v-else>
                     <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent font-serif font-semibold text-primary">
-                      {{ index + 1 }}
+                      {{ step }}
                     </div>
                     <p class="min-w-0 flex-1 leading-6">
-                      {{ instruction.$value.raw }}
+                      {{ instruction.raw }}
                     </p>
                   </template>
                   <button type="button" class="mt-1 shrink-0" @click="deleteInstruction(index)">

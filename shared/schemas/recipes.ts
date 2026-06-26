@@ -33,7 +33,7 @@ export const createRecipeSchema = z.object({
   description: z.string(),
   prepTime: z.int().nonnegative(),
   cookTime: z.int().nonnegative(),
-  servings: z.int().nonnegative(),
+  servings: z.int().positive(),
   ingredients: z.array(recipeIngredientSchema),
   instructions: z.array(recipeInstructionSchema),
   notes: z.string(),
