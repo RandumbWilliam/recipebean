@@ -8,7 +8,14 @@ export default defineNuxtConfig({
   },
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
-  modules: ['@nuxt/eslint', '@clerk/nuxt', 'shadcn-nuxt', '@nuxt/fonts', '@vueuse/nuxt'],
+  modules: [
+    '@nuxt/eslint',
+    '@clerk/nuxt',
+    'shadcn-nuxt',
+    '@nuxt/fonts',
+    '@vueuse/nuxt',
+    '@nuxt/test-utils/module',
+  ],
   eslint: {
     config: {
       standalone: false,
