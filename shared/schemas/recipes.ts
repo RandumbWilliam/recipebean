@@ -1,15 +1,11 @@
 import type { Serialize } from 'nitropack/types'
 import type { recipesTable } from '~~/server/db/schema'
 import * as z from 'zod'
+import { ingredientSchema } from '~~/shared/lib/ingredient-parser'
 
 const headerSchema = z.object({
   type: z.literal('header'),
   title: z.string(),
-})
-
-const ingredientSchema = z.object({
-  type: z.literal('ingredient'),
-  raw: z.string(),
 })
 
 const instructionSchema = z.object({
@@ -44,6 +40,7 @@ export const toggleFavoriteSchema = z.object({
   isFavorite: z.boolean(),
 })
 
+export type ParsedIngredient = z.infer<typeof ingredientSchema>
 export type RecipeIngredient = z.infer<typeof recipeIngredientSchema>
 export type RecipeInstruction = z.infer<typeof recipeInstructionSchema>
 export type SerializedRecipe = Serialize<typeof recipesTable.$inferSelect>
