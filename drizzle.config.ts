@@ -7,11 +7,9 @@ export default defineConfig({
   schema: './server/db/schema/*',
   out: './drizzle',
   dbCredentials: {
-    host: process.env.NUXT_DB_HOST ?? 'localhost',
-    port: Number(process.env.NUXT_DB_PORT ?? 5432),
-    user: process.env.NUXT_DB_USER ?? '',
-    password: process.env.NUXT_DB_PASSWORD ?? '',
-    database: process.env.NUXT_DB_NAME ?? '',
-    ssl: false,
+    // Drizzle Kit connects directly to Postgres (never through Hyperdrive).
+    // Point DATABASE_MIGRATIONS_URL at your local DB for local migrations, or
+    // at the direct Neon URL (with sslmode=require) to migrate production.
+    url: process.env.DATABASE_MIGRATIONS_URL!,
   },
 })

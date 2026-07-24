@@ -1,10 +1,11 @@
-import { db } from '~~/server/db'
+import { useDb } from '~~/server/db'
 import { recipesCategoriesTable, recipesTable } from '~~/server/db/schema'
-import { requireAuth } from '~~/server/util/auth'
+import { requireAuth } from '~~/server/utils/auth'
 import { createRecipeSchema } from '~~/shared/schemas/recipes'
 
 export default defineEventHandler(async (event) => {
   const user = await requireAuth(event)
+  const db = useDb(event)
 
   const { categoryIds, ...recipeData } = await readValidatedBody(event, createRecipeSchema.parse)
 

@@ -1,8 +1,8 @@
 import { and, eq } from 'drizzle-orm'
 import * as z from 'zod'
-import { db } from '~~/server/db'
+import { useDb } from '~~/server/db'
 import { recipesTable } from '~~/server/db/schema'
-import { requireAuth } from '~~/server/util/auth'
+import { requireAuth } from '~~/server/utils/auth'
 import { toggleFavoriteSchema } from '~~/shared/schemas/recipes'
 
 const paramsSchema = z.object({
@@ -11,6 +11,7 @@ const paramsSchema = z.object({
 
 export default defineEventHandler(async (event) => {
   const user = await requireAuth(event)
+  const db = useDb(event)
 
   const params = await getValidatedRouterParams(event, paramsSchema.parse)
 

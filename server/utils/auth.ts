@@ -1,6 +1,6 @@
-import type { H3Event } from '#imports'
+import type { H3Event } from 'h3'
 import { eq } from 'drizzle-orm'
-import { db } from '../db'
+import { useDb } from '../db'
 import { usersTable } from '../db/schema'
 
 export async function requireAuth(event: H3Event) {
@@ -8,6 +8,7 @@ export async function requireAuth(event: H3Event) {
   if (!clerkId)
     throw createError({ statusCode: 401, statusMessage: 'Unauthorized' })
 
+  const db = useDb(event)
   const user = await db.query.usersTable.findFirst({
     where: eq(usersTable.clerkId, clerkId),
   })
