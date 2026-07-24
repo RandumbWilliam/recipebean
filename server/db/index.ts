@@ -1,5 +1,5 @@
 import type { NodePgDatabase } from 'drizzle-orm/node-postgres'
-import type { H3Event } from '#imports'
+import type { H3Event } from 'h3'
 import { drizzle } from 'drizzle-orm/node-postgres'
 import { Pool } from 'pg'
 import * as schema from './schema'

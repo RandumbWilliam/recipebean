@@ -1,4 +1,4 @@
-import type { H3Event } from '#imports'
+import type { H3Event } from 'h3'
 import { eq } from 'drizzle-orm'
 import { useDb } from '../db'
 import { usersTable } from '../db/schema'
