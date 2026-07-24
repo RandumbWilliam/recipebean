@@ -1,9 +1,9 @@
 import type { SQL } from 'drizzle-orm'
 import { and, eq } from 'drizzle-orm'
 import * as z from 'zod'
-import { db } from '~~/server/db'
+import { useDb } from '~~/server/db'
 import { recipesTable } from '~~/server/db/schema'
-import { requireAuth } from '~~/server/util/auth'
+import { requireAuth } from '~~/server/utils/auth'
 
 const querySchema = z.object({
   favorite: z.coerce.boolean().optional(),
@@ -11,6 +11,7 @@ const querySchema = z.object({
 
 export default defineEventHandler(async (event) => {
   const user = await requireAuth(event)
+  const db = useDb(event)
 
   const query = await getValidatedQuery(event, querySchema.parse)
 

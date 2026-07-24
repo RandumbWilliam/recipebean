@@ -1,5 +1,5 @@
 import { eq } from 'drizzle-orm'
-import { db } from '~~/server/db'
+import { useDb } from '~~/server/db'
 import { usersTable } from '~~/server/db/schema'
 import { randomPfpId } from '~~/shared/misc/pfp'
 
@@ -8,6 +8,7 @@ export default defineEventHandler(async (event) => {
   if (!userId)
     throw createError({ statusCode: 401, statusMessage: 'Unauthorized' })
 
+  const db = useDb(event)
   const existing = await db.query.usersTable.findFirst({
     where: eq(usersTable.clerkId, userId),
     columns: { pfpId: true },

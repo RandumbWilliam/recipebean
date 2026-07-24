@@ -1,6 +1,6 @@
 import { verifyWebhook } from '@clerk/nuxt/webhooks'
 import { eq } from 'drizzle-orm'
-import { db } from '~~/server/db'
+import { useDb } from '~~/server/db'
 import { usersTable } from '~~/server/db/schema'
 import { randomPfpId } from '~~/shared/misc/pfp'
 
@@ -12,6 +12,8 @@ export default defineEventHandler(async (event) => {
   catch {
     throw createError({ statusCode: 401, statusMessage: 'Invalid webhook signature' })
   }
+
+  const db = useDb(event)
 
   switch (evt.type) {
     case 'user.created': {
