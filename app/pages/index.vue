@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Star } from '@lucide/vue'
+import { cn } from '~/lib/utils'
 
 useHead({
   title: 'Recipebean - Your kitchen, beautifully organized',
@@ -35,7 +36,12 @@ const INFOS = [
     <Header />
 
     <main>
-      <section class="container grid grid-cols-2 pt-16 pb-15 gap-8">
+      <section
+        :class="cn(
+          'container flex flex-col gap-24 pt-8 pb-15',
+          'md:grid md:grid-cols-2 md:gap-8 md:pt-16',
+        )"
+      >
         <div class="flex flex-col gap-6">
           <div class="bg-accent flex items-center rounded-full px-4 h-8 gap-3 w-fit">
             <div class="w-[7px] h-[7px] rounded-full bg-primary" />
@@ -43,10 +49,16 @@ const INFOS = [
               Your kitchen, beautifully organized
             </p>
           </div>
-          <h1 class="font-serif font-medium text-[62px] -tracking-[0.015em] leading-[1.04]">
-            Every recipe you love,<br><span class="text-primary italic">finally</span> in one cozy place.
+          <h1
+            :class="cn(
+              'font-serif font-medium text-[48px] text-center -tracking-[0.015em] leading-[1.04]',
+              'sm:text-[58px] sm:text-start',
+              'md:text-[62px]',
+            )"
+          >
+            Every recipe you love, <br class="hidden md:block"><span class="text-primary italic">finally</span> in one cozy place.
           </h1>
-          <p class="text-lg text-muted-foreground">
+          <p class="text-base sm:text-lg text-muted-foreground">
             Save the dishes worth making again. Keep ingredients, steps, and notes tidy — and pull them up the moment you're standing at the stove.
           </p>
           <div>
@@ -54,7 +66,7 @@ const INFOS = [
               Start your cookbook
             </Button>
           </div>
-          <div class="flex items-center gap-3">
+          <div class="flex flex-col items-start sm:flex-row sm:items-center gap-3">
             <div class="flex items-center">
               <Star v-for="index in 5" :key="index" class="fill-primary stroke-none" :size="18" />
             </div>
@@ -64,7 +76,7 @@ const INFOS = [
           </div>
         </div>
 
-        <div class="relative flex justify-center items-center">
+        <div class="hidden relative md:flex justify-center items-center">
           <div
             class="absolute w-[400px] h-[380px]
          bg-[linear-gradient(140deg,rgb(255,228,215)_0%,rgb(255,219,225)_100%)]
@@ -75,7 +87,12 @@ const INFOS = [
         </div>
       </section>
 
-      <section class="container grid grid-cols-3 gap-4 pb-15">
+      <section
+        :class="cn(
+          'container flex flex-col gap-4 pb-15',
+          'md:grid md:grid-cols-3',
+        )"
+      >
         <div v-for="(info, index) in INFOS" :key="index" class="border p-6 rounded-xl flex flex-col gap-1.5 bg-white">
           <div
             class="flex items-center justify-center h-14 w-14 rounded-lg p-1"
