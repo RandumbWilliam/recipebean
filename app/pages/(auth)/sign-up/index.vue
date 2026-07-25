@@ -3,6 +3,7 @@ import { useRegleSchema } from '@regle/schemas'
 import { z } from 'zod'
 import GoogleButton from '~/components/auth/GoogleButton.vue'
 import PasswordInput from '~/components/auth/PasswordInput.vue'
+import { cn } from '~/lib/utils'
 
 definePageMeta({ layout: false })
 
@@ -88,21 +89,27 @@ async function onGoogle() {
 </script>
 
 <template>
-  <section class="grid grid-rows-1 min-h-[768px] min-h-screen grid-cols-[min(50%,640px)_1fr] max-md:grid-cols-1">
-    <div class="relative border-l overflow-hidden h-full min-h-[240px]">
+  <section class="grid grid-rows-1 min-h-[768px] min-h-screen max-md:grid-cols-1 md:grid-cols-[min(50%,640px)_1fr]">
+    <div class="hidden md:flex relative border-l overflow-hidden h-full min-h-[240px]">
       <img src="/chicken-pasta-foxes-love-lemons.jpg" class="absolute inset-0 object-cover w-full h-full">
       <div
         class="absolute inset-0 pointer-events-none bg-[linear-gradient(165deg,rgba(255,89,109,0.2)_0%,rgba(43,36,34,0.1)_45%,rgba(43,36,34,0.52)_100%)]"
       />
     </div>
 
-    <div class="flex flex-col gap-6 px-14 py-11">
-      <div class="w-fit">
+    <div
+      :class="cn(
+        'flex flex-col gap-6 px-4 py-4',
+        'md:px-8 md:py-8',
+        'lg:px-14 lg:py-11',
+      )"
+    >
+      <NuxtLink to="/" class="w-fit">
         <Logo class="h-7" />
-      </div>
+      </NuxtLink>
 
       <div class="flex-1 flex items-center">
-        <div class="w-full max-w-md flex flex-col gap-6">
+        <div class="w-full max-w-md mx-auto flex flex-col gap-6 md:mx-0">
           <div v-if="errorMessage" class="border rounded-md text-sm py-3 px-4 text-destructive bg-destructive/5 font-medium border-destructive">
             {{ errorMessage }}
           </div>
@@ -128,8 +135,8 @@ async function onGoogle() {
 
           <form id="signup-form" @submit.prevent="onSubmit">
             <FieldSet :disabled="loading">
-              <FieldGroup>
-                <div class="flex gap-3">
+              <FieldGroup class="gap-3 sm:gap-7">
+                <div class="flex flex-col sm:flex-row gap-3">
                   <Field :data-invalid="r$.firstName.$error" class="gap-1 flex-1">
                     <FieldLabel for="signup-form-first-name">
                       First name

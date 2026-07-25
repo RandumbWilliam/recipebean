@@ -3,6 +3,7 @@ import { useRegleSchema } from '@regle/schemas'
 import { z } from 'zod'
 import GoogleButton from '~/components/auth/GoogleButton.vue'
 import PasswordInput from '~/components/auth/PasswordInput.vue'
+import { cn } from '~/lib/utils'
 
 definePageMeta({ layout: false })
 
@@ -90,14 +91,20 @@ async function onGoogle() {
 </script>
 
 <template>
-  <section class="grid grid-rows-1 min-h-[768px] min-h-screen grid-cols-[1fr_min(50%,640px)] max-md:grid-cols-1">
-    <div class="flex flex-col gap-6 px-14 py-11">
-      <div class="w-fit">
+  <section class="grid grid-rows-1 max-md:grid-cols-1 min-h-[768px] min-h-screen md:grid-cols-[1fr_min(50%,640px)]">
+    <div
+      :class="cn(
+        'flex flex-col gap-6 px-4 py-4',
+        'md:px-8 md:py-8',
+        'lg:px-14 lg:py-11',
+      )"
+    >
+      <NuxtLink to="/" class="w-fit">
         <Logo class="h-7" />
-      </div>
+      </NuxtLink>
 
       <div class="flex-1 flex items-center">
-        <div class="w-full max-w-md flex flex-col gap-6">
+        <div class="w-full max-w-md mx-auto flex flex-col gap-6 md:mx-0">
           <div v-if="errorMessage" class="border rounded-md text-sm py-3 px-4 text-destructive bg-destructive/5 font-medium border-destructive">
             {{ errorMessage }}
           </div>
@@ -172,7 +179,8 @@ async function onGoogle() {
         </div>
       </div>
     </div>
-    <div class="relative border-l overflow-hidden h-full min-h-[240px]">
+
+    <div class="hidden md:flex relative border-l overflow-hidden h-full min-h-[240px]">
       <img src="/brunch-menu-foxes-love-lemons.jpg" class="absolute inset-0 object-cover w-full h-full">
       <div
         class="absolute inset-0 pointer-events-none bg-[linear-gradient(165deg,rgba(255,89,109,0.2)_0%,rgba(43,36,34,0.1)_45%,rgba(43,36,34,0.52)_100%)]"

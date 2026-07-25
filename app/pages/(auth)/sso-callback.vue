@@ -18,7 +18,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div>
+  <div class="flex flex-col items-center justify-center h-screen">
     <h1 class="font-serif font-medium text-4xl -tracking-[0.015em] leading-[1.1]">
       Signing you <span class="text-primary italic">in</span>…
     </h1>
