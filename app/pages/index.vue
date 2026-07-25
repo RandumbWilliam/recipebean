@@ -62,8 +62,10 @@ const INFOS = [
             Save the dishes worth making again. Keep ingredients, steps, and notes tidy — and pull them up the moment you're standing at the stove.
           </p>
           <div>
-            <Button size="lg">
-              Start your cookbook
+            <Button size="lg" as-child>
+              <NuxtLink to="/sign-up">
+                Start your cookbook
+              </NuxtLink>
             </Button>
           </div>
           <div class="flex flex-col items-start sm:flex-row sm:items-center gap-3">

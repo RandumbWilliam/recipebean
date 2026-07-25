@@ -1,31 +1,32 @@
 <script setup lang="ts">
 import { useRegleSchema } from '@regle/schemas'
 import { z } from 'zod'
+import { cn } from '~/lib/utils'
 
 definePageMeta({
   layout: false,
-  middleware: async () => {
-    const { isLoaded, signUp, setActive } = useSignUp()
+  // middleware: async () => {
+  //   const { isLoaded, signUp, setActive } = useSignUp()
 
-    try {
-      await until(isLoaded).toBe(true, { timeout: 5000, throwOnTimeout: true })
-    }
-    catch {
-      return navigateTo('/sign-up')
-    }
+  //   try {
+  //     await until(isLoaded).toBe(true, { timeout: 5000, throwOnTimeout: true })
+  //   }
+  //   catch {
+  //     return navigateTo('/sign-up')
+  //   }
 
-    const status = signUp.value?.status
-    const hasPendingEmail = !!signUp.value?.emailAddress
+  //   const status = signUp.value?.status
+  //   const hasPendingEmail = !!signUp.value?.emailAddress
 
-    if (!status || !setActive.value || !hasPendingEmail || status === 'abandoned') {
-      return navigateTo('/sign-up')
-    }
+  //   if (!status || !setActive.value || !hasPendingEmail || status === 'abandoned') {
+  //     return navigateTo('/sign-up')
+  //   }
 
-    if (status === 'complete' && signUp.value.createdSessionId) {
-      await setActive.value({ session: signUp.value.createdSessionId })
-      return navigateTo('/dashboard')
-    }
-  },
+  //   if (status === 'complete' && signUp.value.createdSessionId) {
+  //     await setActive.value({ session: signUp.value.createdSessionId })
+  //     return navigateTo('/dashboard')
+  //   }
+  // },
 })
 
 const { isLoaded, signUp, setActive } = useSignUp()
@@ -123,20 +124,26 @@ async function onResend() {
 
 <template>
   <section class="grid grid-rows-1 min-h-[768px] min-h-screen grid-cols-[min(50%,640px)_1fr] max-md:grid-cols-1">
-    <div class="relative border-l overflow-hidden h-full min-h-[240px]">
+    <div class="hidden md:flex relative border-l overflow-hidden h-full min-h-[240px]">
       <img src="/chicken-pasta-foxes-love-lemons.jpg" class="absolute inset-0 object-cover w-full h-full">
       <div
         class="absolute inset-0 pointer-events-none bg-[linear-gradient(165deg,rgba(255,89,109,0.2)_0%,rgba(43,36,34,0.1)_45%,rgba(43,36,34,0.52)_100%)]"
       />
     </div>
 
-    <div class="flex flex-col gap-6 px-14 py-11">
-      <div class="w-fit">
+    <div
+      :class="cn(
+        'flex flex-col gap-6 px-4 py-4',
+        'md:px-8 md:py-8',
+        'lg:px-14 lg:py-11',
+      )"
+    >
+      <NuxtLink to="/" class="w-fit">
         <Logo class="h-7" />
-      </div>
+      </NuxtLink>
 
       <div class="flex-1 flex items-center">
-        <div class="w-full max-w-md flex flex-col gap-6">
+        <div class="w-full max-w-md mx-auto flex flex-col gap-6 md:mx-0">
           <div v-if="info" class="border rounded-md  py-3 px-4 font-medium text-muted-foreground bg-muted">
             {{ info }}
           </div>
