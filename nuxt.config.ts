@@ -2,10 +2,17 @@ import tailwindcss from '@tailwindcss/vite'
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  ssr: false,
+  ssr: true,
 
   routeRules: {
+    // Public marketing page → static HTML at build time, edge-cached, real SEO.
     '/': { prerender: true },
+    // Everything behind auth → client-only SPA; per-user data never renders on
+    // the server and these pages have no SEO value.
+    '/dashboard/**': { ssr: false },
+    '/login': { ssr: false },
+    '/sign-up/**': { ssr: false },
+    '/sso-callback': { ssr: false },
   },
 
   compatibilityDate: '2025-07-15',
