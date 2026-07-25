@@ -1,6 +1,13 @@
 <script setup lang="ts">
 import { Star } from '@lucide/vue'
 
+useHead({
+  title: 'Recipebean - Your kitchen, beautifully organized',
+  meta: [
+    { name: 'description', content: 'Every recipe you love, finally in one cozy place. Keep ingredients, steps, and notes tidy in a single searchable library.' },
+  ],
+})
+
 const INFOS = [
   {
     icon: '/kawaii-icons/salad-bowl.png',
