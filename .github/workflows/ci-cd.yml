@@ -34,10 +34,8 @@ jobs:
   deploy:
     name: Migrate & Deploy
     needs: check
-    # Only deploy on push (or manual dispatch) to main, never on pull requests.
-    if: >-
-      (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
-      && github.ref == 'refs/heads/main'
+    # Deploy only via manual dispatch from main — never automatically on push or PR.
+    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
