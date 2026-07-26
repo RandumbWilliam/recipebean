@@ -19,7 +19,8 @@ const emits = defineEmits<{
   'update:open': [open: boolean]
 }>()
 
-const isMobile = useMediaQuery('(max-width: 768px)')
+// 767.98px so 768px is desktop, matching Tailwind's `md` (min-width: 768px) used across the app.
+const isMobile = useMediaQuery('(max-width: 767.98px)')
 const openMobile = ref(false)
 
 const open = useVModel(props, 'open', emits, {

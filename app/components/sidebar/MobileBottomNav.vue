@@ -1,8 +1,16 @@
 <script setup lang="ts">
-import { BookOpenText, Clock, CookingPot, Heart, Plus } from '@lucide/vue'
+import type { Component } from 'vue'
+import { BookOpenText, CookingPot, Heart, Plus, Search } from '@lucide/vue'
 import { cn } from '~/lib/utils'
 
-const NAV_MENU = [
+interface NavItem {
+  title: string
+  icon: Component
+  url?: string
+  action?: 'search'
+}
+
+const NAV_MENU: NavItem[] = [
   {
     title: 'All recipes',
     icon: BookOpenText,
@@ -19,16 +27,19 @@ const NAV_MENU = [
     url: '#',
   },
   {
-    title: 'Recently added',
-    icon: Clock,
-    url: '#',
+    title: 'Search',
+    icon: Search,
+    action: 'search',
   },
 ]
 
 const route = useRoute()
+const { openSearch } = useRecipeSearch()
 
 const leftItems = NAV_MENU.slice(0, 2)
 const rightItems = NAV_MENU.slice(2)
+
+const tabClass = 'flex min-h-11 min-w-0 flex-1 flex-col items-center justify-center gap-0.5 px-1 text-muted-foreground transition-colors'
 
 function isActive(url: string) {
   if (url === '#')
@@ -49,13 +60,10 @@ function isActive(url: string) {
         v-for="item in leftItems"
         :key="item.title"
         :to="item.url"
-        :aria-current="isActive(item.url) ? 'page' : undefined"
-        :class="cn(
-          'flex min-h-11 min-w-0 flex-1 flex-col items-center justify-center gap-0.5 px-1 text-muted-foreground transition-colors',
-          isActive(item.url) && 'text-primary',
-        )"
+        :aria-current="isActive(item.url!) ? 'page' : undefined"
+        :class="cn(tabClass, isActive(item.url!) && 'text-primary')"
       >
-        <component :is="item.icon" class="size-5 shrink-0" :stroke-width="isActive(item.url) ? 2.5 : 2" />
+        <component :is="item.icon" class="size-5 shrink-0" :stroke-width="isActive(item.url!) ? 2.5 : 2" />
         <span class="max-w-full truncate text-[10px] font-semibold leading-tight">
           {{ item.title }}
         </span>
@@ -71,21 +79,30 @@ function isActive(url: string) {
         </NuxtLink>
       </div>
 
-      <NuxtLink
-        v-for="item in rightItems"
-        :key="item.title"
-        :to="item.url"
-        :aria-current="isActive(item.url) ? 'page' : undefined"
-        :class="cn(
-          'flex min-h-11 min-w-0 flex-1 flex-col items-center justify-center gap-0.5 px-1 text-muted-foreground transition-colors',
-          isActive(item.url) && 'text-primary',
-        )"
-      >
-        <component :is="item.icon" class="size-5 shrink-0" :stroke-width="isActive(item.url) ? 2.5 : 2" />
-        <span class="max-w-full truncate text-[10px] font-semibold leading-tight">
-          {{ item.title }}
-        </span>
-      </NuxtLink>
+      <template v-for="item in rightItems" :key="item.title">
+        <button
+          v-if="item.action === 'search'"
+          type="button"
+          :class="tabClass"
+          @click="openSearch"
+        >
+          <component :is="item.icon" class="size-5 shrink-0" :stroke-width="2" />
+          <span class="max-w-full truncate text-[10px] font-semibold leading-tight">
+            {{ item.title }}
+          </span>
+        </button>
+        <NuxtLink
+          v-else
+          :to="item.url"
+          :aria-current="isActive(item.url!) ? 'page' : undefined"
+          :class="cn(tabClass, isActive(item.url!) && 'text-primary')"
+        >
+          <component :is="item.icon" class="size-5 shrink-0" :stroke-width="isActive(item.url!) ? 2.5 : 2" />
+          <span class="max-w-full truncate text-[10px] font-semibold leading-tight">
+            {{ item.title }}
+          </span>
+        </NuxtLink>
+      </template>
     </div>
   </nav>
 </template>

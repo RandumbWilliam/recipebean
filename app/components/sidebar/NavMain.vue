@@ -1,5 +1,7 @@
 <script setup lang="ts">
-import { BookOpenText, Clock, CookingPot, Heart } from '@lucide/vue'
+import { BookOpenText, Clock, CookingPot, Heart, Search } from '@lucide/vue'
+
+const { openSearch } = useRecipeSearch()
 
 const NAV_MENU = [
   {
@@ -29,6 +31,16 @@ const NAV_MENU = [
   <SidebarGroup>
     <SidebarGroupContent>
       <SidebarMenu>
+        <SidebarMenuItem class="hidden group-data-[collapsible=icon]:block">
+          <SidebarMenuButton
+            tooltip="Search"
+            class="text-muted-foreground h-10 px-3 hover:bg-accent! hover:text-muted-foreground! font-semibold"
+            @click="openSearch"
+          >
+            <Search />
+            <span>Search</span>
+          </SidebarMenuButton>
+        </SidebarMenuItem>
         <SidebarMenuItem v-for="item in NAV_MENU" :key="item.title">
           <SidebarMenuButton as-child :tooltip="item.title">
             <NuxtLink
