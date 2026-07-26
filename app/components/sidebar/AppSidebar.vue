@@ -6,6 +6,7 @@ import {
   SidebarFooter,
   SidebarHeader,
   SidebarRail,
+  SidebarTrigger,
 } from '@/components/ui/sidebar'
 import NavCategories from './NavCategories.vue'
 import NavMain from './NavMain.vue'
@@ -32,14 +33,13 @@ const sidebarUser = computed(() =>
 
 <template>
   <Sidebar v-bind="props">
-    <SidebarHeader class="py-6 gap-4 group-data-[collapsible=icon]:hidden">
-      <SidebarMenu>
-        <SidebarMenuItem>
-          <NuxtLink to="/dashboard">
-            <Logo class="h-6" />
-          </NuxtLink>
-        </SidebarMenuItem>
-      </SidebarMenu>
+    <SidebarHeader class="py-6 gap-4">
+      <div class="flex items-center justify-between group-data-[collapsible=icon]:justify-center">
+        <NuxtLink to="/dashboard" class="group-data-[collapsible=icon]:hidden">
+          <Logo class="h-6" />
+        </NuxtLink>
+        <SidebarTrigger />
+      </div>
       <SearchForm class="group-data-[collapsible=icon]:hidden" />
     </SidebarHeader>
     <SidebarContent class="gap-5">
