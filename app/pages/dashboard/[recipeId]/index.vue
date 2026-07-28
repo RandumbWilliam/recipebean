@@ -109,9 +109,9 @@ async function toggleFavorite() {
           <Image v-else :size="18" class="text-muted-foreground" />
         </div>
 
-        <div class="relative grid grid-cols-[330px_1fr] gap-10">
+        <div class="relative flex flex-col md:grid md:grid-cols-[330px_1fr] gap-10">
           <!-- Ingredients -->
-          <div class="sticky top-6 self-start flex flex-col gap-3 py-6 px-4 border bg-white rounded-xl">
+          <div class="relative w-full md:sticky md:top-6 self-start flex flex-col gap-3 py-6 px-4 border bg-white rounded-xl">
             <h2 class="font-serif font-medium text-2xl">
               Ingredients
             </h2>
