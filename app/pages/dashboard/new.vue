@@ -1,6 +1,8 @@
 <script setup lang="ts">
+import type { Ingredient } from '~~/shared/lib/ingredient-parser'
 import { Check, GripVertical, Plus, X } from '@lucide/vue'
 import { useRegleSchema } from '@regle/schemas'
+import { formatIngredient, parseIngredient } from '~~/shared/lib/ingredient-parser'
 import { createRecipeSchema } from '~~/shared/schemas/recipes'
 import { cn } from '~/lib/utils'
 import { withInstructionSteps } from '~/utils/recipes'
@@ -40,7 +42,9 @@ function addIngredient() {
   if (currIngredient.length === 0)
     return
 
-  r$.$value.ingredients.push({ type: 'ingredient', raw: currIngredient })
+  const parsedIngredient = parseIngredient(currIngredient)
+
+  r$.$value.ingredients.push({ type: 'ingredient', ...parsedIngredient })
   currentIngredient.value = ''
 }
 
@@ -303,7 +307,7 @@ async function onSubmit() {
                     {{ ingredient.$value.title }}
                   </div>
                   <p v-else class="min-w-0 flex-1 leading-6">
-                    {{ ingredient.$value.raw }}
+                    {{ formatIngredient(ingredient.$value as Ingredient) }}
                   </p>
                   <button type="button" class="mt-1 shrink-0" @click="deleteIngredient(index)">
                     <X :size="18" class="text-muted-foreground" />

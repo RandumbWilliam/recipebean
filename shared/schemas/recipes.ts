@@ -1,15 +1,16 @@
 import type { Serialize } from 'nitropack/types'
 import type { recipesTable } from '~~/server/db/schema'
 import * as z from 'zod'
+import { ingredientSchema } from '~~/shared/lib/ingredient-parser'
 
 const headerSchema = z.object({
   type: z.literal('header'),
   title: z.string(),
 })
 
-const ingredientSchema = z.object({
+const ingredientTypeSchema = z.object({
   type: z.literal('ingredient'),
-  raw: z.string(),
+  ...ingredientSchema.shape,
 })
 
 const instructionSchema = z.object({
@@ -19,7 +20,7 @@ const instructionSchema = z.object({
 
 const recipeIngredientSchema = z.discriminatedUnion('type', [
   headerSchema,
-  ingredientSchema,
+  ingredientTypeSchema,
 ])
 
 const recipeInstructionSchema = z.discriminatedUnion('type', [
