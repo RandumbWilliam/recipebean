@@ -30,7 +30,7 @@ const recipeInstructionSchema = z.discriminatedUnion('type', [
 
 export const createRecipeSchema = z.object({
   name: z.string().min(1, { error: 'Required' }),
-  imageUrl: z.string(),
+  imageId: z.uuid().nullable(),
   description: z.string(),
   prepTime: z.int().nonnegative(),
   cookTime: z.int().nonnegative(),
@@ -47,4 +47,6 @@ export const toggleFavoriteSchema = z.object({
 
 export type RecipeIngredient = z.infer<typeof recipeIngredientSchema>
 export type RecipeInstruction = z.infer<typeof recipeInstructionSchema>
-export type SerializedRecipe = Serialize<typeof recipesTable.$inferSelect>
+export type SerializedRecipe = Serialize<typeof recipesTable.$inferSelect> & {
+  imageUrl: string | null
+}

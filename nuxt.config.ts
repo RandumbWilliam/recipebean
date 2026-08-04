@@ -58,6 +58,7 @@ export default defineNuxtConfig({
       secretKey: '',
     },
     public: {
+      mediaBaseUrl: '',
       clerk: {
         publishableKey: '',
       },
@@ -70,6 +71,14 @@ export default defineNuxtConfig({
     cloudflare: {
       deployConfig: true,
       nodeCompat: true,
+    },
+
+    experimental: {
+      tasks: true,
+    },
+
+    scheduledTasks: {
+      '0 3 * * 0': ['images:cleanup-pending'],
     },
 
     rollupConfig: {

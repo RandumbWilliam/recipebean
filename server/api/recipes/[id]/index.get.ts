@@ -3,6 +3,7 @@ import * as z from 'zod'
 import { useDb } from '~~/server/db'
 import { recipesTable } from '~~/server/db/schema'
 import { requireAuth } from '~~/server/utils/auth'
+import { serializeRecipeWithImageUrl } from '~~/server/utils/images'
 
 const paramsSchema = z.object({
   id: z.string(),
@@ -11,6 +12,7 @@ const paramsSchema = z.object({
 export default defineEventHandler(async (event) => {
   const user = await requireAuth(event)
   const db = useDb(event)
+  const config = useRuntimeConfig(event)
 
   const params = await getValidatedRouterParams(event, paramsSchema.parse)
 
@@ -19,6 +21,11 @@ export default defineEventHandler(async (event) => {
       eq(recipesTable.userId, user.id),
       eq(recipesTable.id, params.id),
     ),
+    with: {
+      image: {
+        columns: { key: true },
+      },
+    },
   })
 
   if (!recipe) {
@@ -28,5 +35,5 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  return recipe
+  return serializeRecipeWithImageUrl(recipe, config.public.mediaBaseUrl)
 })

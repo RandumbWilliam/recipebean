@@ -1,15 +1,16 @@
 <script setup lang="ts">
 import type { Ingredient } from '~~/shared/lib/ingredient-parser'
-import { Check, GripVertical, Plus, X } from '@lucide/vue'
+import { Check, GripVertical, ImagePlus, LoaderCircle, Plus, X } from '@lucide/vue'
 import { useRegleSchema } from '@regle/schemas'
 import { formatIngredient, parseIngredient } from '~~/shared/lib/ingredient-parser'
 import { createRecipeSchema } from '~~/shared/schemas/recipes'
 import { cn } from '~/lib/utils'
+import { ImageUploadError, uploadRecipeImage } from '~/utils/image-upload'
 import { withInstructionSteps } from '~/utils/recipes'
 
 const { r$ } = useRegleSchema({
   name: '',
-  imageUrl: '',
+  imageId: null,
   description: '',
   prepTime: 0,
   cookTime: 0,
@@ -23,6 +24,10 @@ const { r$ } = useRegleSchema({
 })
 
 const loading = ref(false)
+const uploadingImage = ref(false)
+const imagePreviewUrl = ref<string | null>(null)
+const imageError = ref<string | null>(null)
+const fileInput = useTemplateRef<HTMLInputElement>('fileInput')
 const currentIngredient = ref('')
 const currentInstruction = ref('')
 
@@ -114,10 +119,69 @@ function cancelInstructionHeader() {
 
 const numberedInstructions = computed(() => withInstructionSteps(r$.$value.instructions))
 
+async function onImageSelected(event: Event) {
+  const input = event.target as HTMLInputElement
+  const file = input.files?.[0]
+  input.value = ''
+  if (!file || uploadingImage.value || loading.value)
+    return
+
+  imageError.value = null
+  uploadingImage.value = true
+
+  const previousImageId = r$.$value.imageId
+  const previousPreview = imagePreviewUrl.value
+  const localPreview = URL.createObjectURL(file)
+  imagePreviewUrl.value = localPreview
+
+  try {
+    const uploaded = await uploadRecipeImage(file)
+    r$.$value.imageId = uploaded.id
+    // Keep the local blob preview so the form works before the public media domain is reachable.
+    if (previousPreview?.startsWith('blob:')) {
+      URL.revokeObjectURL(previousPreview)
+    }
+
+    if (previousImageId) {
+      await $fetch(`/api/images/${previousImageId}`, { method: 'DELETE' }).catch(() => undefined)
+    }
+  }
+  catch (err) {
+    URL.revokeObjectURL(localPreview)
+    imagePreviewUrl.value = previousPreview
+    imageError.value = err instanceof ImageUploadError
+      ? err.message
+      : 'Failed to upload image'
+  }
+  finally {
+    uploadingImage.value = false
+  }
+}
+
+async function clearImage() {
+  const imageId = r$.$value.imageId
+  if (imagePreviewUrl.value?.startsWith('blob:')) {
+    URL.revokeObjectURL(imagePreviewUrl.value)
+  }
+  imagePreviewUrl.value = null
+  imageError.value = null
+  r$.$value.imageId = null
+
+  if (imageId) {
+    await $fetch(`/api/images/${imageId}`, { method: 'DELETE' }).catch(() => undefined)
+  }
+}
+
+onBeforeUnmount(() => {
+  if (imagePreviewUrl.value?.startsWith('blob:')) {
+    URL.revokeObjectURL(imagePreviewUrl.value)
+  }
+})
+
 async function onSubmit() {
   const { valid, data } = await r$.$validate()
 
-  if (!valid || loading.value) {
+  if (!valid || loading.value || uploadingImage.value) {
     return
   }
 
@@ -132,6 +196,9 @@ async function onSubmit() {
   }
   catch (err: any) {
     console.error(err)
+  }
+  finally {
+    loading.value = false
   }
 }
 </script>
@@ -149,7 +216,7 @@ async function onSubmit() {
               Cancel
             </NuxtLink>
           </Button>
-          <Button type="submit" form="create-recipe-form" :disabled="loading">
+          <Button type="submit" form="create-recipe-form" :disabled="loading || uploadingImage">
             {{ loading ? "Saving…" : "Save recipe" }}
           </Button>
         </div>
@@ -159,8 +226,67 @@ async function onSubmit() {
       <form id="create-recipe-form" class="flex flex-col md:grid md:grid-cols-[400px_1fr] gap-10 py-10" @submit.prevent="onSubmit">
         <FieldSet>
           <FieldGroup>
-            <div class="flex items-center justify-center w-full h-65 rounded-xl bg-muted">
-              Upload image
+            <div class="flex flex-col gap-2">
+              <div class="relative w-full h-65 rounded-xl bg-muted overflow-hidden">
+                <img
+                  v-if="imagePreviewUrl"
+                  :src="imagePreviewUrl"
+                  alt="Recipe banner preview"
+                  class="absolute inset-0 h-full w-full object-cover"
+                >
+                <button
+                  v-else
+                  type="button"
+                  class="flex flex-col items-center justify-center gap-2 w-full h-full text-muted-foreground hover:bg-muted/80 transition-colors"
+                  :disabled="uploadingImage"
+                  @click="fileInput?.click()"
+                >
+                  <ImagePlus :size="28" />
+                  <span class="text-sm font-medium">Upload image</span>
+                  <span class="text-xs">JPEG, PNG, or WebP · max 5 MB</span>
+                </button>
+                <div
+                  v-if="uploadingImage"
+                  class="absolute inset-0 flex items-center justify-center bg-background/60"
+                >
+                  <LoaderCircle :size="28" class="animate-spin text-primary" />
+                </div>
+                <div
+                  v-if="imagePreviewUrl && !uploadingImage"
+                  class="absolute top-2 right-2 flex gap-2"
+                >
+                  <Button
+                    type="button"
+                    size="icon"
+                    variant="secondary"
+                    class="rounded-full"
+                    aria-label="Replace image"
+                    @click="fileInput?.click()"
+                  >
+                    <ImagePlus :size="16" />
+                  </Button>
+                  <Button
+                    type="button"
+                    size="icon"
+                    variant="secondary"
+                    class="rounded-full"
+                    aria-label="Remove image"
+                    @click="clearImage"
+                  >
+                    <X :size="16" />
+                  </Button>
+                </div>
+                <input
+                  ref="fileInput"
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp,image/gif"
+                  class="sr-only"
+                  @change="onImageSelected"
+                >
+              </div>
+              <p v-if="imageError" class="text-sm text-destructive">
+                {{ imageError }}
+              </p>
             </div>
             <Field :data-invalid="r$.name.$error" class="gap-1">
               <FieldLabel for="create-recipe-form-name">

@@ -1,4 +1,5 @@
 export * from './categories'
+export * from './images'
 export * from './recipes'
 export * from './recipes-categories'
 export * from './users'

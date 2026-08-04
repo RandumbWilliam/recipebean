@@ -1,6 +1,7 @@
 import { relations } from 'drizzle-orm'
 import { integer, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core'
 import { categoriesTable } from './categories'
+import { imagesTable } from './images'
 import { recipesTable } from './recipes'
 
 export const usersTable = pgTable('users', {
@@ -14,6 +15,7 @@ export const usersTable = pgTable('users', {
 export const usersRelations = relations(usersTable, ({ many }) => ({
   recipes: many(recipesTable),
   categories: many(categoriesTable),
+  images: many(imagesTable),
 }))
 
 export type User = typeof usersTable.$inferSelect

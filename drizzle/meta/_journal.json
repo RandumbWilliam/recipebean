@@ -8,6 +8,13 @@
       "when": 1784935017033,
       "tag": "0000_daffy_red_skull",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1785457856318,
+      "tag": "0001_outgoing_stick",
+      "breakpoints": true
     }
   ]
 }

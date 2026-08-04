@@ -4,6 +4,7 @@ import * as z from 'zod'
 import { useDb } from '~~/server/db'
 import { recipesTable } from '~~/server/db/schema'
 import { requireAuth } from '~~/server/utils/auth'
+import { serializeRecipeWithImageUrl } from '~~/server/utils/images'
 
 const querySchema = z.object({
   favorite: z.coerce.boolean().optional(),
@@ -12,6 +13,7 @@ const querySchema = z.object({
 export default defineEventHandler(async (event) => {
   const user = await requireAuth(event)
   const db = useDb(event)
+  const config = useRuntimeConfig(event)
 
   const query = await getValidatedQuery(event, querySchema.parse)
 
@@ -26,7 +28,12 @@ export default defineEventHandler(async (event) => {
       eq(recipesTable.userId, user.id),
       ...filters,
     ),
+    with: {
+      image: {
+        columns: { key: true },
+      },
+    },
   })
 
-  return recipes
+  return recipes.map(recipe => serializeRecipeWithImageUrl(recipe, config.public.mediaBaseUrl))
 })
