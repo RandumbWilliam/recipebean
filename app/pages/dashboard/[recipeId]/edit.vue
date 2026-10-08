@@ -78,7 +78,7 @@ async function onDelete() {
       <Dialog v-model:open="confirmingDelete">
         <DialogTrigger as-child>
           <Button type="button" variant="ghost" class="text-destructive hover:text-destructive">
-            <Trash2 :size="18" /> Delete
+            <Trash2 :size="18" /> <span class="sr-only sm:not-sr-only">Delete</span>
           </Button>
         </DialogTrigger>
         <DialogContent>

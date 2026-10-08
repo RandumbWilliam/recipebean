@@ -63,7 +63,7 @@ async function onSubmit(values: RecipeInput) {
       <template #header-actions>
         <Button type="button" variant="outline" @click="importOpen = true">
           <Link2 :size="16" />
-          Import from link
+          <span class="sr-only sm:not-sr-only">Import from link</span>
         </Button>
       </template>
     </RecipeForm>
