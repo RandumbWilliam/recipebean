@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import type { SerializedRecipe } from '~~/shared/schemas/recipes'
 import type { SidebarProps } from '@/components/ui/sidebar'
 import {
   Sidebar,
@@ -19,29 +18,7 @@ const props = withDefaults(defineProps<SidebarProps>(), {
   collapsible: 'icon',
 })
 
-const { user, isLoaded } = useUser()
-// Keyed so the account page shares this entry and a saved avatar lands in the
-// footer without a second request.
-const { data: me } = useFetch('/api/me', { key: 'me' })
-
-// Shares the dashboard list page's asyncData entry — see RecipeSearch for why
-// the key has to be explicit — so the footer count costs no extra request and
-// refetches whenever a recipe is added or deleted.
-const { data: recipes } = useFetch('/api/recipes', {
-  key: 'recipes',
-  default: () => [] as SerializedRecipe[],
-  dedupe: 'defer',
-})
-
-const sidebarUser = computed(() =>
-  user.value && me.value && {
-    firstName: user.value.firstName,
-    lastName: user.value.lastName,
-    email: user.value.primaryEmailAddress?.emailAddress ?? '',
-    pfpId: me.value.pfpId,
-    recipeCount: recipes.value.length,
-  },
-)
+const currentUser = useCurrentUser()
 </script>
 
 <template>
@@ -60,7 +37,7 @@ const sidebarUser = computed(() =>
       <NavCategories />
     </SidebarContent>
     <SidebarFooter>
-      <NavUser v-if="isLoaded && sidebarUser" :user="sidebarUser" />
+      <NavUser v-if="currentUser" :user="currentUser" />
       <NavUserSkeleton v-else />
     </SidebarFooter>
     <SidebarRail />
