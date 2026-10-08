@@ -246,20 +246,37 @@ async function onSubmit() {
 
 <template>
   <div>
-    <header class="flex items-center bg-white border-b h-20">
-      <div class="container flex items-center justify-between">
-        <h1 class="text-2xl font-serif font-medium">
-          {{ props.title }}
-        </h1>
-        <div class="flex gap-3">
+    <!-- Below sm there is no room for four labelled buttons beside the title, so
+         Cancel becomes an X before the title, header-actions are expected to
+         show only their icon (see the pages' sr-only labels), and Save drops
+         its noun. -->
+    <header class="flex items-center bg-white border-b h-16 sm:h-20">
+      <div class="container flex items-center justify-between gap-2 sm:gap-3">
+        <div class="flex min-w-0 items-center gap-1">
+          <Button variant="ghost" size="icon" class="-ml-2 sm:hidden" as-child>
+            <NuxtLink :to="props.cancelTo" aria-label="Cancel">
+              <X class="size-5" />
+            </NuxtLink>
+          </Button>
+          <h1 class="truncate text-xl sm:text-2xl font-serif font-medium">
+            {{ props.title }}
+          </h1>
+        </div>
+        <div class="flex shrink-0 gap-2 sm:gap-3">
           <slot name="header-actions" />
-          <Button variant="outline" as-child>
+          <Button variant="outline" class="hidden sm:inline-flex" as-child>
             <NuxtLink :to="props.cancelTo">
               Cancel
             </NuxtLink>
           </Button>
           <Button type="submit" form="recipe-form" :disabled="props.submitting">
-            {{ props.submitting ? "Saving…" : props.submitLabel }}
+            <template v-if="props.submitting">
+              Saving…
+            </template>
+            <template v-else>
+              <span class="sm:hidden">Save</span>
+              <span class="hidden sm:inline">{{ props.submitLabel }}</span>
+            </template>
           </Button>
         </div>
       </div>
