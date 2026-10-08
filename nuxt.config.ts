@@ -11,6 +11,7 @@ export default defineNuxtConfig({
     // the server and these pages have no SEO value.
     '/dashboard/**': { ssr: false },
     '/login': { ssr: false },
+    '/forgot-password': { ssr: false },
     '/sign-up/**': { ssr: false },
     '/sso-callback': { ssr: false },
   },

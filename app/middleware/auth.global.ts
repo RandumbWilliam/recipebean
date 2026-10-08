@@ -1,5 +1,5 @@
 const isProtectedRoute = createRouteMatcher(['/dashboard(.*)'])
-const isAuthRoute = createRouteMatcher(['/login', '/sign-up(.*)', '/sso-callback'])
+const isAuthRoute = createRouteMatcher(['/login', '/forgot-password', '/sign-up(.*)', '/sso-callback'])
 
 // Clerk JS is fetched after hydration, so the first client navigation has to
 // wait for it. Later navigations must not wait, and this flag is what stops
