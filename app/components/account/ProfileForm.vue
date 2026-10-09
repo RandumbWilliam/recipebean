@@ -155,14 +155,14 @@ async function onSubmit() {
           <div
             role="radiogroup"
             aria-labelledby="account-pfp-label"
-            class="grid grid-cols-6 sm:grid-cols-8 lg:grid-cols-12 gap-2"
+            class="grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-8 gap-3"
           >
             <!-- A real radio, visually hidden: arrow-key roving and the checked
                  state come from the browser rather than from a keydown handler. -->
             <label
               v-for="(icon, id) in PFP"
               :key="icon"
-              class="relative flex aspect-square cursor-pointer items-center justify-center rounded-lg border bg-white p-1.5 transition-colors hover:bg-accent has-[:checked]:border-primary has-[:checked]:bg-accent has-[:focus-visible]:border-ring has-[:focus-visible]:ring-3 has-[:focus-visible]:ring-ring/50"
+              class="relative flex aspect-square cursor-pointer items-center justify-center rounded-lg border bg-white p-2 transition-colors hover:bg-accent has-[:checked]:border-primary has-[:checked]:bg-accent has-[:focus-visible]:border-ring has-[:focus-visible]:ring-3 has-[:focus-visible]:ring-ring/50"
             >
               <input
                 v-model="r$.$value.pfpId"

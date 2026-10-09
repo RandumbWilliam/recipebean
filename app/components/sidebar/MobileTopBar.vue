@@ -23,7 +23,7 @@ const currentUser = useCurrentUser()
         >
           <UserAvatar :user="currentUser" class="size-9 border border-border" />
         </DropdownMenuTrigger>
-        <DropdownMenuContent class="min-w-56 rounded-lg" align="end">
+        <DropdownMenuContent class="min-w-64 rounded-lg p-1.5" align="end">
           <UserMenuItems :user="currentUser" />
         </DropdownMenuContent>
       </DropdownMenu>
